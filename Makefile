@@ -1,10 +1,10 @@
-PROJECT_NAME := Pulumi Xyz Resource Provider
+PROJECT_NAME := Pulumi OpenZiti Resource Provider
 
-PACK             := xyz
+PACK             := openziti
 PACKDIR          := sdk
-PROJECT          := github.com/pulumi/pulumi-xyz
-NODE_MODULE_NAME := @pulumi/xyz
-NUGET_PKG_NAME   := Pulumi.Xyz
+PROJECT          := github.com/pulumi/pulumi-openziti
+NODE_MODULE_NAME := @pulumi/openziti
+NUGET_PKG_NAME   := Pulumi.OpenZiti
 
 PROVIDER        := pulumi-resource-${PACK}
 VERSION         ?= $(shell pulumictl get version)
