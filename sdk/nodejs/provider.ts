@@ -19,6 +19,19 @@ export class Provider extends pulumi.ProviderResource {
         return obj['__pulumiType'] === "pulumi:providers:" + Provider.__pulumiType;
     }
 
+    /**
+     * The password. It is very secret.
+     */
+    public readonly password!: pulumi.Output<string>;
+    /**
+     * The URI to the API
+     */
+    public readonly uri!: pulumi.Output<string>;
+    /**
+     * The username. It's important but not secret.
+     */
+    public readonly user!: pulumi.Output<string>;
+    public readonly version!: pulumi.Output<string | undefined>;
 
     /**
      * Create a Provider resource with the given unique name, arguments, and options.
@@ -27,12 +40,28 @@ export class Provider extends pulumi.ProviderResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: ProviderArgs, opts?: pulumi.ResourceOptions) {
+    constructor(name: string, args: ProviderArgs, opts?: pulumi.ResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         {
+            if ((!args || args.password === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'password'");
+            }
+            if ((!args || args.uri === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'uri'");
+            }
+            if ((!args || args.user === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'user'");
+            }
+            resourceInputs["insecure"] = pulumi.output(args ? args.insecure : undefined).apply(JSON.stringify);
+            resourceInputs["password"] = args?.password ? pulumi.secret(args.password) : undefined;
+            resourceInputs["uri"] = args ? args.uri : undefined;
+            resourceInputs["user"] = args ? args.user : undefined;
+            resourceInputs["version"] = args ? args.version : undefined;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
+        const secretOpts = { additionalSecretOutputs: ["password"] };
+        opts = pulumi.mergeOptions(opts, secretOpts);
         super(Provider.__pulumiType, name, resourceInputs, opts);
     }
 }
@@ -41,4 +70,18 @@ export class Provider extends pulumi.ProviderResource {
  * The set of arguments for constructing a Provider resource.
  */
 export interface ProviderArgs {
+    insecure?: pulumi.Input<boolean>;
+    /**
+     * The password. It is very secret.
+     */
+    password: pulumi.Input<string>;
+    /**
+     * The URI to the API
+     */
+    uri: pulumi.Input<string>;
+    /**
+     * The username. It's important but not secret.
+     */
+    user: pulumi.Input<string>;
+    version?: pulumi.Input<string>;
 }

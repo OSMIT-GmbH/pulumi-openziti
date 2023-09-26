@@ -13,16 +13,96 @@ __all__ = ['ProviderArgs', 'Provider']
 
 @pulumi.input_type
 class ProviderArgs:
-    def __init__(__self__):
+    def __init__(__self__, *,
+                 password: pulumi.Input[str],
+                 uri: pulumi.Input[str],
+                 user: pulumi.Input[str],
+                 insecure: Optional[pulumi.Input[bool]] = None,
+                 version: Optional[pulumi.Input[str]] = None):
         """
         The set of arguments for constructing a Provider resource.
+        :param pulumi.Input[str] password: The password. It is very secret.
+        :param pulumi.Input[str] uri: The URI to the API
+        :param pulumi.Input[str] user: The username. It's important but not secret.
         """
-        pass
+        ProviderArgs._configure(
+            lambda key, value: pulumi.set(__self__, key, value),
+            password=password,
+            uri=uri,
+            user=user,
+            insecure=insecure,
+            version=version,
+        )
     @staticmethod
     def _configure(
              _setter: Callable[[Any, Any], None],
+             password: pulumi.Input[str],
+             uri: pulumi.Input[str],
+             user: pulumi.Input[str],
+             insecure: Optional[pulumi.Input[bool]] = None,
+             version: Optional[pulumi.Input[str]] = None,
              opts: Optional[pulumi.ResourceOptions]=None):
-        pass
+        _setter("password", password)
+        _setter("uri", uri)
+        _setter("user", user)
+        if insecure is not None:
+            _setter("insecure", insecure)
+        if version is not None:
+            _setter("version", version)
+
+    @property
+    @pulumi.getter
+    def password(self) -> pulumi.Input[str]:
+        """
+        The password. It is very secret.
+        """
+        return pulumi.get(self, "password")
+
+    @password.setter
+    def password(self, value: pulumi.Input[str]):
+        pulumi.set(self, "password", value)
+
+    @property
+    @pulumi.getter
+    def uri(self) -> pulumi.Input[str]:
+        """
+        The URI to the API
+        """
+        return pulumi.get(self, "uri")
+
+    @uri.setter
+    def uri(self, value: pulumi.Input[str]):
+        pulumi.set(self, "uri", value)
+
+    @property
+    @pulumi.getter
+    def user(self) -> pulumi.Input[str]:
+        """
+        The username. It's important but not secret.
+        """
+        return pulumi.get(self, "user")
+
+    @user.setter
+    def user(self, value: pulumi.Input[str]):
+        pulumi.set(self, "user", value)
+
+    @property
+    @pulumi.getter
+    def insecure(self) -> Optional[pulumi.Input[bool]]:
+        return pulumi.get(self, "insecure")
+
+    @insecure.setter
+    def insecure(self, value: Optional[pulumi.Input[bool]]):
+        pulumi.set(self, "insecure", value)
+
+    @property
+    @pulumi.getter
+    def version(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "version")
+
+    @version.setter
+    def version(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "version", value)
 
 
 class Provider(pulumi.ProviderResource):
@@ -30,17 +110,25 @@ class Provider(pulumi.ProviderResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 insecure: Optional[pulumi.Input[bool]] = None,
+                 password: Optional[pulumi.Input[str]] = None,
+                 uri: Optional[pulumi.Input[str]] = None,
+                 user: Optional[pulumi.Input[str]] = None,
+                 version: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         """
         Create a Openziti resource with the given unique name, props, and options.
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[str] password: The password. It is very secret.
+        :param pulumi.Input[str] uri: The URI to the API
+        :param pulumi.Input[str] user: The username. It's important but not secret.
         """
         ...
     @overload
     def __init__(__self__,
                  resource_name: str,
-                 args: Optional[ProviderArgs] = None,
+                 args: ProviderArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         Create a Openziti resource with the given unique name, props, and options.
@@ -63,6 +151,11 @@ class Provider(pulumi.ProviderResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 insecure: Optional[pulumi.Input[bool]] = None,
+                 password: Optional[pulumi.Input[str]] = None,
+                 uri: Optional[pulumi.Input[str]] = None,
+                 user: Optional[pulumi.Input[str]] = None,
+                 version: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -72,9 +165,51 @@ class Provider(pulumi.ProviderResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = ProviderArgs.__new__(ProviderArgs)
 
+            __props__.__dict__["insecure"] = pulumi.Output.from_input(insecure).apply(pulumi.runtime.to_json) if insecure is not None else None
+            if password is None and not opts.urn:
+                raise TypeError("Missing required property 'password'")
+            __props__.__dict__["password"] = None if password is None else pulumi.Output.secret(password)
+            if uri is None and not opts.urn:
+                raise TypeError("Missing required property 'uri'")
+            __props__.__dict__["uri"] = uri
+            if user is None and not opts.urn:
+                raise TypeError("Missing required property 'user'")
+            __props__.__dict__["user"] = user
+            __props__.__dict__["version"] = version
+        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["password"])
+        opts = pulumi.ResourceOptions.merge(opts, secret_opts)
         super(Provider, __self__).__init__(
             'openziti',
             resource_name,
             __props__,
             opts)
+
+    @property
+    @pulumi.getter
+    def password(self) -> pulumi.Output[str]:
+        """
+        The password. It is very secret.
+        """
+        return pulumi.get(self, "password")
+
+    @property
+    @pulumi.getter
+    def uri(self) -> pulumi.Output[str]:
+        """
+        The URI to the API
+        """
+        return pulumi.get(self, "uri")
+
+    @property
+    @pulumi.getter
+    def user(self) -> pulumi.Output[str]:
+        """
+        The username. It's important but not secret.
+        """
+        return pulumi.get(self, "user")
+
+    @property
+    @pulumi.getter
+    def version(self) -> pulumi.Output[Optional[str]]:
+        return pulumi.get(self, "version")
 

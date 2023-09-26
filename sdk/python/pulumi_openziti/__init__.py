@@ -5,8 +5,17 @@
 from . import _utilities
 import typing
 # Export this package's modules as members:
+from .config_obj import *
 from .provider import *
-from .random import *
+from . import outputs
+
+# Make subpackages available:
+if typing.TYPE_CHECKING:
+    import pulumi_openziti.config as __config
+    config = __config
+else:
+    config = _utilities.lazy_import('pulumi_openziti.config')
+
 _utilities.register(
     resource_modules="""
 [
@@ -15,7 +24,7 @@ _utilities.register(
   "mod": "index",
   "fqn": "pulumi_openziti",
   "classes": {
-   "openziti:index:Random": "Random"
+   "openziti:index:ConfigObj": "ConfigObj"
   }
  }
 ]

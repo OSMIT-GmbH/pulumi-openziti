@@ -79,7 +79,7 @@ lint::
 
 install:: install_nodejs_sdk install_dotnet_sdk
 	cp $(WORKING_DIR)/bin/${PROVIDER} ${GOPATH}/bin
-	pulumi plugin install resource ${PACK} ${VERSION} -f $(WORKING_DIR)/bin/${PROVIDER}
+	pulumi plugin install resource ${PACK} ${VERSION} -f $(WORKING_DIR)/bin/${PROVIDER} --reinstall
 
 GO_TEST 	 := go test -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM}
 
