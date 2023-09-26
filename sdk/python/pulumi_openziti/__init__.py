@@ -6,15 +6,20 @@ from . import _utilities
 import typing
 # Export this package's modules as members:
 from .config_obj import *
+from .identity import *
 from .provider import *
+from ._inputs import *
 from . import outputs
 
 # Make subpackages available:
 if typing.TYPE_CHECKING:
     import pulumi_openziti.config as __config
     config = __config
+    import pulumi_openziti.rest_model as __rest_model
+    rest_model = __rest_model
 else:
     config = _utilities.lazy_import('pulumi_openziti.config')
+    rest_model = _utilities.lazy_import('pulumi_openziti.rest_model')
 
 _utilities.register(
     resource_modules="""
@@ -24,7 +29,8 @@ _utilities.register(
   "mod": "index",
   "fqn": "pulumi_openziti",
   "classes": {
-   "openziti:index:ConfigObj": "ConfigObj"
+   "openziti:index:ConfigObj": "ConfigObj",
+   "openziti:index:Identity": "Identity"
   }
  }
 ]

@@ -36,6 +36,7 @@ func Provider() p.Provider {
 			// we have to use ConfigObj as name otherwise we have a name
 			// clash with ProviderConfig in dotnet module... :-/
 			infer.Resource[*ConfigObj, ConfigArgs, ConfigState](),
+			infer.Resource[*Identity, IdentityArgs, IdentityState](),
 		},
 		ModuleMap: map[tokens.ModuleName]tokens.ModuleName{
 			"provider": "index",

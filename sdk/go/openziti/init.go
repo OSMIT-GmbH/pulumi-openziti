@@ -23,6 +23,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 	switch typ {
 	case "openziti:index:ConfigObj":
 		r = &ConfigObj{}
+	case "openziti:index:Identity":
+		r = &Identity{}
 	default:
 		return nil, fmt.Errorf("unknown resource type: %s", typ)
 	}

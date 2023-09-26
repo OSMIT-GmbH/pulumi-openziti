@@ -57,6 +57,695 @@ func (o EntityRefOutput) Name() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v EntityRef) *string { return v.Name }).(pulumi.StringPtrOutput)
 }
 
+type EntityRefPtrOutput struct{ *pulumi.OutputState }
+
+func (EntityRefPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**EntityRef)(nil)).Elem()
+}
+
+func (o EntityRefPtrOutput) ToEntityRefPtrOutput() EntityRefPtrOutput {
+	return o
+}
+
+func (o EntityRefPtrOutput) ToEntityRefPtrOutputWithContext(ctx context.Context) EntityRefPtrOutput {
+	return o
+}
+
+func (o EntityRefPtrOutput) ToOutput(ctx context.Context) pulumix.Output[*EntityRef] {
+	return pulumix.Output[*EntityRef]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o EntityRefPtrOutput) Elem() EntityRefOutput {
+	return o.ApplyT(func(v *EntityRef) EntityRef {
+		if v != nil {
+			return *v
+		}
+		var ret EntityRef
+		return ret
+	}).(EntityRefOutput)
+}
+
+func (o EntityRefPtrOutput) _links() LinkMapOutput {
+	return o.ApplyT(func(v *EntityRef) map[string]Link {
+		if v == nil {
+			return nil
+		}
+		return v._links
+	}).(LinkMapOutput)
+}
+
+func (o EntityRefPtrOutput) Entity() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *EntityRef) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Entity
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o EntityRefPtrOutput) Id() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *EntityRef) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Id
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o EntityRefPtrOutput) Name() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *EntityRef) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Name
+	}).(pulumi.StringPtrOutput)
+}
+
+type EnvInfo struct {
+	Arch      *string `pulumi:"arch"`
+	Os        *string `pulumi:"os"`
+	OsRelease *string `pulumi:"osRelease"`
+	OsVersion *string `pulumi:"osVersion"`
+}
+
+type EnvInfoOutput struct{ *pulumi.OutputState }
+
+func (EnvInfoOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*EnvInfo)(nil)).Elem()
+}
+
+func (o EnvInfoOutput) ToEnvInfoOutput() EnvInfoOutput {
+	return o
+}
+
+func (o EnvInfoOutput) ToEnvInfoOutputWithContext(ctx context.Context) EnvInfoOutput {
+	return o
+}
+
+func (o EnvInfoOutput) ToOutput(ctx context.Context) pulumix.Output[EnvInfo] {
+	return pulumix.Output[EnvInfo]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o EnvInfoOutput) Arch() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v EnvInfo) *string { return v.Arch }).(pulumi.StringPtrOutput)
+}
+
+func (o EnvInfoOutput) Os() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v EnvInfo) *string { return v.Os }).(pulumi.StringPtrOutput)
+}
+
+func (o EnvInfoOutput) OsRelease() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v EnvInfo) *string { return v.OsRelease }).(pulumi.StringPtrOutput)
+}
+
+func (o EnvInfoOutput) OsVersion() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v EnvInfo) *string { return v.OsVersion }).(pulumi.StringPtrOutput)
+}
+
+type IdentityCreateEnrollment struct {
+	Ott   *bool   `pulumi:"ott"`
+	Ottca *string `pulumi:"ottca"`
+	Updb  *string `pulumi:"updb"`
+}
+
+// IdentityCreateEnrollmentInput is an input type that accepts IdentityCreateEnrollmentArgs and IdentityCreateEnrollmentOutput values.
+// You can construct a concrete instance of `IdentityCreateEnrollmentInput` via:
+//
+//	IdentityCreateEnrollmentArgs{...}
+type IdentityCreateEnrollmentInput interface {
+	pulumi.Input
+
+	ToIdentityCreateEnrollmentOutput() IdentityCreateEnrollmentOutput
+	ToIdentityCreateEnrollmentOutputWithContext(context.Context) IdentityCreateEnrollmentOutput
+}
+
+type IdentityCreateEnrollmentArgs struct {
+	Ott   pulumi.BoolPtrInput   `pulumi:"ott"`
+	Ottca pulumi.StringPtrInput `pulumi:"ottca"`
+	Updb  pulumi.StringPtrInput `pulumi:"updb"`
+}
+
+func (IdentityCreateEnrollmentArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*IdentityCreateEnrollment)(nil)).Elem()
+}
+
+func (i IdentityCreateEnrollmentArgs) ToIdentityCreateEnrollmentOutput() IdentityCreateEnrollmentOutput {
+	return i.ToIdentityCreateEnrollmentOutputWithContext(context.Background())
+}
+
+func (i IdentityCreateEnrollmentArgs) ToIdentityCreateEnrollmentOutputWithContext(ctx context.Context) IdentityCreateEnrollmentOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(IdentityCreateEnrollmentOutput)
+}
+
+func (i IdentityCreateEnrollmentArgs) ToOutput(ctx context.Context) pulumix.Output[IdentityCreateEnrollment] {
+	return pulumix.Output[IdentityCreateEnrollment]{
+		OutputState: i.ToIdentityCreateEnrollmentOutputWithContext(ctx).OutputState,
+	}
+}
+
+func (i IdentityCreateEnrollmentArgs) ToIdentityCreateEnrollmentPtrOutput() IdentityCreateEnrollmentPtrOutput {
+	return i.ToIdentityCreateEnrollmentPtrOutputWithContext(context.Background())
+}
+
+func (i IdentityCreateEnrollmentArgs) ToIdentityCreateEnrollmentPtrOutputWithContext(ctx context.Context) IdentityCreateEnrollmentPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(IdentityCreateEnrollmentOutput).ToIdentityCreateEnrollmentPtrOutputWithContext(ctx)
+}
+
+// IdentityCreateEnrollmentPtrInput is an input type that accepts IdentityCreateEnrollmentArgs, IdentityCreateEnrollmentPtr and IdentityCreateEnrollmentPtrOutput values.
+// You can construct a concrete instance of `IdentityCreateEnrollmentPtrInput` via:
+//
+//	        IdentityCreateEnrollmentArgs{...}
+//
+//	or:
+//
+//	        nil
+type IdentityCreateEnrollmentPtrInput interface {
+	pulumi.Input
+
+	ToIdentityCreateEnrollmentPtrOutput() IdentityCreateEnrollmentPtrOutput
+	ToIdentityCreateEnrollmentPtrOutputWithContext(context.Context) IdentityCreateEnrollmentPtrOutput
+}
+
+type identityCreateEnrollmentPtrType IdentityCreateEnrollmentArgs
+
+func IdentityCreateEnrollmentPtr(v *IdentityCreateEnrollmentArgs) IdentityCreateEnrollmentPtrInput {
+	return (*identityCreateEnrollmentPtrType)(v)
+}
+
+func (*identityCreateEnrollmentPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**IdentityCreateEnrollment)(nil)).Elem()
+}
+
+func (i *identityCreateEnrollmentPtrType) ToIdentityCreateEnrollmentPtrOutput() IdentityCreateEnrollmentPtrOutput {
+	return i.ToIdentityCreateEnrollmentPtrOutputWithContext(context.Background())
+}
+
+func (i *identityCreateEnrollmentPtrType) ToIdentityCreateEnrollmentPtrOutputWithContext(ctx context.Context) IdentityCreateEnrollmentPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(IdentityCreateEnrollmentPtrOutput)
+}
+
+func (i *identityCreateEnrollmentPtrType) ToOutput(ctx context.Context) pulumix.Output[*IdentityCreateEnrollment] {
+	return pulumix.Output[*IdentityCreateEnrollment]{
+		OutputState: i.ToIdentityCreateEnrollmentPtrOutputWithContext(ctx).OutputState,
+	}
+}
+
+type IdentityCreateEnrollmentOutput struct{ *pulumi.OutputState }
+
+func (IdentityCreateEnrollmentOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*IdentityCreateEnrollment)(nil)).Elem()
+}
+
+func (o IdentityCreateEnrollmentOutput) ToIdentityCreateEnrollmentOutput() IdentityCreateEnrollmentOutput {
+	return o
+}
+
+func (o IdentityCreateEnrollmentOutput) ToIdentityCreateEnrollmentOutputWithContext(ctx context.Context) IdentityCreateEnrollmentOutput {
+	return o
+}
+
+func (o IdentityCreateEnrollmentOutput) ToIdentityCreateEnrollmentPtrOutput() IdentityCreateEnrollmentPtrOutput {
+	return o.ToIdentityCreateEnrollmentPtrOutputWithContext(context.Background())
+}
+
+func (o IdentityCreateEnrollmentOutput) ToIdentityCreateEnrollmentPtrOutputWithContext(ctx context.Context) IdentityCreateEnrollmentPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v IdentityCreateEnrollment) *IdentityCreateEnrollment {
+		return &v
+	}).(IdentityCreateEnrollmentPtrOutput)
+}
+
+func (o IdentityCreateEnrollmentOutput) ToOutput(ctx context.Context) pulumix.Output[IdentityCreateEnrollment] {
+	return pulumix.Output[IdentityCreateEnrollment]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o IdentityCreateEnrollmentOutput) Ott() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v IdentityCreateEnrollment) *bool { return v.Ott }).(pulumi.BoolPtrOutput)
+}
+
+func (o IdentityCreateEnrollmentOutput) Ottca() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityCreateEnrollment) *string { return v.Ottca }).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityCreateEnrollmentOutput) Updb() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityCreateEnrollment) *string { return v.Updb }).(pulumi.StringPtrOutput)
+}
+
+type IdentityCreateEnrollmentPtrOutput struct{ *pulumi.OutputState }
+
+func (IdentityCreateEnrollmentPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**IdentityCreateEnrollment)(nil)).Elem()
+}
+
+func (o IdentityCreateEnrollmentPtrOutput) ToIdentityCreateEnrollmentPtrOutput() IdentityCreateEnrollmentPtrOutput {
+	return o
+}
+
+func (o IdentityCreateEnrollmentPtrOutput) ToIdentityCreateEnrollmentPtrOutputWithContext(ctx context.Context) IdentityCreateEnrollmentPtrOutput {
+	return o
+}
+
+func (o IdentityCreateEnrollmentPtrOutput) ToOutput(ctx context.Context) pulumix.Output[*IdentityCreateEnrollment] {
+	return pulumix.Output[*IdentityCreateEnrollment]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o IdentityCreateEnrollmentPtrOutput) Elem() IdentityCreateEnrollmentOutput {
+	return o.ApplyT(func(v *IdentityCreateEnrollment) IdentityCreateEnrollment {
+		if v != nil {
+			return *v
+		}
+		var ret IdentityCreateEnrollment
+		return ret
+	}).(IdentityCreateEnrollmentOutput)
+}
+
+func (o IdentityCreateEnrollmentPtrOutput) Ott() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *IdentityCreateEnrollment) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.Ott
+	}).(pulumi.BoolPtrOutput)
+}
+
+func (o IdentityCreateEnrollmentPtrOutput) Ottca() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityCreateEnrollment) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Ottca
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityCreateEnrollmentPtrOutput) Updb() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityCreateEnrollment) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Updb
+	}).(pulumi.StringPtrOutput)
+}
+
+type IdentityEnrollments struct {
+	Ott   *IdentityEnrollmentsOtt   `pulumi:"ott"`
+	Ottca *IdentityEnrollmentsOttca `pulumi:"ottca"`
+	Updb  *IdentityEnrollmentsUpdb  `pulumi:"updb"`
+}
+
+type IdentityEnrollmentsOutput struct{ *pulumi.OutputState }
+
+func (IdentityEnrollmentsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*IdentityEnrollments)(nil)).Elem()
+}
+
+func (o IdentityEnrollmentsOutput) ToIdentityEnrollmentsOutput() IdentityEnrollmentsOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsOutput) ToIdentityEnrollmentsOutputWithContext(ctx context.Context) IdentityEnrollmentsOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsOutput) ToOutput(ctx context.Context) pulumix.Output[IdentityEnrollments] {
+	return pulumix.Output[IdentityEnrollments]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o IdentityEnrollmentsOutput) Ott() IdentityEnrollmentsOttPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollments) *IdentityEnrollmentsOtt { return v.Ott }).(IdentityEnrollmentsOttPtrOutput)
+}
+
+func (o IdentityEnrollmentsOutput) Ottca() IdentityEnrollmentsOttcaPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollments) *IdentityEnrollmentsOttca { return v.Ottca }).(IdentityEnrollmentsOttcaPtrOutput)
+}
+
+func (o IdentityEnrollmentsOutput) Updb() IdentityEnrollmentsUpdbPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollments) *IdentityEnrollmentsUpdb { return v.Updb }).(IdentityEnrollmentsUpdbPtrOutput)
+}
+
+type IdentityEnrollmentsOtt struct {
+	ExpiresAt *string `pulumi:"expiresAt"`
+	Id        *string `pulumi:"id"`
+	Jwt       *string `pulumi:"jwt"`
+	Token     *string `pulumi:"token"`
+}
+
+type IdentityEnrollmentsOttOutput struct{ *pulumi.OutputState }
+
+func (IdentityEnrollmentsOttOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*IdentityEnrollmentsOtt)(nil)).Elem()
+}
+
+func (o IdentityEnrollmentsOttOutput) ToIdentityEnrollmentsOttOutput() IdentityEnrollmentsOttOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsOttOutput) ToIdentityEnrollmentsOttOutputWithContext(ctx context.Context) IdentityEnrollmentsOttOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsOttOutput) ToOutput(ctx context.Context) pulumix.Output[IdentityEnrollmentsOtt] {
+	return pulumix.Output[IdentityEnrollmentsOtt]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o IdentityEnrollmentsOttOutput) ExpiresAt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsOtt) *string { return v.ExpiresAt }).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttOutput) Id() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsOtt) *string { return v.Id }).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttOutput) Jwt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsOtt) *string { return v.Jwt }).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttOutput) Token() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsOtt) *string { return v.Token }).(pulumi.StringPtrOutput)
+}
+
+type IdentityEnrollmentsOttPtrOutput struct{ *pulumi.OutputState }
+
+func (IdentityEnrollmentsOttPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**IdentityEnrollmentsOtt)(nil)).Elem()
+}
+
+func (o IdentityEnrollmentsOttPtrOutput) ToIdentityEnrollmentsOttPtrOutput() IdentityEnrollmentsOttPtrOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsOttPtrOutput) ToIdentityEnrollmentsOttPtrOutputWithContext(ctx context.Context) IdentityEnrollmentsOttPtrOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsOttPtrOutput) ToOutput(ctx context.Context) pulumix.Output[*IdentityEnrollmentsOtt] {
+	return pulumix.Output[*IdentityEnrollmentsOtt]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o IdentityEnrollmentsOttPtrOutput) Elem() IdentityEnrollmentsOttOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsOtt) IdentityEnrollmentsOtt {
+		if v != nil {
+			return *v
+		}
+		var ret IdentityEnrollmentsOtt
+		return ret
+	}).(IdentityEnrollmentsOttOutput)
+}
+
+func (o IdentityEnrollmentsOttPtrOutput) ExpiresAt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsOtt) *string {
+		if v == nil {
+			return nil
+		}
+		return v.ExpiresAt
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttPtrOutput) Id() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsOtt) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Id
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttPtrOutput) Jwt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsOtt) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Jwt
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttPtrOutput) Token() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsOtt) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Token
+	}).(pulumi.StringPtrOutput)
+}
+
+type IdentityEnrollmentsOttca struct {
+	Ca        *EntityRef `pulumi:"ca"`
+	CaId      *string    `pulumi:"caId"`
+	ExpiresAt *string    `pulumi:"expiresAt"`
+	Id        *string    `pulumi:"id"`
+	Jwt       *string    `pulumi:"jwt"`
+	Token     *string    `pulumi:"token"`
+}
+
+type IdentityEnrollmentsOttcaOutput struct{ *pulumi.OutputState }
+
+func (IdentityEnrollmentsOttcaOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*IdentityEnrollmentsOttca)(nil)).Elem()
+}
+
+func (o IdentityEnrollmentsOttcaOutput) ToIdentityEnrollmentsOttcaOutput() IdentityEnrollmentsOttcaOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsOttcaOutput) ToIdentityEnrollmentsOttcaOutputWithContext(ctx context.Context) IdentityEnrollmentsOttcaOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsOttcaOutput) ToOutput(ctx context.Context) pulumix.Output[IdentityEnrollmentsOttca] {
+	return pulumix.Output[IdentityEnrollmentsOttca]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o IdentityEnrollmentsOttcaOutput) Ca() EntityRefPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsOttca) *EntityRef { return v.Ca }).(EntityRefPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttcaOutput) CaId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsOttca) *string { return v.CaId }).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttcaOutput) ExpiresAt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsOttca) *string { return v.ExpiresAt }).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttcaOutput) Id() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsOttca) *string { return v.Id }).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttcaOutput) Jwt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsOttca) *string { return v.Jwt }).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttcaOutput) Token() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsOttca) *string { return v.Token }).(pulumi.StringPtrOutput)
+}
+
+type IdentityEnrollmentsOttcaPtrOutput struct{ *pulumi.OutputState }
+
+func (IdentityEnrollmentsOttcaPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**IdentityEnrollmentsOttca)(nil)).Elem()
+}
+
+func (o IdentityEnrollmentsOttcaPtrOutput) ToIdentityEnrollmentsOttcaPtrOutput() IdentityEnrollmentsOttcaPtrOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsOttcaPtrOutput) ToIdentityEnrollmentsOttcaPtrOutputWithContext(ctx context.Context) IdentityEnrollmentsOttcaPtrOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsOttcaPtrOutput) ToOutput(ctx context.Context) pulumix.Output[*IdentityEnrollmentsOttca] {
+	return pulumix.Output[*IdentityEnrollmentsOttca]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o IdentityEnrollmentsOttcaPtrOutput) Elem() IdentityEnrollmentsOttcaOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsOttca) IdentityEnrollmentsOttca {
+		if v != nil {
+			return *v
+		}
+		var ret IdentityEnrollmentsOttca
+		return ret
+	}).(IdentityEnrollmentsOttcaOutput)
+}
+
+func (o IdentityEnrollmentsOttcaPtrOutput) Ca() EntityRefPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsOttca) *EntityRef {
+		if v == nil {
+			return nil
+		}
+		return v.Ca
+	}).(EntityRefPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttcaPtrOutput) CaId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsOttca) *string {
+		if v == nil {
+			return nil
+		}
+		return v.CaId
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttcaPtrOutput) ExpiresAt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsOttca) *string {
+		if v == nil {
+			return nil
+		}
+		return v.ExpiresAt
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttcaPtrOutput) Id() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsOttca) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Id
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttcaPtrOutput) Jwt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsOttca) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Jwt
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsOttcaPtrOutput) Token() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsOttca) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Token
+	}).(pulumi.StringPtrOutput)
+}
+
+type IdentityEnrollmentsUpdb struct {
+	ExpiresAt *string `pulumi:"expiresAt"`
+	Id        *string `pulumi:"id"`
+	Jwt       *string `pulumi:"jwt"`
+	Token     *string `pulumi:"token"`
+}
+
+type IdentityEnrollmentsUpdbOutput struct{ *pulumi.OutputState }
+
+func (IdentityEnrollmentsUpdbOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*IdentityEnrollmentsUpdb)(nil)).Elem()
+}
+
+func (o IdentityEnrollmentsUpdbOutput) ToIdentityEnrollmentsUpdbOutput() IdentityEnrollmentsUpdbOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsUpdbOutput) ToIdentityEnrollmentsUpdbOutputWithContext(ctx context.Context) IdentityEnrollmentsUpdbOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsUpdbOutput) ToOutput(ctx context.Context) pulumix.Output[IdentityEnrollmentsUpdb] {
+	return pulumix.Output[IdentityEnrollmentsUpdb]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o IdentityEnrollmentsUpdbOutput) ExpiresAt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsUpdb) *string { return v.ExpiresAt }).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsUpdbOutput) Id() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsUpdb) *string { return v.Id }).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsUpdbOutput) Jwt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsUpdb) *string { return v.Jwt }).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsUpdbOutput) Token() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v IdentityEnrollmentsUpdb) *string { return v.Token }).(pulumi.StringPtrOutput)
+}
+
+type IdentityEnrollmentsUpdbPtrOutput struct{ *pulumi.OutputState }
+
+func (IdentityEnrollmentsUpdbPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**IdentityEnrollmentsUpdb)(nil)).Elem()
+}
+
+func (o IdentityEnrollmentsUpdbPtrOutput) ToIdentityEnrollmentsUpdbPtrOutput() IdentityEnrollmentsUpdbPtrOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsUpdbPtrOutput) ToIdentityEnrollmentsUpdbPtrOutputWithContext(ctx context.Context) IdentityEnrollmentsUpdbPtrOutput {
+	return o
+}
+
+func (o IdentityEnrollmentsUpdbPtrOutput) ToOutput(ctx context.Context) pulumix.Output[*IdentityEnrollmentsUpdb] {
+	return pulumix.Output[*IdentityEnrollmentsUpdb]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o IdentityEnrollmentsUpdbPtrOutput) Elem() IdentityEnrollmentsUpdbOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsUpdb) IdentityEnrollmentsUpdb {
+		if v != nil {
+			return *v
+		}
+		var ret IdentityEnrollmentsUpdb
+		return ret
+	}).(IdentityEnrollmentsUpdbOutput)
+}
+
+func (o IdentityEnrollmentsUpdbPtrOutput) ExpiresAt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsUpdb) *string {
+		if v == nil {
+			return nil
+		}
+		return v.ExpiresAt
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsUpdbPtrOutput) Id() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsUpdb) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Id
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsUpdbPtrOutput) Jwt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsUpdb) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Jwt
+	}).(pulumi.StringPtrOutput)
+}
+
+func (o IdentityEnrollmentsUpdbPtrOutput) Token() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *IdentityEnrollmentsUpdb) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Token
+	}).(pulumi.StringPtrOutput)
+}
+
 type Link struct {
 	Comment *string `pulumi:"comment"`
 	Href    string  `pulumi:"href"`
@@ -121,8 +810,75 @@ func (o LinkMapOutput) MapIndex(k pulumi.StringInput) LinkOutput {
 	}).(LinkOutput)
 }
 
+type SdkInfo struct {
+	AppId      *string `pulumi:"appId"`
+	AppVersion *string `pulumi:"appVersion"`
+	Branch     *string `pulumi:"branch"`
+	Revision   *string `pulumi:"revision"`
+	Type       *string `pulumi:"type"`
+	Version    *string `pulumi:"version"`
+}
+
+type SdkInfoOutput struct{ *pulumi.OutputState }
+
+func (SdkInfoOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*SdkInfo)(nil)).Elem()
+}
+
+func (o SdkInfoOutput) ToSdkInfoOutput() SdkInfoOutput {
+	return o
+}
+
+func (o SdkInfoOutput) ToSdkInfoOutputWithContext(ctx context.Context) SdkInfoOutput {
+	return o
+}
+
+func (o SdkInfoOutput) ToOutput(ctx context.Context) pulumix.Output[SdkInfo] {
+	return pulumix.Output[SdkInfo]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o SdkInfoOutput) AppId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SdkInfo) *string { return v.AppId }).(pulumi.StringPtrOutput)
+}
+
+func (o SdkInfoOutput) AppVersion() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SdkInfo) *string { return v.AppVersion }).(pulumi.StringPtrOutput)
+}
+
+func (o SdkInfoOutput) Branch() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SdkInfo) *string { return v.Branch }).(pulumi.StringPtrOutput)
+}
+
+func (o SdkInfoOutput) Revision() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SdkInfo) *string { return v.Revision }).(pulumi.StringPtrOutput)
+}
+
+func (o SdkInfoOutput) Type() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SdkInfo) *string { return v.Type }).(pulumi.StringPtrOutput)
+}
+
+func (o SdkInfoOutput) Version() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SdkInfo) *string { return v.Version }).(pulumi.StringPtrOutput)
+}
+
 func init() {
+	pulumi.RegisterInputType(reflect.TypeOf((*IdentityCreateEnrollmentInput)(nil)).Elem(), IdentityCreateEnrollmentArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*IdentityCreateEnrollmentPtrInput)(nil)).Elem(), IdentityCreateEnrollmentArgs{})
 	pulumi.RegisterOutputType(EntityRefOutput{})
+	pulumi.RegisterOutputType(EntityRefPtrOutput{})
+	pulumi.RegisterOutputType(EnvInfoOutput{})
+	pulumi.RegisterOutputType(IdentityCreateEnrollmentOutput{})
+	pulumi.RegisterOutputType(IdentityCreateEnrollmentPtrOutput{})
+	pulumi.RegisterOutputType(IdentityEnrollmentsOutput{})
+	pulumi.RegisterOutputType(IdentityEnrollmentsOttOutput{})
+	pulumi.RegisterOutputType(IdentityEnrollmentsOttPtrOutput{})
+	pulumi.RegisterOutputType(IdentityEnrollmentsOttcaOutput{})
+	pulumi.RegisterOutputType(IdentityEnrollmentsOttcaPtrOutput{})
+	pulumi.RegisterOutputType(IdentityEnrollmentsUpdbOutput{})
+	pulumi.RegisterOutputType(IdentityEnrollmentsUpdbPtrOutput{})
 	pulumi.RegisterOutputType(LinkOutput{})
 	pulumi.RegisterOutputType(LinkMapOutput{})
+	pulumi.RegisterOutputType(SdkInfoOutput{})
 }

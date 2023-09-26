@@ -169,7 +169,7 @@ func buildTags(tags rest_model.Tags) Tags {
 	return out
 }
 
-func buildZitiTags(tags Tags) rest_model.Tags {
+func buildZitiTags(tags Tags) *rest_model.Tags {
 	//if len(tags.SubTags) == 0 {
 	//	return rest_model.Tags{}
 	//}
@@ -177,7 +177,7 @@ func buildZitiTags(tags Tags) rest_model.Tags {
 	for key, value := range tags {
 		out[key] = value
 	}
-	return rest_model.Tags{SubTags: out}
+	return &rest_model.Tags{SubTags: out}
 }
 
 func dumpStruct(ctx p.Context, data interface{}) {
@@ -330,5 +330,45 @@ func diffWalk(ctx p.Context, diff map[string]p.PropertyDiff, path string, old re
 		// handle other types
 		diff[path] = p.PropertyDiff{Kind: p.Update}
 		ctx.Log(diag.Warning, fmt.Sprintf("Unhandled types comparing %s: %s<>%s, %s != %s", path, old.Kind().String(), new.Kind().String(), old.String(), new.String()))
+	}
+}
+
+func ifte[T interface{}](cond bool, trueVal T, falseVal T) T {
+	if cond {
+		return trueVal
+	} else {
+		return falseVal
+	}
+}
+
+func iftfe[T interface{}](cond bool, trueFunc func() T, falseVal T) T {
+	if cond {
+		return trueFunc()
+	} else {
+		return falseVal
+	}
+}
+
+func ifted[T interface{}](cond bool, trueVal T, falseVal T) *T {
+	if cond {
+		return &trueVal
+	} else {
+		return &falseVal
+	}
+}
+func iftden[T interface{}](cond bool, trueVal T) *T {
+	if cond {
+		return &trueVal
+	} else {
+		return nil
+	}
+}
+
+func iftfden[T interface{}](cond bool, trueFunc func() T) *T {
+	if cond {
+		ret := trueFunc()
+		return &ret
+	} else {
+		return nil
 	}
 }

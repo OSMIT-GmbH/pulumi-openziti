@@ -12,7 +12,13 @@ from . import outputs
 
 __all__ = [
     'EntityRef',
+    'EnvInfo',
+    'IdentityEnrollments',
+    'IdentityEnrollmentsOtt',
+    'IdentityEnrollmentsOttca',
+    'IdentityEnrollmentsUpdb',
     'Link',
+    'SdkInfo',
 ]
 
 @pulumi.output_type
@@ -67,6 +73,348 @@ class EntityRef(dict):
 
 
 @pulumi.output_type
+class EnvInfo(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "osRelease":
+            suggest = "os_release"
+        elif key == "osVersion":
+            suggest = "os_version"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in EnvInfo. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        EnvInfo.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        EnvInfo.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 arch: Optional[str] = None,
+                 os: Optional[str] = None,
+                 os_release: Optional[str] = None,
+                 os_version: Optional[str] = None):
+        EnvInfo._configure(
+            lambda key, value: pulumi.set(__self__, key, value),
+            arch=arch,
+            os=os,
+            os_release=os_release,
+            os_version=os_version,
+        )
+    @staticmethod
+    def _configure(
+             _setter: Callable[[Any, Any], None],
+             arch: Optional[str] = None,
+             os: Optional[str] = None,
+             os_release: Optional[str] = None,
+             os_version: Optional[str] = None,
+             opts: Optional[pulumi.ResourceOptions]=None):
+        if arch is not None:
+            _setter("arch", arch)
+        if os is not None:
+            _setter("os", os)
+        if os_release is not None:
+            _setter("os_release", os_release)
+        if os_version is not None:
+            _setter("os_version", os_version)
+
+    @property
+    @pulumi.getter
+    def arch(self) -> Optional[str]:
+        return pulumi.get(self, "arch")
+
+    @property
+    @pulumi.getter
+    def os(self) -> Optional[str]:
+        return pulumi.get(self, "os")
+
+    @property
+    @pulumi.getter(name="osRelease")
+    def os_release(self) -> Optional[str]:
+        return pulumi.get(self, "os_release")
+
+    @property
+    @pulumi.getter(name="osVersion")
+    def os_version(self) -> Optional[str]:
+        return pulumi.get(self, "os_version")
+
+
+@pulumi.output_type
+class IdentityEnrollments(dict):
+    def __init__(__self__, *,
+                 ott: Optional['outputs.IdentityEnrollmentsOtt'] = None,
+                 ottca: Optional['outputs.IdentityEnrollmentsOttca'] = None,
+                 updb: Optional['outputs.IdentityEnrollmentsUpdb'] = None):
+        IdentityEnrollments._configure(
+            lambda key, value: pulumi.set(__self__, key, value),
+            ott=ott,
+            ottca=ottca,
+            updb=updb,
+        )
+    @staticmethod
+    def _configure(
+             _setter: Callable[[Any, Any], None],
+             ott: Optional['outputs.IdentityEnrollmentsOtt'] = None,
+             ottca: Optional['outputs.IdentityEnrollmentsOttca'] = None,
+             updb: Optional['outputs.IdentityEnrollmentsUpdb'] = None,
+             opts: Optional[pulumi.ResourceOptions]=None):
+        if ott is not None:
+            _setter("ott", ott)
+        if ottca is not None:
+            _setter("ottca", ottca)
+        if updb is not None:
+            _setter("updb", updb)
+
+    @property
+    @pulumi.getter
+    def ott(self) -> Optional['outputs.IdentityEnrollmentsOtt']:
+        return pulumi.get(self, "ott")
+
+    @property
+    @pulumi.getter
+    def ottca(self) -> Optional['outputs.IdentityEnrollmentsOttca']:
+        return pulumi.get(self, "ottca")
+
+    @property
+    @pulumi.getter
+    def updb(self) -> Optional['outputs.IdentityEnrollmentsUpdb']:
+        return pulumi.get(self, "updb")
+
+
+@pulumi.output_type
+class IdentityEnrollmentsOtt(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "expiresAt":
+            suggest = "expires_at"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in IdentityEnrollmentsOtt. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        IdentityEnrollmentsOtt.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        IdentityEnrollmentsOtt.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 expires_at: Optional[str] = None,
+                 id: Optional[str] = None,
+                 jwt: Optional[str] = None,
+                 token: Optional[str] = None):
+        IdentityEnrollmentsOtt._configure(
+            lambda key, value: pulumi.set(__self__, key, value),
+            expires_at=expires_at,
+            id=id,
+            jwt=jwt,
+            token=token,
+        )
+    @staticmethod
+    def _configure(
+             _setter: Callable[[Any, Any], None],
+             expires_at: Optional[str] = None,
+             id: Optional[str] = None,
+             jwt: Optional[str] = None,
+             token: Optional[str] = None,
+             opts: Optional[pulumi.ResourceOptions]=None):
+        if expires_at is not None:
+            _setter("expires_at", expires_at)
+        if id is not None:
+            _setter("id", id)
+        if jwt is not None:
+            _setter("jwt", jwt)
+        if token is not None:
+            _setter("token", token)
+
+    @property
+    @pulumi.getter(name="expiresAt")
+    def expires_at(self) -> Optional[str]:
+        return pulumi.get(self, "expires_at")
+
+    @property
+    @pulumi.getter
+    def id(self) -> Optional[str]:
+        return pulumi.get(self, "id")
+
+    @property
+    @pulumi.getter
+    def jwt(self) -> Optional[str]:
+        return pulumi.get(self, "jwt")
+
+    @property
+    @pulumi.getter
+    def token(self) -> Optional[str]:
+        return pulumi.get(self, "token")
+
+
+@pulumi.output_type
+class IdentityEnrollmentsOttca(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "caId":
+            suggest = "ca_id"
+        elif key == "expiresAt":
+            suggest = "expires_at"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in IdentityEnrollmentsOttca. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        IdentityEnrollmentsOttca.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        IdentityEnrollmentsOttca.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 ca: Optional['outputs.EntityRef'] = None,
+                 ca_id: Optional[str] = None,
+                 expires_at: Optional[str] = None,
+                 id: Optional[str] = None,
+                 jwt: Optional[str] = None,
+                 token: Optional[str] = None):
+        IdentityEnrollmentsOttca._configure(
+            lambda key, value: pulumi.set(__self__, key, value),
+            ca=ca,
+            ca_id=ca_id,
+            expires_at=expires_at,
+            id=id,
+            jwt=jwt,
+            token=token,
+        )
+    @staticmethod
+    def _configure(
+             _setter: Callable[[Any, Any], None],
+             ca: Optional['outputs.EntityRef'] = None,
+             ca_id: Optional[str] = None,
+             expires_at: Optional[str] = None,
+             id: Optional[str] = None,
+             jwt: Optional[str] = None,
+             token: Optional[str] = None,
+             opts: Optional[pulumi.ResourceOptions]=None):
+        if ca is not None:
+            _setter("ca", ca)
+        if ca_id is not None:
+            _setter("ca_id", ca_id)
+        if expires_at is not None:
+            _setter("expires_at", expires_at)
+        if id is not None:
+            _setter("id", id)
+        if jwt is not None:
+            _setter("jwt", jwt)
+        if token is not None:
+            _setter("token", token)
+
+    @property
+    @pulumi.getter
+    def ca(self) -> Optional['outputs.EntityRef']:
+        return pulumi.get(self, "ca")
+
+    @property
+    @pulumi.getter(name="caId")
+    def ca_id(self) -> Optional[str]:
+        return pulumi.get(self, "ca_id")
+
+    @property
+    @pulumi.getter(name="expiresAt")
+    def expires_at(self) -> Optional[str]:
+        return pulumi.get(self, "expires_at")
+
+    @property
+    @pulumi.getter
+    def id(self) -> Optional[str]:
+        return pulumi.get(self, "id")
+
+    @property
+    @pulumi.getter
+    def jwt(self) -> Optional[str]:
+        return pulumi.get(self, "jwt")
+
+    @property
+    @pulumi.getter
+    def token(self) -> Optional[str]:
+        return pulumi.get(self, "token")
+
+
+@pulumi.output_type
+class IdentityEnrollmentsUpdb(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "expiresAt":
+            suggest = "expires_at"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in IdentityEnrollmentsUpdb. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        IdentityEnrollmentsUpdb.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        IdentityEnrollmentsUpdb.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 expires_at: Optional[str] = None,
+                 id: Optional[str] = None,
+                 jwt: Optional[str] = None,
+                 token: Optional[str] = None):
+        IdentityEnrollmentsUpdb._configure(
+            lambda key, value: pulumi.set(__self__, key, value),
+            expires_at=expires_at,
+            id=id,
+            jwt=jwt,
+            token=token,
+        )
+    @staticmethod
+    def _configure(
+             _setter: Callable[[Any, Any], None],
+             expires_at: Optional[str] = None,
+             id: Optional[str] = None,
+             jwt: Optional[str] = None,
+             token: Optional[str] = None,
+             opts: Optional[pulumi.ResourceOptions]=None):
+        if expires_at is not None:
+            _setter("expires_at", expires_at)
+        if id is not None:
+            _setter("id", id)
+        if jwt is not None:
+            _setter("jwt", jwt)
+        if token is not None:
+            _setter("token", token)
+
+    @property
+    @pulumi.getter(name="expiresAt")
+    def expires_at(self) -> Optional[str]:
+        return pulumi.get(self, "expires_at")
+
+    @property
+    @pulumi.getter
+    def id(self) -> Optional[str]:
+        return pulumi.get(self, "id")
+
+    @property
+    @pulumi.getter
+    def jwt(self) -> Optional[str]:
+        return pulumi.get(self, "jwt")
+
+    @property
+    @pulumi.getter
+    def token(self) -> Optional[str]:
+        return pulumi.get(self, "token")
+
+
+@pulumi.output_type
 class Link(dict):
     def __init__(__self__, *,
                  href: str,
@@ -105,5 +453,96 @@ class Link(dict):
     @pulumi.getter
     def method(self) -> Optional[str]:
         return pulumi.get(self, "method")
+
+
+@pulumi.output_type
+class SdkInfo(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "appId":
+            suggest = "app_id"
+        elif key == "appVersion":
+            suggest = "app_version"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in SdkInfo. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        SdkInfo.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        SdkInfo.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 app_id: Optional[str] = None,
+                 app_version: Optional[str] = None,
+                 branch: Optional[str] = None,
+                 revision: Optional[str] = None,
+                 type: Optional[str] = None,
+                 version: Optional[str] = None):
+        SdkInfo._configure(
+            lambda key, value: pulumi.set(__self__, key, value),
+            app_id=app_id,
+            app_version=app_version,
+            branch=branch,
+            revision=revision,
+            type=type,
+            version=version,
+        )
+    @staticmethod
+    def _configure(
+             _setter: Callable[[Any, Any], None],
+             app_id: Optional[str] = None,
+             app_version: Optional[str] = None,
+             branch: Optional[str] = None,
+             revision: Optional[str] = None,
+             type: Optional[str] = None,
+             version: Optional[str] = None,
+             opts: Optional[pulumi.ResourceOptions]=None):
+        if app_id is not None:
+            _setter("app_id", app_id)
+        if app_version is not None:
+            _setter("app_version", app_version)
+        if branch is not None:
+            _setter("branch", branch)
+        if revision is not None:
+            _setter("revision", revision)
+        if type is not None:
+            _setter("type", type)
+        if version is not None:
+            _setter("version", version)
+
+    @property
+    @pulumi.getter(name="appId")
+    def app_id(self) -> Optional[str]:
+        return pulumi.get(self, "app_id")
+
+    @property
+    @pulumi.getter(name="appVersion")
+    def app_version(self) -> Optional[str]:
+        return pulumi.get(self, "app_version")
+
+    @property
+    @pulumi.getter
+    def branch(self) -> Optional[str]:
+        return pulumi.get(self, "branch")
+
+    @property
+    @pulumi.getter
+    def revision(self) -> Optional[str]:
+        return pulumi.get(self, "revision")
+
+    @property
+    @pulumi.getter
+    def type(self) -> Optional[str]:
+        return pulumi.get(self, "type")
+
+    @property
+    @pulumi.getter
+    def version(self) -> Optional[str]:
+        return pulumi.get(self, "version")
 
 

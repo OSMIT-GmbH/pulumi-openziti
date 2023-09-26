@@ -5,3 +5,11 @@ import * as pulumi from "@pulumi/pulumi";
 import * as inputs from "../types/input";
 import * as outputs from "../types/output";
 
+export interface IdentityCreateEnrollmentArgs {
+    ott?: pulumi.Input<boolean>;
+    ottca?: pulumi.Input<string>;
+    updb?: pulumi.Input<string>;
+}
+
+export namespace rest_model {
+}

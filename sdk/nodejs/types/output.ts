@@ -12,9 +12,59 @@ export interface EntityRef {
     name?: string;
 }
 
+export interface EnvInfo {
+    arch?: string;
+    os?: string;
+    osRelease?: string;
+    osVersion?: string;
+}
+
+export interface IdentityEnrollments {
+    ott?: outputs.IdentityEnrollmentsOtt;
+    ottca?: outputs.IdentityEnrollmentsOttca;
+    updb?: outputs.IdentityEnrollmentsUpdb;
+}
+
+export interface IdentityEnrollmentsOtt {
+    expiresAt?: string;
+    id?: string;
+    jwt?: string;
+    token?: string;
+}
+
+export interface IdentityEnrollmentsOttca {
+    ca?: outputs.EntityRef;
+    caId?: string;
+    expiresAt?: string;
+    id?: string;
+    jwt?: string;
+    token?: string;
+}
+
+export interface IdentityEnrollmentsUpdb {
+    expiresAt?: string;
+    id?: string;
+    jwt?: string;
+    token?: string;
+}
+
 export interface Link {
     comment?: string;
     href: string;
     method?: string;
 }
 
+export interface SdkInfo {
+    appId?: string;
+    appVersion?: string;
+    branch?: string;
+    revision?: string;
+    type?: string;
+    version?: string;
+}
+
+export namespace rest_model {
+    export interface IdentityAuthenticators {
+    }
+
+}

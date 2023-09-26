@@ -1,4 +1,4 @@
-// Copyright 2023, Pulumi Corporation.
+// Copyright 2023, OSMIT GmbH
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/openziti/edge-api/rest_management_api_client/config"
+	"github.com/openziti/edge-api/rest_management_api_client/identity"
 	"github.com/openziti/edge-api/rest_model"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
 	"reflect"
@@ -37,77 +38,330 @@ import (
 // - Delete: Custom logic when the resource is deleted.
 // - Annotate: Describe fields and set defaults for a resource.
 // - WireDependencies: Control how outputs and secrets flows through values.
-type ConfigObj struct{}
+type Identity struct{}
+
+type IdentityCreateEnrollment struct {
+
+	// ott
+	Ott bool `pulumi:"ott,optional"`
+
+	// ottca
+	Ottca string `pulumi:"ottca,optional"`
+
+	// updb
+	Updb string `pulumi:"updb,optional"`
+}
 
 // Each resource has in input struct, defining what arguments it accepts.
-type ConfigArgs struct {
+type IdentityArgs struct {
 	BaseArgsEntity
 
-	ConfigTypeName string `pulumi:"configTypeName"`
+	// app data
+	AppData Tags `pulumi:"appData,optional"`
 
-	// The data section of a config is based on the schema of its type
+	// auth policy Id
+	AuthPolicyID string `pulumi:"authPolicyId,optional"`
+
+	// default hosting cost
+	DefaultHostingCost rest_model.TerminatorCost `pulumi:"defaultHostingCost,optional"`
+
+	// default hosting precedence
+	DefaultHostingPrecedence rest_model.TerminatorPrecedence `pulumi:"defaultHostingPrecedence,optional"`
+
+	// enrollment
+	Enrollment IdentityCreateEnrollment `pulumi:"enrollment,optional"`
+
+	// external Id
+	ExternalID *string `pulumi:"externalId,optional"`
+
+	// is admin
 	// Required: true
-	Data interface{} `pulumi:"data"`
+	IsAdmin bool `pulumi:"isAdmin"`
 
-	// Data map[string]interface{} `pulumi:"data"`
-	//Data string `pulumi:"data"`
+	// role attributes
+	RoleAttributes rest_model.Attributes `pulumi:"roleAttributes,optional"`
+
+	// service hosting costs
+	ServiceHostingCosts rest_model.TerminatorCostMap `pulumi:"serviceHostingCosts,optional"`
+
+	// service hosting precedences
+	ServiceHostingPrecedences rest_model.TerminatorPrecedenceMap `pulumi:"serviceHostingPrecedences,optional"`
+
+	// type
+	// Required: true
+	Type rest_model.IdentityType `pulumi:"type"`
+}
+
+type IdentityEnrollmentsOtt struct {
+
+	// expires at
+	// Format: date-time
+	ExpiresAt string `pulumi:"expiresAt,optional"`
+
+	// id
+	ID string `pulumi:"id,optional"`
+
+	// jwt
+	JWT string `pulumi:"jwt,optional"`
+
+	// token
+	Token string `pulumi:"token,optional"`
+}
+
+type IdentityEnrollmentsOttca struct {
+
+	// ca
+	Ca EntityRef `pulumi:"ca,optional"`
+
+	// ca Id
+	CaID string `pulumi:"caId,optional"`
+
+	// expires at
+	// Format: date-time
+	ExpiresAt string `pulumi:"expiresAt,optional"`
+
+	// id
+	ID string `pulumi:"id,optional"`
+
+	// jwt
+	JWT string `pulumi:"jwt,optional"`
+
+	// token
+	Token string `pulumi:"token,optional"`
+}
+type IdentityEnrollmentsUpdb struct {
+
+	// expires at
+	// Format: date-time
+	ExpiresAt string `pulumi:"expiresAt,optional"`
+
+	// id
+	ID string `pulumi:"id,optional"`
+
+	// jwt
+	JWT string `pulumi:"jwt,optional"`
+
+	// token
+	Token string `pulumi:"token,optional"`
+}
+type IdentityEnrollments struct {
+
+	// ott
+	Ott *IdentityEnrollmentsOtt `pulumi:"ott,optional"`
+
+	// ottca
+	Ottca *IdentityEnrollmentsOttca `pulumi:"ottca,optional"`
+
+	// updb
+	Updb *IdentityEnrollmentsUpdb `pulumi:"updb,optional"`
+}
+
+type IdentityAuthenticatorsCert struct {
+
+	// fingerprint
+	Fingerprint string `pulumi:"fingerprint,optional"`
+
+	// id
+	ID string `pulumi:"id,optional"`
+}
+type IdentityAuthenticatorsUpdb struct {
+
+	// id
+	ID string `pulumi:"id,optional"`
+
+	// username
+	Username string `pulumi:"username,optional"`
+}
+type IdentityAuthenticators struct {
+
+	// cert
+	Cert IdentityAuthenticatorsCert `pulumi:"cert,optional"`
+
+	// updb
+	Updb IdentityAuthenticatorsUpdb `pulumi:"updb,optional"`
+}
+
+type EnvInfo struct {
+
+	// arch
+	Arch string `pulumi:"arch,optional"`
+
+	// os
+	Os string `pulumi:"os,optional"`
+
+	// os release
+	OsRelease string `pulumi:"osRelease,optional"`
+
+	// os version
+	OsVersion string `pulumi:"osVersion,optional"`
+}
+
+type SdkInfo struct {
+
+	// app Id
+	AppID string `pulumi:"appId,optional"`
+
+	// app version
+	AppVersion string `pulumi:"appVersion,optional"`
+
+	// branch
+	Branch string `pulumi:"branch,optional"`
+
+	// revision
+	Revision string `pulumi:"revision,optional"`
+
+	// type
+	Type string `pulumi:"type,optional"`
+
+	// version
+	Version string `pulumi:"version,optional"`
 }
 
 // Each resource has a state, describing the fields that exist on the created resource.
-type ConfigState struct {
+type IdentityState struct {
 	// It is generally a good idea to embed args in outputs, but it isn't strictly necessary.
-	ConfigArgs
+	IdentityArgs
 	// Here we define a required output called result.
 	// Data interface{} `pulumi:"data"`
 	BaseStateEntity
-	// config type
-	// Required: true
-	ConfigType EntityRef `pulumi:"configType"`
 
-	// config type Id
-	// Required: true
-	ConfigTypeID *string `pulumi:"configTypeId"`
+	// app data
+	AppData Tags `pulumi:"appData,optional"`
 
-	// The data section of a config is based on the schema of its type
+	// auth policy
 	// Required: true
-	Data interface{} `pulumi:"data"`
+	AuthPolicy EntityRef `pulumi:"authPolicy"`
+
+	// auth policy Id
+	// Required: true
+	AuthPolicyID string `pulumi:"authPolicyId"`
+
+	// authenticators
+	// Required: true
+	Authenticators rest_model.IdentityAuthenticators `pulumi:"authenticators"`
+
+	// default hosting cost
+	// Required: true
+	DefaultHostingCost rest_model.TerminatorCost `pulumi:"defaultHostingCost"`
+
+	// default hosting precedence
+	DefaultHostingPrecedence rest_model.TerminatorPrecedence `pulumi:"defaultHostingPrecedence,optional"`
+
+	// disabled
+	// Required: true
+	Disabled bool `pulumi:"disabled"`
+
+	// disabled at
+	// Format: date-time
+	DisabledAt *string `pulumi:"disabledAt,optional"`
+
+	// disabled until
+	// Format: date-time
+	DisabledUntil *string `pulumi:"disabledUntil,optional"`
+
+	// enrollment
+	// Required: true
+	Enrollment IdentityEnrollments `pulumi:"enrollment"`
+
+	// env info
+	// Required: true
+	EnvInfo EnvInfo `pulumi:"envInfo"`
+
+	// external Id
+	ExternalID *string `pulumi:"externalId,optional"`
+
+	// has Api session
+	// Required: true
+	HasAPISession bool `pulumi:"hasApiSession"`
+
+	// has edge router connection
+	// Required: true
+	HasEdgeRouterConnection bool `pulumi:"hasEdgeRouterConnection"`
+
+	// is admin
+	// Required: true
+	IsAdmin bool `pulumi:"isAdmin"`
+
+	// is default admin
+	// Required: true
+	IsDefaultAdmin bool `pulumi:"isDefaultAdmin"`
+
+	// is mfa enabled
+	// Required: true
+	IsMfaEnabled bool `pulumi:"isMfaEnabled"`
+
+	// name
+	// Required: true
+	Name string `pulumi:"name"`
+
+	// role attributes
+	// Required: true
+	RoleAttributes []string `pulumi:"roleAttributes"`
+
+	// sdk info
+	// Required: true
+	SdkInfo SdkInfo `pulumi:"sdkInfo"`
+
+	// service hosting costs
+	// Required: true
+	ServiceHostingCosts rest_model.TerminatorCostMap `pulumi:"serviceHostingCosts"`
+
+	// service hosting precedences
+	// Required: true
+	ServiceHostingPrecedences rest_model.TerminatorPrecedenceMap `pulumi:"serviceHostingPrecedences"`
+
+	// type
+	// Required: true
+	Type EntityRef `pulumi:"type"`
+
+	// type Id
+	// Required: true
+	TypeID string `pulumi:"typeId"`
 }
 
 // All resources must implement Create at a minumum.
-func (*ConfigObj) Create(ctx p.Context, name string, input ConfigArgs, preview bool) (string, ConfigState, error) {
-	retErr := func(err error) (string, ConfigState, error) {
-		return "", ConfigState{ConfigArgs: input}, err
+func (*Identity) Create(ctx p.Context, name string, input IdentityArgs, preview bool) (string, IdentityState, error) {
+	retErr := func(err error) (string, IdentityState, error) {
+		return "", IdentityState{IdentityArgs: input}, err
 	}
 	ce, err := initClient(ctx)
 	if err != nil {
 		return retErr(err)
 	}
-	configTypeID, err := getConfigTypeId(ce, input.ConfigTypeName)
-	if err != nil {
-		return retErr(err)
-	}
 
-	tags := buildZitiTags(input.Tags)
-	confCreate := &rest_model.ConfigCreate{
-		ConfigTypeID: &configTypeID,
-		Data:         &input.Data,
-		Name:         &input.Name,
-		Tags:         &tags,
+	confCreate := &rest_model.IdentityCreate{
+		AppData:                  buildZitiTags(input.AppData),
+		AuthPolicyID:             &input.AuthPolicyID,
+		DefaultHostingCost:       &input.DefaultHostingCost,
+		DefaultHostingPrecedence: input.DefaultHostingPrecedence,
+		Enrollment: &rest_model.IdentityCreateEnrollment{
+			Ott:   input.Enrollment.Ott,
+			Ottca: input.Enrollment.Ottca,
+			Updb:  input.Enrollment.Updb,
+		},
+		ExternalID:                input.ExternalID,
+		IsAdmin:                   &input.IsAdmin,
+		Name:                      &input.Name,
+		RoleAttributes:            &input.RoleAttributes,
+		ServiceHostingCosts:       input.ServiceHostingCosts,
+		ServiceHostingPrecedences: input.ServiceHostingPrecedences,
+		Tags:                      buildZitiTags(input.Tags),
+		Type:                      &input.Type,
 	}
-	confParams := &config.CreateConfigParams{
-		Config:  confCreate,
-		Context: context.Background(),
+	createParams := &identity.CreateIdentityParams{
+		Identity: confCreate,
+		Context:  context.Background(),
 	}
 	// dumpStruct(ctx, confCreate)
 
 	// bail out now when we are in preview mode
 	if preview {
-		return name, ConfigState{ConfigArgs: input}, nil
+		return name, IdentityState{IdentityArgs: input}, nil
 	}
 
-	resp, err := ce.client.Config.CreateConfig(confParams, nil)
+	resp, err := ce.client.Identity.CreateIdentity(createParams, nil)
 	if err != nil {
-		var badReq *config.CreateConfigBadRequest
+		var badReq *identity.CreateIdentityBadRequest
 		if errors.As(err, &badReq) {
 			return retErr(formatApiErr(ctx, badReq, badReq.Payload))
 		}
@@ -115,25 +369,64 @@ func (*ConfigObj) Create(ctx p.Context, name string, input ConfigArgs, preview b
 		return retErr(err)
 	}
 	createdId := resp.GetPayload().Data.ID
-	state, err := readConfig(ce, createdId, input)
+	state, err := readIdentity(ce, createdId, input)
 	if err != nil {
 		return createdId, state, err
 	}
 	return createdId, state, nil
 }
 
-func (*ConfigObj) Diff(ctx p.Context, id string, olds ConfigState, news ConfigArgs) (p.DiffResponse, error) {
+func (*Identity) Diff(ctx p.Context, id string, olds IdentityState, news IdentityArgs) (p.DiffResponse, error) {
 	diff := map[string]p.PropertyDiff{}
 	if news.Name != olds.Name {
 		diff["name"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 	diffWalk(ctx, diff, "tags", reflect.ValueOf(olds.Tags), reflect.ValueOf(news.Tags))
-	if news.ConfigTypeName != olds.ConfigTypeName {
-		diff["configTypeName"] = p.PropertyDiff{Kind: p.UpdateReplace}
+
+	diffWalk(ctx, diff, "appData", reflect.ValueOf(olds.AppData), reflect.ValueOf(news.AppData))
+	if news.AuthPolicyID != olds.AuthPolicyID && news.AuthPolicyID != "" && olds.AuthPolicyID != "default" {
+		diff["authPolicyId"] = p.PropertyDiff{Kind: p.Update}
 	}
-	diffWalk(ctx, diff, "data", reflect.ValueOf(olds.Data), reflect.ValueOf(news.Data))
+
+	if news.DefaultHostingCost != olds.DefaultHostingCost {
+		diff["defaultHostingCost"] = p.PropertyDiff{Kind: p.Update}
+	}
+
+	if news.DefaultHostingPrecedence != olds.DefaultHostingPrecedence && news.DefaultHostingPrecedence != "" && olds.DefaultHostingPrecedence != "default" {
+		diff["defaultHostingPrecedence"] = p.PropertyDiff{Kind: p.Update}
+	}
+
+	// enrollment is only changeable on creation
+	//if news.Enrollment.Ott != olds.IdentityArgs.Enrollment.Ott {
+	//	diff["enrollment.ott"] = p.PropertyDiff{Kind: p.Update}
+	//}
+	//if news.Enrollment.Ottca != olds.IdentityArgs.Enrollment.Ottca {
+	//	diff["enrollment.ottCa"] = p.PropertyDiff{Kind: p.Update}
+	//}
+	//if news.Enrollment.Updb != olds.IdentityArgs.Enrollment.Updb {
+	//	diff["enrollment.updb"] = p.PropertyDiff{Kind: p.Update}
+	//}
+
+	if news.ExternalID != olds.ExternalID {
+		diff["externalId"] = p.PropertyDiff{Kind: p.Update}
+	}
+
+	if news.IsAdmin != olds.IsAdmin {
+		diff["isAdmin"] = p.PropertyDiff{Kind: p.Update}
+	}
+
+	diffWalk(ctx, diff, "roleAttributes", reflect.ValueOf(olds.RoleAttributes), reflect.ValueOf(news.RoleAttributes))
+
+	diffWalk(ctx, diff, "serviceHostingCosts", reflect.ValueOf(olds.ServiceHostingCosts), reflect.ValueOf(news.ServiceHostingCosts))
+
+	diffWalk(ctx, diff, "serviceHostingPrecedences", reflect.ValueOf(olds.ServiceHostingPrecedences), reflect.ValueOf(news.ServiceHostingPrecedences))
+
+	if string(news.Type) != olds.Type.Name {
+		diff["type"] = p.PropertyDiff{Kind: p.Update}
+	}
+
 	if len(diff) > 0 {
-		ctx.Log(diag.Info, fmt.Sprintf("Found %d diffs: %v", len(diff), diff))
+		ctx.Log(diag.Info, fmt.Sprintf("DIFF on Identity %s/%s: Found %d diffs: %v", news.Name, id, len(diff), diff))
 	}
 	return p.DiffResponse{
 		DeleteBeforeReplace: true,
@@ -142,38 +435,100 @@ func (*ConfigObj) Diff(ctx p.Context, id string, olds ConfigState, news ConfigAr
 	}, nil
 }
 
-func readConfig(ce CacheEntry, id string, input ConfigArgs) (ConfigState, error) {
-	detailConfParams := &config.DetailConfigParams{
+func readIdentity(ce CacheEntry, id string, input IdentityArgs) (IdentityState, error) {
+	params := &identity.DetailIdentityParams{
 		ID:      id,
 		Context: context.Background(),
 	}
-	detailResp, err := ce.client.Config.DetailConfig(detailConfParams, nil)
+	detailResp, err := ce.client.Identity.DetailIdentity(params, nil)
 	if err != nil {
-		return ConfigState{ConfigArgs: input}, err
+		return IdentityState{IdentityArgs: input}, err
 	}
 	respPayload := detailResp.GetPayload()
+	data := respPayload.Data
 	// fmt.Printf("get  output: %+v\n", respPayload)
-	return ConfigState{ConfigArgs: input,
-		BaseStateEntity: buildBaseState(respPayload.Data.BaseEntity),
-		ConfigType:      buildEntityRef(respPayload.Data.ConfigType),
-		ConfigTypeID:    respPayload.Data.ConfigTypeID,
-		Data:            respPayload.Data.Data,
+	return IdentityState{
+		IdentityArgs:             input,
+		BaseStateEntity:          buildBaseState(data.BaseEntity),
+		AppData:                  buildTags(*data.AppData),
+		AuthPolicy:               buildEntityRef(data.AuthPolicy),
+		AuthPolicyID:             *data.AuthPolicyID,
+		Authenticators:           *data.Authenticators,
+		DefaultHostingCost:       *data.DefaultHostingCost,
+		DefaultHostingPrecedence: data.DefaultHostingPrecedence,
+		Disabled:                 *data.Disabled,
+		DisabledAt:               iftfden(data.DisabledAt != nil, func() string { return data.DisabledAt.String() }),
+		DisabledUntil:            iftfden(data.DisabledUntil != nil, func() string { return data.DisabledUntil.String() }),
+		Enrollment: IdentityEnrollments{
+			Ott: iftfden(data.Enrollment.Ott != nil, func() IdentityEnrollmentsOtt {
+				return IdentityEnrollmentsOtt{
+					ExpiresAt: data.Enrollment.Ott.ExpiresAt.String(),
+					ID:        data.Enrollment.Ott.ID,
+					JWT:       data.Enrollment.Ott.JWT,
+					Token:     data.Enrollment.Ott.Token,
+				}
+			}),
+			Ottca: iftfden(data.Enrollment.Ottca != nil, func() IdentityEnrollmentsOttca {
+				return IdentityEnrollmentsOttca{
+					Ca:        buildEntityRef(data.Enrollment.Ottca.Ca),
+					CaID:      data.Enrollment.Ottca.CaID,
+					ExpiresAt: data.Enrollment.Ottca.ExpiresAt.String(),
+					ID:        data.Enrollment.Ottca.ID,
+					JWT:       data.Enrollment.Ottca.JWT,
+					Token:     data.Enrollment.Ottca.Token,
+				}
+			}),
+			Updb: iftfden(data.Enrollment.Updb != nil, func() IdentityEnrollmentsUpdb {
+				return IdentityEnrollmentsUpdb{
+					ExpiresAt: data.Enrollment.Updb.ExpiresAt.String(),
+					ID:        data.Enrollment.Updb.ID,
+					JWT:       data.Enrollment.Updb.JWT,
+					Token:     data.Enrollment.Updb.Token,
+				}
+			}),
+		},
+		EnvInfo: EnvInfo{
+			Arch:      data.EnvInfo.Arch,
+			Os:        data.EnvInfo.Os,
+			OsRelease: data.EnvInfo.OsRelease,
+			OsVersion: data.EnvInfo.OsVersion,
+		},
+		ExternalID:              data.ExternalID,
+		HasAPISession:           *data.HasAPISession,
+		HasEdgeRouterConnection: *data.HasEdgeRouterConnection,
+		IsAdmin:                 *data.IsAdmin,
+		IsDefaultAdmin:          *data.IsDefaultAdmin,
+		IsMfaEnabled:            *data.IsMfaEnabled,
+		Name:                    *data.Name,
+		RoleAttributes:          iftfe(data.RoleAttributes != nil, func() []string { return *data.RoleAttributes }, []string{}),
+		SdkInfo: SdkInfo{
+			AppID:      data.SdkInfo.AppID,
+			AppVersion: data.SdkInfo.AppVersion,
+			Branch:     data.SdkInfo.Branch,
+			Revision:   data.SdkInfo.Revision,
+			Type:       data.SdkInfo.Type,
+			Version:    data.SdkInfo.Version,
+		},
+		ServiceHostingCosts:       data.ServiceHostingCosts,
+		ServiceHostingPrecedences: data.ServiceHostingPrecedences,
+		Type:                      buildEntityRef(data.Type),
+		TypeID:                    *data.TypeID,
 	}, nil
 }
 
-func (*ConfigObj) Read(ctx p.Context, id string, inputs ConfigArgs, state ConfigState) (string, ConfigArgs, ConfigState, error) {
+func (*Identity) Read(ctx p.Context, id string, inputs IdentityArgs, state IdentityState) (string, IdentityArgs, IdentityState, error) {
 	ce, err := initClient(ctx)
 	if err != nil {
 		return id, inputs, state, err
 	}
-	readState, err := readConfig(ce, id, inputs)
+	readState, err := readIdentity(ce, id, inputs)
 	if err != nil {
 		return id, inputs, readState, err
 	}
 	return id, inputs, readState, nil
 }
 
-func (*ConfigObj) Update(ctx p.Context, id string, olds ConfigState, news ConfigArgs, preview bool) (ConfigState, error) {
+func (*Identity) Update(ctx p.Context, id string, olds IdentityState, news IdentityArgs, preview bool) (IdentityState, error) {
 	ce, err := initClient(ctx)
 	if err != nil {
 		return olds, err
@@ -181,16 +536,25 @@ func (*ConfigObj) Update(ctx p.Context, id string, olds ConfigState, news Config
 	if err != nil {
 		return olds, err
 	}
-	tags := buildZitiTags(news.Tags)
-	confCreate := &rest_model.ConfigUpdate{
-		Data: &news.Data,
-		Name: &news.Name,
-		Tags: &tags,
+	updateData := &rest_model.IdentityUpdate{
+		AppData:                  buildZitiTags(news.AppData),
+		AuthPolicyID:             &news.AuthPolicyID,
+		DefaultHostingCost:       &news.DefaultHostingCost,
+		DefaultHostingPrecedence: news.DefaultHostingPrecedence,
+
+		ExternalID:                news.ExternalID,
+		IsAdmin:                   &news.IsAdmin,
+		Name:                      &news.Name,
+		RoleAttributes:            &news.RoleAttributes,
+		ServiceHostingCosts:       news.ServiceHostingCosts,
+		ServiceHostingPrecedences: news.ServiceHostingPrecedences,
+		Tags:                      buildZitiTags(news.Tags),
+		Type:                      &news.Type,
 	}
-	confParams := &config.UpdateConfigParams{
-		Config:  confCreate,
-		ID:      id,
-		Context: context.Background(),
+	updateParams := &identity.UpdateIdentityParams{
+		Identity: updateData,
+		ID:       id,
+		Context:  context.Background(),
 	}
 	// dumpStruct(ctx, confCreate)
 
@@ -199,23 +563,23 @@ func (*ConfigObj) Update(ctx p.Context, id string, olds ConfigState, news Config
 		return olds, nil
 	}
 
-	_, err = ce.client.Config.UpdateConfig(confParams, nil)
+	_, err = ce.client.Identity.UpdateIdentity(updateParams, nil)
 	if err != nil {
-		var badReq *config.UpdateConfigBadRequest
+		var badReq *identity.UpdateIdentityBadRequest
 		if errors.As(err, &badReq) {
 			return olds, formatApiErr(ctx, badReq, badReq.Payload)
 		}
 		return olds, err
 	}
 
-	readState, err := readConfig(ce, id, news)
+	readState, err := readIdentity(ce, id, news)
 	if err != nil {
 		return readState, err
 	}
 	return readState, nil
 }
 
-func (*ConfigObj) Delete(ctx p.Context, id string, _ ConfigState) error {
+func (*Identity) Delete(ctx p.Context, id string, _ IdentityState) error {
 	ce, err := initClient(ctx)
 	if err != nil {
 		return err

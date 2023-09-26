@@ -87,12 +87,11 @@ func (*ConfigObj) Create(ctx p.Context, name string, input ConfigArgs, preview b
 		return retErr(err)
 	}
 
-	tags := buildZitiTags(input.Tags)
 	confCreate := &rest_model.ConfigCreate{
 		ConfigTypeID: &configTypeID,
 		Data:         &input.Data,
 		Name:         &input.Name,
-		Tags:         &tags,
+		Tags:         buildZitiTags(input.Tags),
 	}
 	confParams := &config.CreateConfigParams{
 		Config:  confCreate,
@@ -133,7 +132,7 @@ func (*ConfigObj) Diff(ctx p.Context, id string, olds ConfigState, news ConfigAr
 	}
 	diffWalk(ctx, diff, "data", reflect.ValueOf(olds.Data), reflect.ValueOf(news.Data))
 	if len(diff) > 0 {
-		ctx.Log(diag.Info, fmt.Sprintf("Found %d diffs: %v", len(diff), diff))
+		ctx.Log(diag.Info, fmt.Sprintf("DIFF on Identity %s/%s: Found %d diffs: %v", news.Name, id, len(diff), diff))
 	}
 	return p.DiffResponse{
 		DeleteBeforeReplace: true,
@@ -143,11 +142,11 @@ func (*ConfigObj) Diff(ctx p.Context, id string, olds ConfigState, news ConfigAr
 }
 
 func readConfig(ce CacheEntry, id string, input ConfigArgs) (ConfigState, error) {
-	detailConfParams := &config.DetailConfigParams{
+	params := &config.DetailConfigParams{
 		ID:      id,
 		Context: context.Background(),
 	}
-	detailResp, err := ce.client.Config.DetailConfig(detailConfParams, nil)
+	detailResp, err := ce.client.Config.DetailConfig(params, nil)
 	if err != nil {
 		return ConfigState{ConfigArgs: input}, err
 	}
@@ -178,17 +177,14 @@ func (*ConfigObj) Update(ctx p.Context, id string, olds ConfigState, news Config
 	if err != nil {
 		return olds, err
 	}
-	if err != nil {
-		return olds, err
-	}
-	tags := buildZitiTags(news.Tags)
-	confCreate := &rest_model.ConfigUpdate{
+
+	updateData := &rest_model.ConfigUpdate{
 		Data: &news.Data,
 		Name: &news.Name,
-		Tags: &tags,
+		Tags: buildZitiTags(news.Tags),
 	}
-	confParams := &config.UpdateConfigParams{
-		Config:  confCreate,
+	updateParams := &config.UpdateConfigParams{
+		Config:  updateData,
 		ID:      id,
 		Context: context.Background(),
 	}
@@ -199,7 +195,7 @@ func (*ConfigObj) Update(ctx p.Context, id string, olds ConfigState, news Config
 		return olds, nil
 	}
 
-	_, err = ce.client.Config.UpdateConfig(confParams, nil)
+	_, err = ce.client.Config.UpdateConfig(updateParams, nil)
 	if err != nil {
 		var badReq *config.UpdateConfigBadRequest
 		if errors.As(err, &badReq) {
