@@ -7,6 +7,17 @@ import * as utilities from "../utilities";
 declare var exports: any;
 const __config = new pulumi.Config("openziti");
 
+/**
+ * Assimilate an existing object during create
+ */
+export declare const assimilate: boolean | undefined;
+Object.defineProperty(exports, "assimilate", {
+    get() {
+        return __config.getObject<boolean>("assimilate");
+    },
+    enumerable: true,
+});
+
 export declare const insecure: boolean | undefined;
 Object.defineProperty(exports, "insecure", {
     get() {

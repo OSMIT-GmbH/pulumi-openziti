@@ -65,6 +65,12 @@ namespace Pulumi.Openziti
 
     public sealed class ProviderArgs : global::Pulumi.ResourceArgs
     {
+        /// <summary>
+        /// Assimilate an existing object during create
+        /// </summary>
+        [Input("assimilate", json: true)]
+        public Input<bool>? Assimilate { get; set; }
+
         [Input("insecure", json: true)]
         public Input<bool>? Insecure { get; set; }
 

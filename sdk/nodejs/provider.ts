@@ -53,6 +53,7 @@ export class Provider extends pulumi.ProviderResource {
             if ((!args || args.user === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'user'");
             }
+            resourceInputs["assimilate"] = pulumi.output(args ? args.assimilate : undefined).apply(JSON.stringify);
             resourceInputs["insecure"] = pulumi.output(args ? args.insecure : undefined).apply(JSON.stringify);
             resourceInputs["password"] = args?.password ? pulumi.secret(args.password) : undefined;
             resourceInputs["uri"] = args ? args.uri : undefined;
@@ -70,6 +71,10 @@ export class Provider extends pulumi.ProviderResource {
  * The set of arguments for constructing a Provider resource.
  */
 export interface ProviderArgs {
+    /**
+     * Assimilate an existing object during create
+     */
+    assimilate?: pulumi.Input<boolean>;
     insecure?: pulumi.Input<boolean>;
     /**
      * The password. It is very secret.

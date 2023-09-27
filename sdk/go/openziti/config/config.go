@@ -11,6 +11,10 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
+// Assimilate an existing object during create
+func GetAssimilate(ctx *pulumi.Context) bool {
+	return config.GetBool(ctx, "openziti:assimilate")
+}
 func GetInsecure(ctx *pulumi.Context) bool {
 	return config.GetBool(ctx, "openziti:insecure")
 }

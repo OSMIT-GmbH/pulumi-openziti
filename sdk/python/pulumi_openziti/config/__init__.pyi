@@ -9,6 +9,11 @@ import pulumi.runtime
 from typing import Any, Callable, Mapping, Optional, Sequence, Union, overload
 from .. import _utilities
 
+assimilate: Optional[bool]
+"""
+Assimilate an existing object during create
+"""
+
 insecure: Optional[bool]
 
 password: Optional[str]

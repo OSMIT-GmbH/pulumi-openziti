@@ -58,7 +58,9 @@ func NewProvider(ctx *pulumi.Context,
 }
 
 type providerArgs struct {
-	Insecure *bool `pulumi:"insecure"`
+	// Assimilate an existing object during create
+	Assimilate *bool `pulumi:"assimilate"`
+	Insecure   *bool `pulumi:"insecure"`
 	// The password. It is very secret.
 	Password string `pulumi:"password"`
 	// The URI to the API
@@ -70,7 +72,9 @@ type providerArgs struct {
 
 // The set of arguments for constructing a Provider resource.
 type ProviderArgs struct {
-	Insecure pulumi.BoolPtrInput
+	// Assimilate an existing object during create
+	Assimilate pulumi.BoolPtrInput
+	Insecure   pulumi.BoolPtrInput
 	// The password. It is very secret.
 	Password pulumi.StringInput
 	// The URI to the API

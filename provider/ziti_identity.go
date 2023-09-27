@@ -18,7 +18,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/openziti/edge-api/rest_management_api_client/config"
 	"github.com/openziti/edge-api/rest_management_api_client/identity"
 	"github.com/openziti/edge-api/rest_model"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
@@ -320,11 +319,11 @@ type IdentityState struct {
 }
 
 // All resources must implement Create at a minumum.
-func (*Identity) Create(ctx p.Context, name string, input IdentityArgs, preview bool) (string, IdentityState, error) {
+func (thiz *Identity) Create(ctx p.Context, name string, input IdentityArgs, preview bool) (string, IdentityState, error) {
 	retErr := func(err error) (string, IdentityState, error) {
 		return "", IdentityState{IdentityArgs: input}, err
 	}
-	ce, err := initClient(ctx)
+	ce, c, err := initClient(ctx)
 	if err != nil {
 		return retErr(err)
 	}
@@ -363,7 +362,35 @@ func (*Identity) Create(ctx p.Context, name string, input IdentityArgs, preview 
 	if err != nil {
 		var badReq *identity.CreateIdentityBadRequest
 		if errors.As(err, &badReq) {
-			return retErr(formatApiErr(ctx, badReq, badReq.Payload))
+			err2, dupe := formatApiErrDupeCheck(ctx, badReq, badReq.Payload)
+			fmt.Printf("DupeCheck: %b %b %s", dupe, c.assimilate, c.Assimilate)
+
+			if dupe && c.assimilate {
+				// find identity by name...
+				findParams := &identity.ListIdentitiesParams{
+					Filter:  buildNameFilter(input.Name),
+					Context: context.Background(),
+				}
+				findRet, err3 := ce.client.Identity.ListIdentities(findParams, nil)
+				if err3 != nil {
+					ctx.Logf(diag.Error, "Assimilate failed: List failed with %s", err3.Error())
+					return retErr(err2)
+				}
+				if len(findRet.Payload.Data) != 1 {
+					ctx.Logf(diag.Error, "Assimilate failed: List returned unexpected result count: %v", findRet.Payload.Data)
+					return retErr(err2)
+				}
+				existingId := *findRet.Payload.Data[0].ID
+				ctx.Logf(diag.Info, "Assimilating existing ID: %s", existingId)
+				state, err := readIdentity(ce, existingId, input)
+				if err != nil {
+					ctx.Logf(diag.Error, "Assimilate failed: Fetch failed with: %s", err2)
+					return retErr(err2)
+				}
+				updatedState, err := thiz.Update(ctx, existingId, state, input, preview)
+				return existingId, updatedState, err
+			}
+			return retErr(err2)
 		}
 
 		return retErr(err)
@@ -517,7 +544,7 @@ func readIdentity(ce CacheEntry, id string, input IdentityArgs) (IdentityState, 
 }
 
 func (*Identity) Read(ctx p.Context, id string, inputs IdentityArgs, state IdentityState) (string, IdentityArgs, IdentityState, error) {
-	ce, err := initClient(ctx)
+	ce, _, err := initClient(ctx)
 	if err != nil {
 		return id, inputs, state, err
 	}
@@ -529,7 +556,7 @@ func (*Identity) Read(ctx p.Context, id string, inputs IdentityArgs, state Ident
 }
 
 func (*Identity) Update(ctx p.Context, id string, olds IdentityState, news IdentityArgs, preview bool) (IdentityState, error) {
-	ce, err := initClient(ctx)
+	ce, _, err := initClient(ctx)
 	if err != nil {
 		return olds, err
 	}
@@ -580,16 +607,17 @@ func (*Identity) Update(ctx p.Context, id string, olds IdentityState, news Ident
 }
 
 func (*Identity) Delete(ctx p.Context, id string, _ IdentityState) error {
-	ce, err := initClient(ctx)
+	ce, _, err := initClient(ctx)
 	if err != nil {
 		return err
 	}
-	deleteParams := &config.DeleteConfigParams{
-		ID: id,
+	deleteParams := &identity.DeleteIdentityParams{
+		ID:      id,
+		Context: context.Background(),
 	}
 	deleteParams.SetTimeout(30 * time.Second)
 	// ctx.Logf(diag.Info, "Calling delete on %s; output: %#v\n", id, *deleteParams)
-	_, err = ce.client.Config.DeleteConfig(deleteParams, nil)
+	_, err = ce.client.Identity.DeleteIdentity(deleteParams, nil)
 	if err != nil {
 		return handleDeleteErr(ctx, err, id, "Config")
 	}

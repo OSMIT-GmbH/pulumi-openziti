@@ -66,7 +66,7 @@ type ConfigState struct {
 
 	// config type Id
 	// Required: true
-	ConfigTypeID *string `pulumi:"configTypeId"`
+	ConfigTypeID string `pulumi:"configTypeId"`
 
 	// The data section of a config is based on the schema of its type
 	// Required: true
@@ -74,11 +74,11 @@ type ConfigState struct {
 }
 
 // All resources must implement Create at a minumum.
-func (*ConfigObj) Create(ctx p.Context, name string, input ConfigArgs, preview bool) (string, ConfigState, error) {
+func (thiz *ConfigObj) Create(ctx p.Context, name string, input ConfigArgs, preview bool) (string, ConfigState, error) {
 	retErr := func(err error) (string, ConfigState, error) {
 		return "", ConfigState{ConfigArgs: input}, err
 	}
-	ce, err := initClient(ctx)
+	ce, c, err := initClient(ctx)
 	if err != nil {
 		return retErr(err)
 	}
@@ -101,14 +101,59 @@ func (*ConfigObj) Create(ctx p.Context, name string, input ConfigArgs, preview b
 
 	// bail out now when we are in preview mode
 	if preview {
-		return name, ConfigState{ConfigArgs: input}, nil
+		return name, ConfigState{
+			ConfigArgs: input,
+			BaseStateEntity: BaseStateEntity{
+				Links:     Links{},
+				CreatedAt: "",
+				ID:        "",
+				Tags:      input.Tags,
+				UpdatedAt: "",
+			},
+			ConfigType: EntityRef{
+				Links:  Links{},
+				Entity: "",
+				ID:     "",
+				Name:   input.ConfigTypeName,
+			},
+			ConfigTypeID: "",
+			Data:         input.Data,
+		}, nil
 	}
 
 	resp, err := ce.client.Config.CreateConfig(confParams, nil)
 	if err != nil {
 		var badReq *config.CreateConfigBadRequest
 		if errors.As(err, &badReq) {
-			return retErr(formatApiErr(ctx, badReq, badReq.Payload))
+			err2, dupe := formatApiErrDupeCheck(ctx, badReq, badReq.Payload)
+			fmt.Printf("DupeCheck: %b %b %s", dupe, c.assimilate, c.Assimilate)
+
+			if dupe && c.assimilate {
+				// find identity by name...
+				findParams := &config.ListConfigsParams{
+					Filter:  buildNameFilter(input.Name),
+					Context: context.Background(),
+				}
+				findRet, err3 := ce.client.Config.ListConfigs(findParams, nil)
+				if err3 != nil {
+					ctx.Logf(diag.Error, "Assimilate failed: List failed with %s", err3.Error())
+					return retErr(err2)
+				}
+				if len(findRet.Payload.Data) != 1 {
+					ctx.Logf(diag.Error, "Assimilate failed: List returned unexpected result count: %v", findRet.Payload.Data)
+					return retErr(err2)
+				}
+				existingId := *findRet.Payload.Data[0].ID
+				ctx.Logf(diag.Info, "Assimilating existing ID: %s", existingId)
+				state, err := readConfig(ce, existingId, input)
+				if err != nil {
+					ctx.Logf(diag.Error, "Assimilate failed: Fetch failed with: %s", err2)
+					return retErr(err2)
+				}
+				updatedState, err := thiz.Update(ctx, existingId, state, input, preview)
+				return existingId, updatedState, err
+			}
+			return retErr(err2)
 		}
 
 		return retErr(err)
@@ -124,7 +169,7 @@ func (*ConfigObj) Create(ctx p.Context, name string, input ConfigArgs, preview b
 func (*ConfigObj) Diff(ctx p.Context, id string, olds ConfigState, news ConfigArgs) (p.DiffResponse, error) {
 	diff := map[string]p.PropertyDiff{}
 	if news.Name != olds.Name {
-		diff["name"] = p.PropertyDiff{Kind: p.UpdateReplace}
+		diff["name"] = p.PropertyDiff{Kind: p.Update}
 	}
 	diffWalk(ctx, diff, "tags", reflect.ValueOf(olds.Tags), reflect.ValueOf(news.Tags))
 	if news.ConfigTypeName != olds.ConfigTypeName {
@@ -155,13 +200,13 @@ func readConfig(ce CacheEntry, id string, input ConfigArgs) (ConfigState, error)
 	return ConfigState{ConfigArgs: input,
 		BaseStateEntity: buildBaseState(respPayload.Data.BaseEntity),
 		ConfigType:      buildEntityRef(respPayload.Data.ConfigType),
-		ConfigTypeID:    respPayload.Data.ConfigTypeID,
+		ConfigTypeID:    *respPayload.Data.ConfigTypeID,
 		Data:            respPayload.Data.Data,
 	}, nil
 }
 
 func (*ConfigObj) Read(ctx p.Context, id string, inputs ConfigArgs, state ConfigState) (string, ConfigArgs, ConfigState, error) {
-	ce, err := initClient(ctx)
+	ce, _, err := initClient(ctx)
 	if err != nil {
 		return id, inputs, state, err
 	}
@@ -173,7 +218,7 @@ func (*ConfigObj) Read(ctx p.Context, id string, inputs ConfigArgs, state Config
 }
 
 func (*ConfigObj) Update(ctx p.Context, id string, olds ConfigState, news ConfigArgs, preview bool) (ConfigState, error) {
-	ce, err := initClient(ctx)
+	ce, _, err := initClient(ctx)
 	if err != nil {
 		return olds, err
 	}
@@ -212,12 +257,13 @@ func (*ConfigObj) Update(ctx p.Context, id string, olds ConfigState, news Config
 }
 
 func (*ConfigObj) Delete(ctx p.Context, id string, _ ConfigState) error {
-	ce, err := initClient(ctx)
+	ce, _, err := initClient(ctx)
 	if err != nil {
 		return err
 	}
 	deleteParams := &config.DeleteConfigParams{
-		ID: id,
+		ID:      id,
+		Context: context.Background(),
 	}
 	deleteParams.SetTimeout(30 * time.Second)
 	// ctx.Logf(diag.Info, "Calling delete on %s; output: %#v\n", id, *deleteParams)

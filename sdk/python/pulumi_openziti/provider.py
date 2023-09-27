@@ -17,6 +17,7 @@ class ProviderArgs:
                  password: pulumi.Input[str],
                  uri: pulumi.Input[str],
                  user: pulumi.Input[str],
+                 assimilate: Optional[pulumi.Input[bool]] = None,
                  insecure: Optional[pulumi.Input[bool]] = None,
                  version: Optional[pulumi.Input[str]] = None):
         """
@@ -24,12 +25,14 @@ class ProviderArgs:
         :param pulumi.Input[str] password: The password. It is very secret.
         :param pulumi.Input[str] uri: The URI to the API
         :param pulumi.Input[str] user: The username. It's important but not secret.
+        :param pulumi.Input[bool] assimilate: Assimilate an existing object during create
         """
         ProviderArgs._configure(
             lambda key, value: pulumi.set(__self__, key, value),
             password=password,
             uri=uri,
             user=user,
+            assimilate=assimilate,
             insecure=insecure,
             version=version,
         )
@@ -39,12 +42,15 @@ class ProviderArgs:
              password: pulumi.Input[str],
              uri: pulumi.Input[str],
              user: pulumi.Input[str],
+             assimilate: Optional[pulumi.Input[bool]] = None,
              insecure: Optional[pulumi.Input[bool]] = None,
              version: Optional[pulumi.Input[str]] = None,
              opts: Optional[pulumi.ResourceOptions]=None):
         _setter("password", password)
         _setter("uri", uri)
         _setter("user", user)
+        if assimilate is not None:
+            _setter("assimilate", assimilate)
         if insecure is not None:
             _setter("insecure", insecure)
         if version is not None:
@@ -88,6 +94,18 @@ class ProviderArgs:
 
     @property
     @pulumi.getter
+    def assimilate(self) -> Optional[pulumi.Input[bool]]:
+        """
+        Assimilate an existing object during create
+        """
+        return pulumi.get(self, "assimilate")
+
+    @assimilate.setter
+    def assimilate(self, value: Optional[pulumi.Input[bool]]):
+        pulumi.set(self, "assimilate", value)
+
+    @property
+    @pulumi.getter
     def insecure(self) -> Optional[pulumi.Input[bool]]:
         return pulumi.get(self, "insecure")
 
@@ -110,6 +128,7 @@ class Provider(pulumi.ProviderResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 assimilate: Optional[pulumi.Input[bool]] = None,
                  insecure: Optional[pulumi.Input[bool]] = None,
                  password: Optional[pulumi.Input[str]] = None,
                  uri: Optional[pulumi.Input[str]] = None,
@@ -120,6 +139,7 @@ class Provider(pulumi.ProviderResource):
         Create a Openziti resource with the given unique name, props, and options.
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[bool] assimilate: Assimilate an existing object during create
         :param pulumi.Input[str] password: The password. It is very secret.
         :param pulumi.Input[str] uri: The URI to the API
         :param pulumi.Input[str] user: The username. It's important but not secret.
@@ -151,6 +171,7 @@ class Provider(pulumi.ProviderResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 assimilate: Optional[pulumi.Input[bool]] = None,
                  insecure: Optional[pulumi.Input[bool]] = None,
                  password: Optional[pulumi.Input[str]] = None,
                  uri: Optional[pulumi.Input[str]] = None,
@@ -165,6 +186,7 @@ class Provider(pulumi.ProviderResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = ProviderArgs.__new__(ProviderArgs)
 
+            __props__.__dict__["assimilate"] = pulumi.Output.from_input(assimilate).apply(pulumi.runtime.to_json) if assimilate is not None else None
             __props__.__dict__["insecure"] = pulumi.Output.from_input(insecure).apply(pulumi.runtime.to_json) if insecure is not None else None
             if password is None and not opts.urn:
                 raise TypeError("Missing required property 'password'")

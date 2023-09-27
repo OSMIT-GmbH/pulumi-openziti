@@ -3,7 +3,7 @@ module github.com/pulumi/pulumi-openziti/provider
 go 1.21
 
 require (
-	github.com/pulumi/pulumi-go-provider v0.11.1
+	github.com/pulumi/pulumi-go-provider v0.12.0
 	github.com/pulumi/pulumi/sdk/v3 v3.79.0
 )
 

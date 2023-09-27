@@ -28,16 +28,24 @@ import (
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
+	"net/url"
 	"reflect"
+	"regexp"
+	"strings"
 )
 
 type OpenZitiProviderConfig struct {
 	User     string `pulumi:"user"`
 	Password string `pulumi:"password" provider:"secret"`
 	Uri      string `pulumi:"uri"`
-	Insecure bool   `pulumi:"insecure,optional"`
-	Version  string `pulumi:"version,optional"` // version seems to be provided automatically
-	cacheKey string
+	// I'm not sure what's wrong with boolean - see following error:
+	// error: pulumi:providers:openziti resource 'openziti-provider': property assimilate value {false} has a problem: Field 'assimilate' on 'provider.OpenZitiProviderConfig' must be a 'bool'; got 'string' instead
+	Insecure   string `pulumi:"insecure,optional"`
+	insecure   bool
+	Assimilate string `pulumi:"assimilate,optional"`
+	assimilate bool
+	Version    string `pulumi:"version,optional"` // version seems to be provided automatically
+	cacheKey   string
 }
 
 var _ = (infer.Annotated)((*OpenZitiProviderConfig)(nil))
@@ -46,6 +54,7 @@ func (c *OpenZitiProviderConfig) Annotate(a infer.Annotator) {
 	a.Describe(&c.User, "The username. It's important but not secret.")
 	a.Describe(&c.Password, "The password. It is very secret.")
 	a.Describe(&c.Uri, `The URI to the API`)
+	a.Describe(&c.Assimilate, `Assimilate an existing object during create`)
 	// a.SetDefault(&c.Insecure, false)
 }
 
@@ -60,10 +69,24 @@ func (c *OpenZitiProviderConfig) Configure(ctx p.Context) error {
 	//	return err
 	//}
 	c.cacheKey = fmt.Sprintf("%s:%s:%s", c.Uri, c.User, c.Password)
+	c.assimilate = strings.EqualFold(c.Assimilate, "true")
+	c.insecure = strings.EqualFold(c.Insecure, "true")
 
 	//ctx.Log(diag.Info, msg)
 	return nil
 }
+
+// TODO https://github.com/pulumi/pulumi-go-provider/issues/121
+//var _ = (infer.CustomDiff[*OpenZitiProviderConfig, *OpenZitiProviderConfig])((*OpenZitiProviderConfig)(nil))
+//
+//func (*OpenZitiProviderConfig) Diff(ctx p.Context, id string, olds *OpenZitiProviderConfig, news *OpenZitiProviderConfig) (p.DiffResponse, error) {
+//	fmt.Printf("Config Diff called: %v => %v", olds, news)
+//	return p.DiffResponse{
+//		DeleteBeforeReplace: true,
+//		HasChanges:          false,
+//		DetailedDiff:        nil,
+//	}, nil
+//}
 
 type Link struct {
 
@@ -230,19 +253,19 @@ func getConfigTypeId(cache CacheEntry, name string) (string, error) {
 	return typeId, nil
 }
 
-func initClient(ctx p.Context) (CacheEntry, error) {
+func initClient(ctx p.Context) (CacheEntry, OpenZitiProviderConfig, error) {
 	c := infer.GetConfig[OpenZitiProviderConfig](ctx)
 	ce := cache[c.cacheKey]
 	if ce.client == nil {
 		// creds := edge_apis.New([]*x509.Certificate{testIdCerts.cert}, testIdCerts.key)
 		caPool, err := ziti.GetControllerWellKnownCaPool(c.Uri)
 		if err != nil {
-			return ce, err
+			return ce, c, err
 		}
 
 		client, err := rest_util.NewEdgeManagementClientWithUpdb(c.User, c.Password, c.Uri, caPool)
 		if err != nil {
-			return ce, err
+			return ce, c, err
 		}
 
 		//creds := edgeapis.NewUpdbCredentials(c.User, c.Password)
@@ -257,7 +280,7 @@ func initClient(ctx p.Context) (CacheEntry, error) {
 		// fmt.Printf("identity name: %#v; token: s\n", client)
 		ce.client = client
 	}
-	return ce, nil
+	return ce, c, nil
 }
 
 func formatApiErr(ctx p.Context, err error, apiError *rest_model.APIErrorEnvelope) error {
@@ -268,6 +291,14 @@ func formatApiErr(ctx p.Context, err error, apiError *rest_model.APIErrorEnvelop
 		return errors.Join(err, err2)
 	}
 	return fmt.Errorf("ERROR: type: ErrorString: %s, Payload=%s\n", err.Error(), string(errOut))
+}
+func formatApiErrDupeCheck(ctx p.Context, err error, apiError *rest_model.APIErrorEnvelope) (error, bool) {
+	errRet := formatApiErr(ctx, err, apiError)
+	match, _ := regexp.MatchString(" Payload=\\{\"cause\":\\{\"field\":\"name\",\"reason\":\"duplicate value '[^\"']+' in unique index on identities store\",\"value\":\"[^\"']+\"},", errRet.Error())
+	if !match {
+		match, _ = regexp.MatchString(" Payload={\"cause\":{\"field\":\"name\",\"reason\":\"name is must be unique\",\"value\":\"[^\"']+\"},\"code\":\"COULD_NOT_VALIDATE\",", errRet.Error())
+	}
+	return errRet, match
 }
 func handleDeleteErr(ctx p.Context, err error, id string, typeName string) error {
 	var apiError *runtime.APIError
@@ -331,6 +362,11 @@ func diffWalk(ctx p.Context, diff map[string]p.PropertyDiff, path string, old re
 		diff[path] = p.PropertyDiff{Kind: p.Update}
 		ctx.Log(diag.Warning, fmt.Sprintf("Unhandled types comparing %s: %s<>%s, %s != %s", path, old.Kind().String(), new.Kind().String(), old.String(), new.String()))
 	}
+}
+
+func buildNameFilter(name string) *string {
+	filter := "name=\"" + url.QueryEscape(name) + "\""
+	return &filter
 }
 
 func ifte[T interface{}](cond bool, trueVal T, falseVal T) T {
