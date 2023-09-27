@@ -37,6 +37,57 @@ func (o IdentityAuthenticatorsOutput) ToOutput(ctx context.Context) pulumix.Outp
 	}
 }
 
+type PostureQuery struct {
+}
+
+type PostureQueryOutput struct{ *pulumi.OutputState }
+
+func (PostureQueryOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*PostureQuery)(nil)).Elem()
+}
+
+func (o PostureQueryOutput) ToPostureQueryOutput() PostureQueryOutput {
+	return o
+}
+
+func (o PostureQueryOutput) ToPostureQueryOutputWithContext(ctx context.Context) PostureQueryOutput {
+	return o
+}
+
+func (o PostureQueryOutput) ToOutput(ctx context.Context) pulumix.Output[PostureQuery] {
+	return pulumix.Output[PostureQuery]{
+		OutputState: o.OutputState,
+	}
+}
+
+type PostureQueryArrayOutput struct{ *pulumi.OutputState }
+
+func (PostureQueryArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]PostureQuery)(nil)).Elem()
+}
+
+func (o PostureQueryArrayOutput) ToPostureQueryArrayOutput() PostureQueryArrayOutput {
+	return o
+}
+
+func (o PostureQueryArrayOutput) ToPostureQueryArrayOutputWithContext(ctx context.Context) PostureQueryArrayOutput {
+	return o
+}
+
+func (o PostureQueryArrayOutput) ToOutput(ctx context.Context) pulumix.Output[[]PostureQuery] {
+	return pulumix.Output[[]PostureQuery]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o PostureQueryArrayOutput) Index(i pulumi.IntInput) PostureQueryOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) PostureQuery {
+		return vs[0].([]PostureQuery)[vs[1].(int)]
+	}).(PostureQueryOutput)
+}
+
 func init() {
 	pulumi.RegisterOutputType(IdentityAuthenticatorsOutput{})
+	pulumi.RegisterOutputType(PostureQueryOutput{})
+	pulumi.RegisterOutputType(PostureQueryArrayOutput{})
 }

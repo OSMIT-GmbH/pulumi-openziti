@@ -16,6 +16,9 @@ import (
 type Provider struct {
 	pulumi.ProviderResourceState
 
+	// Assimilate an existing object during create
+	Assimilate pulumi.StringPtrOutput `pulumi:"assimilate"`
+	Insecure   pulumi.StringPtrOutput `pulumi:"insecure"`
 	// The password. It is very secret.
 	Password pulumi.StringOutput `pulumi:"password"`
 	// The URI to the API
@@ -59,8 +62,8 @@ func NewProvider(ctx *pulumi.Context,
 
 type providerArgs struct {
 	// Assimilate an existing object during create
-	Assimilate *bool `pulumi:"assimilate"`
-	Insecure   *bool `pulumi:"insecure"`
+	Assimilate *string `pulumi:"assimilate"`
+	Insecure   *string `pulumi:"insecure"`
 	// The password. It is very secret.
 	Password string `pulumi:"password"`
 	// The URI to the API
@@ -73,8 +76,8 @@ type providerArgs struct {
 // The set of arguments for constructing a Provider resource.
 type ProviderArgs struct {
 	// Assimilate an existing object during create
-	Assimilate pulumi.BoolPtrInput
-	Insecure   pulumi.BoolPtrInput
+	Assimilate pulumi.StringPtrInput
+	Insecure   pulumi.StringPtrInput
 	// The password. It is very secret.
 	Password pulumi.StringInput
 	// The URI to the API
@@ -131,6 +134,15 @@ func (o ProviderOutput) ToOutput(ctx context.Context) pulumix.Output[*Provider] 
 	return pulumix.Output[*Provider]{
 		OutputState: o.OutputState,
 	}
+}
+
+// Assimilate an existing object during create
+func (o ProviderOutput) Assimilate() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.Assimilate }).(pulumi.StringPtrOutput)
+}
+
+func (o ProviderOutput) Insecure() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.Insecure }).(pulumi.StringPtrOutput)
 }
 
 // The password. It is very secret.

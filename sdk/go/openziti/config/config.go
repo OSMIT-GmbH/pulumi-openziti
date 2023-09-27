@@ -12,11 +12,11 @@ import (
 var _ = internal.GetEnvOrDefault
 
 // Assimilate an existing object during create
-func GetAssimilate(ctx *pulumi.Context) bool {
-	return config.GetBool(ctx, "openziti:assimilate")
+func GetAssimilate(ctx *pulumi.Context) string {
+	return config.Get(ctx, "openziti:assimilate")
 }
-func GetInsecure(ctx *pulumi.Context) bool {
-	return config.GetBool(ctx, "openziti:insecure")
+func GetInsecure(ctx *pulumi.Context) string {
+	return config.Get(ctx, "openziti:insecure")
 }
 
 // The password. It is very secret.

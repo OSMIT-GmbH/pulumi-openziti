@@ -54,6 +54,18 @@ export interface Link {
     method?: string;
 }
 
+export interface NamedRole {
+    name?: string;
+    role?: string;
+}
+
+export interface PostureQueriesType {
+    isPassing: boolean;
+    policyId: string;
+    policyType?: string;
+    postureQueries: outputs.rest_model.PostureQuery[];
+}
+
 export interface SdkInfo {
     appId?: string;
     appVersion?: string;
@@ -65,6 +77,9 @@ export interface SdkInfo {
 
 export namespace rest_model {
     export interface IdentityAuthenticators {
+    }
+
+    export interface PostureQuery {
     }
 
 }

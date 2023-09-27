@@ -13,6 +13,15 @@ namespace Pulumi.Openziti
     public partial class Provider : global::Pulumi.ProviderResource
     {
         /// <summary>
+        /// Assimilate an existing object during create
+        /// </summary>
+        [Output("assimilate")]
+        public Output<string?> Assimilate { get; private set; } = null!;
+
+        [Output("insecure")]
+        public Output<string?> Insecure { get; private set; } = null!;
+
+        /// <summary>
         /// The password. It is very secret.
         /// </summary>
         [Output("password")]
@@ -68,11 +77,11 @@ namespace Pulumi.Openziti
         /// <summary>
         /// Assimilate an existing object during create
         /// </summary>
-        [Input("assimilate", json: true)]
-        public Input<bool>? Assimilate { get; set; }
+        [Input("assimilate")]
+        public Input<string>? Assimilate { get; set; }
 
-        [Input("insecure", json: true)]
-        public Input<bool>? Insecure { get; set; }
+        [Input("insecure")]
+        public Input<string>? Insecure { get; set; }
 
         [Input("password", required: true)]
         private Input<string>? _password;

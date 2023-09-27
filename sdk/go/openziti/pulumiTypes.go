@@ -10,6 +10,7 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 	"internal"
+	"rest_model"
 )
 
 var _ = internal.GetEnvOrDefault
@@ -810,6 +811,134 @@ func (o LinkMapOutput) MapIndex(k pulumi.StringInput) LinkOutput {
 	}).(LinkOutput)
 }
 
+type NamedRole struct {
+	Name *string `pulumi:"name"`
+	Role *string `pulumi:"role"`
+}
+
+type NamedRoleOutput struct{ *pulumi.OutputState }
+
+func (NamedRoleOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*NamedRole)(nil)).Elem()
+}
+
+func (o NamedRoleOutput) ToNamedRoleOutput() NamedRoleOutput {
+	return o
+}
+
+func (o NamedRoleOutput) ToNamedRoleOutputWithContext(ctx context.Context) NamedRoleOutput {
+	return o
+}
+
+func (o NamedRoleOutput) ToOutput(ctx context.Context) pulumix.Output[NamedRole] {
+	return pulumix.Output[NamedRole]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o NamedRoleOutput) Name() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v NamedRole) *string { return v.Name }).(pulumi.StringPtrOutput)
+}
+
+func (o NamedRoleOutput) Role() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v NamedRole) *string { return v.Role }).(pulumi.StringPtrOutput)
+}
+
+type NamedRoleArrayOutput struct{ *pulumi.OutputState }
+
+func (NamedRoleArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]NamedRole)(nil)).Elem()
+}
+
+func (o NamedRoleArrayOutput) ToNamedRoleArrayOutput() NamedRoleArrayOutput {
+	return o
+}
+
+func (o NamedRoleArrayOutput) ToNamedRoleArrayOutputWithContext(ctx context.Context) NamedRoleArrayOutput {
+	return o
+}
+
+func (o NamedRoleArrayOutput) ToOutput(ctx context.Context) pulumix.Output[[]NamedRole] {
+	return pulumix.Output[[]NamedRole]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o NamedRoleArrayOutput) Index(i pulumi.IntInput) NamedRoleOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) NamedRole {
+		return vs[0].([]NamedRole)[vs[1].(int)]
+	}).(NamedRoleOutput)
+}
+
+type PostureQueriesType struct {
+	IsPassing      bool                      `pulumi:"isPassing"`
+	PolicyId       string                    `pulumi:"policyId"`
+	PolicyType     *string                   `pulumi:"policyType"`
+	PostureQueries []rest_model.PostureQuery `pulumi:"postureQueries"`
+}
+
+type PostureQueriesTypeOutput struct{ *pulumi.OutputState }
+
+func (PostureQueriesTypeOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*PostureQueriesType)(nil)).Elem()
+}
+
+func (o PostureQueriesTypeOutput) ToPostureQueriesTypeOutput() PostureQueriesTypeOutput {
+	return o
+}
+
+func (o PostureQueriesTypeOutput) ToPostureQueriesTypeOutputWithContext(ctx context.Context) PostureQueriesTypeOutput {
+	return o
+}
+
+func (o PostureQueriesTypeOutput) ToOutput(ctx context.Context) pulumix.Output[PostureQueriesType] {
+	return pulumix.Output[PostureQueriesType]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o PostureQueriesTypeOutput) IsPassing() pulumi.BoolOutput {
+	return o.ApplyT(func(v PostureQueriesType) bool { return v.IsPassing }).(pulumi.BoolOutput)
+}
+
+func (o PostureQueriesTypeOutput) PolicyId() pulumi.StringOutput {
+	return o.ApplyT(func(v PostureQueriesType) string { return v.PolicyId }).(pulumi.StringOutput)
+}
+
+func (o PostureQueriesTypeOutput) PolicyType() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v PostureQueriesType) *string { return v.PolicyType }).(pulumi.StringPtrOutput)
+}
+
+func (o PostureQueriesTypeOutput) PostureQueries() rest_model.PostureQueryArrayOutput {
+	return o.ApplyT(func(v PostureQueriesType) []rest_model.PostureQuery { return v.PostureQueries }).(rest_model.PostureQueryArrayOutput)
+}
+
+type PostureQueriesTypeArrayOutput struct{ *pulumi.OutputState }
+
+func (PostureQueriesTypeArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]PostureQueriesType)(nil)).Elem()
+}
+
+func (o PostureQueriesTypeArrayOutput) ToPostureQueriesTypeArrayOutput() PostureQueriesTypeArrayOutput {
+	return o
+}
+
+func (o PostureQueriesTypeArrayOutput) ToPostureQueriesTypeArrayOutputWithContext(ctx context.Context) PostureQueriesTypeArrayOutput {
+	return o
+}
+
+func (o PostureQueriesTypeArrayOutput) ToOutput(ctx context.Context) pulumix.Output[[]PostureQueriesType] {
+	return pulumix.Output[[]PostureQueriesType]{
+		OutputState: o.OutputState,
+	}
+}
+
+func (o PostureQueriesTypeArrayOutput) Index(i pulumi.IntInput) PostureQueriesTypeOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) PostureQueriesType {
+		return vs[0].([]PostureQueriesType)[vs[1].(int)]
+	}).(PostureQueriesTypeOutput)
+}
+
 type SdkInfo struct {
 	AppId      *string `pulumi:"appId"`
 	AppVersion *string `pulumi:"appVersion"`
@@ -880,5 +1009,9 @@ func init() {
 	pulumi.RegisterOutputType(IdentityEnrollmentsUpdbPtrOutput{})
 	pulumi.RegisterOutputType(LinkOutput{})
 	pulumi.RegisterOutputType(LinkMapOutput{})
+	pulumi.RegisterOutputType(NamedRoleOutput{})
+	pulumi.RegisterOutputType(NamedRoleArrayOutput{})
+	pulumi.RegisterOutputType(PostureQueriesTypeOutput{})
+	pulumi.RegisterOutputType(PostureQueriesTypeArrayOutput{})
 	pulumi.RegisterOutputType(SdkInfoOutput{})
 }

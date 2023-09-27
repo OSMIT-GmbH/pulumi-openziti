@@ -15,6 +15,7 @@
 package provider
 
 import (
+	_ "github.com/motemen/go-loghttp/global"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
@@ -37,6 +38,8 @@ func Provider() p.Provider {
 			// clash with ProviderConfig in dotnet module... :-/
 			infer.Resource[*ConfigObj, ConfigArgs, ConfigState](),
 			infer.Resource[*Identity, IdentityArgs, IdentityState](),
+			infer.Resource[*Service, ServiceArgs, ServiceState](),
+			infer.Resource[*ServicePolicy, ServicePolicyArgs, ServicePolicyState](),
 		},
 		ModuleMap: map[tokens.ModuleName]tokens.ModuleName{
 			"provider": "index",

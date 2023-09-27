@@ -11,10 +11,22 @@ from .. import _utilities
 
 __all__ = [
     'IdentityAuthenticators',
+    'PostureQuery',
 ]
 
 @pulumi.output_type
 class IdentityAuthenticators(dict):
+    def __init__(__self__):
+        pass
+    @staticmethod
+    def _configure(
+             _setter: Callable[[Any, Any], None],
+             opts: Optional[pulumi.ResourceOptions]=None):
+        pass
+
+
+@pulumi.output_type
+class PostureQuery(dict):
     def __init__(__self__):
         pass
     @staticmethod

@@ -32,18 +32,18 @@ namespace Pulumi.Openziti
 
         private static readonly global::Pulumi.Config __config = new global::Pulumi.Config("openziti");
 
-        private static readonly __Value<bool?> _assimilate = new __Value<bool?>(() => __config.GetBoolean("assimilate"));
+        private static readonly __Value<string?> _assimilate = new __Value<string?>(() => __config.Get("assimilate"));
         /// <summary>
         /// Assimilate an existing object during create
         /// </summary>
-        public static bool? Assimilate
+        public static string? Assimilate
         {
             get => _assimilate.Get();
             set => _assimilate.Set(value);
         }
 
-        private static readonly __Value<bool?> _insecure = new __Value<bool?>(() => __config.GetBoolean("insecure"));
-        public static bool? Insecure
+        private static readonly __Value<string?> _insecure = new __Value<string?>(() => __config.Get("insecure"));
+        public static string? Insecure
         {
             get => _insecure.Get();
             set => _insecure.Set(value);

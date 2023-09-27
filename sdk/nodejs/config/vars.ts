@@ -10,18 +10,18 @@ const __config = new pulumi.Config("openziti");
 /**
  * Assimilate an existing object during create
  */
-export declare const assimilate: boolean | undefined;
+export declare const assimilate: string | undefined;
 Object.defineProperty(exports, "assimilate", {
     get() {
-        return __config.getObject<boolean>("assimilate");
+        return __config.get("assimilate");
     },
     enumerable: true,
 });
 
-export declare const insecure: boolean | undefined;
+export declare const insecure: string | undefined;
 Object.defineProperty(exports, "insecure", {
     get() {
-        return __config.getObject<boolean>("insecure");
+        return __config.get("insecure");
     },
     enumerable: true,
 });

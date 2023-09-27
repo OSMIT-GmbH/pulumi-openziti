@@ -20,6 +20,16 @@ export type Provider = import("./provider").Provider;
 export const Provider: typeof import("./provider").Provider = null as any;
 utilities.lazyLoad(exports, ["Provider"], () => require("./provider"));
 
+export { ServiceArgs } from "./service";
+export type Service = import("./service").Service;
+export const Service: typeof import("./service").Service = null as any;
+utilities.lazyLoad(exports, ["Service"], () => require("./service"));
+
+export { ServicePolicyArgs } from "./servicePolicy";
+export type ServicePolicy = import("./servicePolicy").ServicePolicy;
+export const ServicePolicy: typeof import("./servicePolicy").ServicePolicy = null as any;
+utilities.lazyLoad(exports, ["ServicePolicy"], () => require("./servicePolicy"));
+
 
 // Export sub-modules:
 import * as config from "./config";
@@ -38,6 +48,10 @@ const _module = {
                 return new ConfigObj(name, <any>undefined, { urn })
             case "openziti:index:Identity":
                 return new Identity(name, <any>undefined, { urn })
+            case "openziti:index:Service":
+                return new Service(name, <any>undefined, { urn })
+            case "openziti:index:ServicePolicy":
+                return new ServicePolicy(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

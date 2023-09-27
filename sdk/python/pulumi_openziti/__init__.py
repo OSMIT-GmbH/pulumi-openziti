@@ -8,6 +8,8 @@ import typing
 from .config_obj import *
 from .identity import *
 from .provider import *
+from .service import *
+from .service_policy import *
 from ._inputs import *
 from . import outputs
 
@@ -30,7 +32,9 @@ _utilities.register(
   "fqn": "pulumi_openziti",
   "classes": {
    "openziti:index:ConfigObj": "ConfigObj",
-   "openziti:index:Identity": "Identity"
+   "openziti:index:Identity": "Identity",
+   "openziti:index:Service": "Service",
+   "openziti:index:ServicePolicy": "ServicePolicy"
   }
  }
 ]

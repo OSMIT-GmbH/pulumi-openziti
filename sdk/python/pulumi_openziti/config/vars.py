@@ -16,15 +16,15 @@ __config__ = pulumi.Config('openziti')
 
 class _ExportableConfig(types.ModuleType):
     @property
-    def assimilate(self) -> Optional[bool]:
+    def assimilate(self) -> Optional[str]:
         """
         Assimilate an existing object during create
         """
-        return __config__.get_bool('assimilate')
+        return __config__.get('assimilate')
 
     @property
-    def insecure(self) -> Optional[bool]:
-        return __config__.get_bool('insecure')
+    def insecure(self) -> Optional[str]:
+        return __config__.get('insecure')
 
     @property
     def password(self) -> Optional[str]:

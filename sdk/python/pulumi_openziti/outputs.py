@@ -9,6 +9,7 @@ import pulumi.runtime
 from typing import Any, Callable, Mapping, Optional, Sequence, Union, overload
 from . import _utilities
 from . import outputs
+from . import rest_model as _rest_model
 
 __all__ = [
     'EntityRef',
@@ -18,6 +19,8 @@ __all__ = [
     'IdentityEnrollmentsOttca',
     'IdentityEnrollmentsUpdb',
     'Link',
+    'NamedRole',
+    'PostureQueriesType',
     'SdkInfo',
 ]
 
@@ -453,6 +456,110 @@ class Link(dict):
     @pulumi.getter
     def method(self) -> Optional[str]:
         return pulumi.get(self, "method")
+
+
+@pulumi.output_type
+class NamedRole(dict):
+    def __init__(__self__, *,
+                 name: Optional[str] = None,
+                 role: Optional[str] = None):
+        NamedRole._configure(
+            lambda key, value: pulumi.set(__self__, key, value),
+            name=name,
+            role=role,
+        )
+    @staticmethod
+    def _configure(
+             _setter: Callable[[Any, Any], None],
+             name: Optional[str] = None,
+             role: Optional[str] = None,
+             opts: Optional[pulumi.ResourceOptions]=None):
+        if name is not None:
+            _setter("name", name)
+        if role is not None:
+            _setter("role", role)
+
+    @property
+    @pulumi.getter
+    def name(self) -> Optional[str]:
+        return pulumi.get(self, "name")
+
+    @property
+    @pulumi.getter
+    def role(self) -> Optional[str]:
+        return pulumi.get(self, "role")
+
+
+@pulumi.output_type
+class PostureQueriesType(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "isPassing":
+            suggest = "is_passing"
+        elif key == "policyId":
+            suggest = "policy_id"
+        elif key == "postureQueries":
+            suggest = "posture_queries"
+        elif key == "policyType":
+            suggest = "policy_type"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in PostureQueriesType. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        PostureQueriesType.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        PostureQueriesType.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 is_passing: bool,
+                 policy_id: str,
+                 posture_queries: Sequence['_rest_model.outputs.PostureQuery'],
+                 policy_type: Optional[str] = None):
+        PostureQueriesType._configure(
+            lambda key, value: pulumi.set(__self__, key, value),
+            is_passing=is_passing,
+            policy_id=policy_id,
+            posture_queries=posture_queries,
+            policy_type=policy_type,
+        )
+    @staticmethod
+    def _configure(
+             _setter: Callable[[Any, Any], None],
+             is_passing: bool,
+             policy_id: str,
+             posture_queries: Sequence['_rest_model.outputs.PostureQuery'],
+             policy_type: Optional[str] = None,
+             opts: Optional[pulumi.ResourceOptions]=None):
+        _setter("is_passing", is_passing)
+        _setter("policy_id", policy_id)
+        _setter("posture_queries", posture_queries)
+        if policy_type is not None:
+            _setter("policy_type", policy_type)
+
+    @property
+    @pulumi.getter(name="isPassing")
+    def is_passing(self) -> bool:
+        return pulumi.get(self, "is_passing")
+
+    @property
+    @pulumi.getter(name="policyId")
+    def policy_id(self) -> str:
+        return pulumi.get(self, "policy_id")
+
+    @property
+    @pulumi.getter(name="postureQueries")
+    def posture_queries(self) -> Sequence['_rest_model.outputs.PostureQuery']:
+        return pulumi.get(self, "posture_queries")
+
+    @property
+    @pulumi.getter(name="policyType")
+    def policy_type(self) -> Optional[str]:
+        return pulumi.get(self, "policy_type")
 
 
 @pulumi.output_type

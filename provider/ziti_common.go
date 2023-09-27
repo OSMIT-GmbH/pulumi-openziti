@@ -31,6 +31,7 @@ import (
 	"net/url"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -361,6 +362,26 @@ func diffWalk(ctx p.Context, diff map[string]p.PropertyDiff, path string, old re
 		// handle other types
 		diff[path] = p.PropertyDiff{Kind: p.Update}
 		ctx.Log(diag.Warning, fmt.Sprintf("Unhandled types comparing %s: %s<>%s, %s != %s", path, old.Kind().String(), new.Kind().String(), old.String(), new.String()))
+	}
+}
+
+func diffStrArrayIgnoreOrder(ctx p.Context, diff map[string]p.PropertyDiff, path string, old []string, new []string) {
+	oldLen := len(old)
+	newLen := len(new)
+	minLen := min(oldLen, newLen)
+	if oldLen > newLen {
+		//noop
+		diff[fmt.Sprintf("%s[%d]", path, minLen+1)] = p.PropertyDiff{Kind: p.Add}
+	}
+	if oldLen < newLen {
+		diff[fmt.Sprintf("%s[%d]", path, minLen+1)] = p.PropertyDiff{Kind: p.Delete}
+	}
+	sort.Strings(old)
+	sort.Strings(new)
+	for i := 0; i < minLen; i++ {
+		if old[i] != new[i] {
+			diff[fmt.Sprintf("%s[%d]", path, i)] = p.PropertyDiff{Kind: p.Update}
+		}
 	}
 }
 

@@ -363,8 +363,6 @@ func (thiz *Identity) Create(ctx p.Context, name string, input IdentityArgs, pre
 		var badReq *identity.CreateIdentityBadRequest
 		if errors.As(err, &badReq) {
 			err2, dupe := formatApiErrDupeCheck(ctx, badReq, badReq.Payload)
-			fmt.Printf("DupeCheck: %b %b %s", dupe, c.assimilate, c.Assimilate)
-
 			if dupe && c.assimilate {
 				// find identity by name...
 				findParams := &identity.ListIdentitiesParams{

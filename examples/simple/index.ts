@@ -7,7 +7,7 @@ const invokeOptions: pulumi.ResourceOptions = {
         uri: openzitiConfig.require("uri"),
         user: openzitiConfig.require("user"),
         password: openzitiConfig.require("password"),
-        assimilate: false
+        assimilate: "true"
     }),
     // ignoreChanges: ["*"]
 };
@@ -48,6 +48,17 @@ const obj2 = new openziti.ConfigObj('oz-test-hostv1-config',
             port: 443,
             protocol: 'tcp',
         },
+    }, invokeOptions
+);
+
+
+const svc = new openziti.Service('oz-test-service',
+    {
+        name: 'test-service',
+        configs: [ obj1.id, obj2.id ],
+        encryptionRequired: true,
+        roleAttributes: ['test1'],
+        tags: { pulumi: "yes!" }
     },invokeOptions
 );
 
@@ -57,10 +68,25 @@ const id1 = new openziti.Identity('oz-test-identity',
         type: 'Default',
         isAdmin: false,
         enrollment: {
-          ott: true
+            ott: true
         },
         tags: {
             pulumi: "true"
         }
-    },invokeOptions
+    }, invokeOptions
+);
+export const id1exp = id1;
+export const id1id = id1.id;
+
+
+const svcBind = new openziti.ServicePolicy('oz-test-service-pol-bind',
+    {
+        name: 'test-service.bind',
+        // identityRoles: ['#test', id1.id.apply((id) => `@${id}`)],
+        identityRoles: ['#test',],
+        semantic: 'AnyOf',
+        serviceRoles: ['#test1'],
+        tags: {pulumi: "yes!"},
+        type: 'Bind',
+    }, invokeOptions
 );

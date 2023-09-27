@@ -20,6 +20,11 @@ export class Provider extends pulumi.ProviderResource {
     }
 
     /**
+     * Assimilate an existing object during create
+     */
+    public readonly assimilate!: pulumi.Output<string | undefined>;
+    public readonly insecure!: pulumi.Output<string | undefined>;
+    /**
      * The password. It is very secret.
      */
     public readonly password!: pulumi.Output<string>;
@@ -53,8 +58,8 @@ export class Provider extends pulumi.ProviderResource {
             if ((!args || args.user === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'user'");
             }
-            resourceInputs["assimilate"] = pulumi.output(args ? args.assimilate : undefined).apply(JSON.stringify);
-            resourceInputs["insecure"] = pulumi.output(args ? args.insecure : undefined).apply(JSON.stringify);
+            resourceInputs["assimilate"] = args ? args.assimilate : undefined;
+            resourceInputs["insecure"] = args ? args.insecure : undefined;
             resourceInputs["password"] = args?.password ? pulumi.secret(args.password) : undefined;
             resourceInputs["uri"] = args ? args.uri : undefined;
             resourceInputs["user"] = args ? args.user : undefined;
@@ -74,8 +79,8 @@ export interface ProviderArgs {
     /**
      * Assimilate an existing object during create
      */
-    assimilate?: pulumi.Input<boolean>;
-    insecure?: pulumi.Input<boolean>;
+    assimilate?: pulumi.Input<string>;
+    insecure?: pulumi.Input<string>;
     /**
      * The password. It is very secret.
      */
