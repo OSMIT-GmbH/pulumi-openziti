@@ -321,7 +321,7 @@ func (*EdgeRouter) Diff(ctx p.Context, id string, olds EdgeRouterState, news Edg
 	}, nil
 }
 
-func readEdgeRouter(ce CacheEntry, id string, input EdgeRouterArgs) (EdgeRouterState, error) {
+func readEdgeRouter(ce *CacheEntry, id string, input EdgeRouterArgs) (EdgeRouterState, error) {
 	params := &edge_router.DetailEdgeRouterParams{
 		ID:      id,
 		Context: context.Background(),

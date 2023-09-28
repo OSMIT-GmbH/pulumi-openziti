@@ -214,7 +214,7 @@ func (*Service) Diff(ctx p.Context, id string, olds ServiceState, news ServiceAr
 	}, nil
 }
 
-func readService(ce CacheEntry, id string, input ServiceArgs) (ServiceState, error) {
+func readService(ce *CacheEntry, id string, input ServiceArgs) (ServiceState, error) {
 	params := &service.DetailServiceParams{
 		ID:      id,
 		Context: context.Background(),

@@ -18,7 +18,7 @@ Following API's are supported (CRUD Operations)
 | EdgeRouterPolicy        | [Management API: Edge Router Policy](https://openziti.io/docs/reference/developer/api/edge-management-reference/#tag/Edge-Router-Policy)           |                                                                                                                                      |
 | Service                 | [Management API: Service](https://openziti.io/docs/reference/developer/api/edge-management-reference/#tag/Service)                                 |                                                                                                                                      |
 | ServiceEdgeRouterPolicy | [Management API: ServiceEdgeRouterPolicy](https://openziti.io/docs/reference/developer/api/edge-management-reference/#tag/ServiceEdgeRouterPolicy) |                                                                                                                                      |
-| ServicePolicy           | [Management API: ServicePolicy](https://openziti.io/docs/reference/developer/api/edge-management-reference/#tag/ServicePolicy)                     |                                                                                                                                      |
+| ServicePolicy           | [Management API: ServicePolicy](https://openziti.io/docs/reference/developer/api/edge-management-reference/#tag/ServicePolicy)                     | `identityRoles` has a lookup: `@name`-identities are mapped from it's name to the id.                                                |
 
 ## Usage
 
@@ -31,7 +31,8 @@ pulumi config set openziti:password <myTopSecretZitiPassword>
 # `assimilate` allows to integrate existing objects. Great for migration
 # pulumi config set openziti:assimilate true
 ```
-For samples how to create the OpenZiti Objects have a look on the example [index.ts](examples/simple/index.ts) 
+
+For samples how to create the OpenZiti Objects have a look on the example [index.ts](examples/simple/index.ts)
 
 ## Developing
 

@@ -109,12 +109,11 @@ const id1 = new openziti.Identity('oz-test-identity',
 export const id1exp = id1;
 export const id1id = id1.id;
 
-
 const svcBind = new openziti.ServicePolicy('oz-test-service-pol-bind',
     {
         name: 'test-service.bind',
-        // identityRoles: ['#test', id1.id.apply((id) => `@${id}`)],
-        identityRoles: ['#test',],
+        identityRoles: ['#test', id1.id.apply((id) => `@${id}`)],
+        // identityRoles: ['#test',],
         semantic: 'AnyOf',
         serviceRoles: ['#test1'],
         tags: {pulumi: "yes!"},
@@ -122,6 +121,17 @@ const svcBind = new openziti.ServicePolicy('oz-test-service-pol-bind',
     }, invokeOptions
 );
 
+const svcBindByName = new openziti.ServicePolicy('oz-test-service-pol-by-name-bind',
+    {
+        name: 'test-service-id-by-name.bind',
+        identityRoles: ['#test', '@pulumi-test'],
+        // identityRoles: ['#test',],
+        semantic: 'AnyOf',
+        serviceRoles: ['#test1'],
+        tags: {pulumi: "yes!"},
+        type: 'Bind',
+    }, invokeOptions
+);
 
 export const routerId = router.id;
 export const routerEnrolmentToken = router.enrollmentToken;

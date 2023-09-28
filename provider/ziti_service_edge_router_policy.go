@@ -20,9 +20,7 @@ import (
 	"fmt"
 	"github.com/openziti/edge-api/rest_management_api_client/service_edge_router_policy"
 	"github.com/openziti/edge-api/rest_model"
-	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"reflect"
 	"time"
 
@@ -85,13 +83,6 @@ type ServiceEdgeRouterPolicyState struct {
 	Semantic rest_model.Semantic `pulumi:"semantic"`
 }
 
-func (*ServiceEdgeRouterPolicy) Check(ctx p.Context, name string, oldInputs ServiceEdgeRouterPolicyArgs, newInputs resource.PropertyMap) (ServiceEdgeRouterPolicyArgs, []p.CheckFailure, error) {
-	if _, ok := newInputs["postureCheckRoles"]; !ok {
-		newInputs["postureCheckRoles"] = resource.NewArrayProperty([]resource.PropertyValue{})
-	}
-	return infer.DefaultCheck[ServiceEdgeRouterPolicyArgs](newInputs)
-}
-
 // All resources must implement Create at a minumum.
 func (thiz *ServiceEdgeRouterPolicy) Create(ctx p.Context, name string, input ServiceEdgeRouterPolicyArgs, preview bool) (string, ServiceEdgeRouterPolicyState, error) {
 	retErr := func(err error) (string, ServiceEdgeRouterPolicyState, error) {
@@ -125,8 +116,6 @@ func (thiz *ServiceEdgeRouterPolicy) Create(ctx p.Context, name string, input Se
 		var badReq *service_edge_router_policy.CreateServiceEdgeRouterPolicyBadRequest
 		if errors.As(err, &badReq) {
 			err2, dupe := formatApiErrDupeCheck(ctx, badReq, badReq.Payload)
-			fmt.Printf("DupeCheck: %b %b %s", dupe, c.assimilate, c.Assimilate)
-
 			if dupe && c.assimilate {
 				// find identity by name...
 				findParams := &service_edge_router_policy.ListServiceEdgeRouterPoliciesParams{
@@ -186,7 +175,7 @@ func (*ServiceEdgeRouterPolicy) Diff(ctx p.Context, id string, olds ServiceEdgeR
 	}, nil
 }
 
-func readServiceEdgeRouterPolicy(ce CacheEntry, id string, input ServiceEdgeRouterPolicyArgs) (ServiceEdgeRouterPolicyState, error) {
+func readServiceEdgeRouterPolicy(ce *CacheEntry, id string, input ServiceEdgeRouterPolicyArgs) (ServiceEdgeRouterPolicyState, error) {
 	params := &service_edge_router_policy.DetailServiceEdgeRouterPolicyParams{
 		ID:      id,
 		Context: context.Background(),

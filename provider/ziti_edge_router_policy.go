@@ -20,9 +20,7 @@ import (
 	"fmt"
 	"github.com/openziti/edge-api/rest_management_api_client/edge_router_policy"
 	"github.com/openziti/edge-api/rest_model"
-	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"reflect"
 	"time"
 
@@ -85,13 +83,6 @@ type EdgeRouterPolicyState struct {
 	Semantic rest_model.Semantic `pulumi:"semantic"`
 }
 
-func (*EdgeRouterPolicy) Check(ctx p.Context, name string, oldInputs EdgeRouterPolicyArgs, newInputs resource.PropertyMap) (EdgeRouterPolicyArgs, []p.CheckFailure, error) {
-	if _, ok := newInputs["postureCheckRoles"]; !ok {
-		newInputs["postureCheckRoles"] = resource.NewArrayProperty([]resource.PropertyValue{})
-	}
-	return infer.DefaultCheck[EdgeRouterPolicyArgs](newInputs)
-}
-
 // All resources must implement Create at a minumum.
 func (thiz *EdgeRouterPolicy) Create(ctx p.Context, name string, input EdgeRouterPolicyArgs, preview bool) (string, EdgeRouterPolicyState, error) {
 	retErr := func(err error) (string, EdgeRouterPolicyState, error) {
@@ -125,8 +116,6 @@ func (thiz *EdgeRouterPolicy) Create(ctx p.Context, name string, input EdgeRoute
 		var badReq *edge_router_policy.CreateEdgeRouterPolicyBadRequest
 		if errors.As(err, &badReq) {
 			err2, dupe := formatApiErrDupeCheck(ctx, badReq, badReq.Payload)
-			fmt.Printf("DupeCheck: %b %b %s", dupe, c.assimilate, c.Assimilate)
-
 			if dupe && c.assimilate {
 				// find identity by name...
 				findParams := &edge_router_policy.ListEdgeRouterPoliciesParams{
@@ -186,7 +175,7 @@ func (*EdgeRouterPolicy) Diff(ctx p.Context, id string, olds EdgeRouterPolicySta
 	}, nil
 }
 
-func readEdgeRouterPolicy(ce CacheEntry, id string, input EdgeRouterPolicyArgs) (EdgeRouterPolicyState, error) {
+func readEdgeRouterPolicy(ce *CacheEntry, id string, input EdgeRouterPolicyArgs) (EdgeRouterPolicyState, error) {
 	params := &edge_router_policy.DetailEdgeRouterPolicyParams{
 		ID:      id,
 		Context: context.Background(),

@@ -18,12 +18,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/openziti/edge-api/rest_management_api_client/identity"
 	"github.com/openziti/edge-api/rest_management_api_client/service_policy"
 	"github.com/openziti/edge-api/rest_model"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"reflect"
+	"strings"
 	"time"
 
 	p "github.com/pulumi/pulumi-go-provider"
@@ -127,11 +129,140 @@ type ServicePolicyState struct {
 	Type rest_model.DialBind `pulumi:"type"`
 }
 
-func (*ServicePolicy) Check(ctx p.Context, name string, oldInputs ServicePolicyArgs, newInputs resource.PropertyMap) (ServicePolicyArgs, []p.CheckFailure, error) {
-	if _, ok := newInputs["postureCheckRoles"]; !ok {
-		newInputs["postureCheckRoles"] = resource.NewArrayProperty([]resource.PropertyValue{})
+func resolveIdentity(ce *CacheEntry, name string) (string, *string, error) {
+	if len(ce.identities) == 0 {
+		ce.identitiesMutex.Lock()
+
+		if len(ce.identities) == 0 {
+			// initial load
+			limit := int64(5000)
+			offset := int64(0)
+			listReq := &identity.ListIdentitiesParams{
+				// Filter:  &filter,
+				Limit:   &limit,
+				Offset:  &offset,
+				Context: context.Background(),
+			}
+			ctResp, err := ce.client.Identity.ListIdentities(listReq, nil)
+			if err != nil {
+				ce.identitiesMutex.Unlock()
+				return "", nil, err
+			}
+
+			identities := make(map[string]string)
+			identitiesReverse := make(map[string]string)
+			for _, entity := range ctResp.GetPayload().Data {
+				identities[*entity.Name] = *entity.ID
+				identitiesReverse[*entity.ID] = *entity.Name
+			}
+			ce.identities = identities
+			ce.identitiesReverse = identitiesReverse
+		}
+		ce.identitiesMutex.Unlock()
 	}
-	return infer.DefaultCheck[ServicePolicyArgs](newInputs)
+	// try to find ID for name
+	if identityId, ok := ce.identities[name]; ok {
+		return identityId, nil, nil
+	}
+	// try to check if name is an ID
+	if _, ok := ce.identitiesReverse[name]; ok {
+		return name, nil, nil
+	}
+
+	ce.identitiesMutex.Lock()
+	// re-check from lock....
+	// try to find ID for name
+	if identityId, ok := ce.identities[name]; ok {
+		ce.identitiesMutex.Unlock()
+		return identityId, nil, nil
+	}
+	// try to check if name is an ID
+	if _, ok := ce.identitiesReverse[name]; ok {
+		ce.identitiesMutex.Unlock()
+		return name, nil, nil
+	}
+
+	// okay, we have to do api lookups... first: try by ID...
+	fetchParams := &identity.DetailIdentityParams{
+		ID:      name,
+		Context: context.Background(),
+	}
+	fetchResp, err := ce.client.Identity.DetailIdentity(fetchParams, nil)
+	if err == nil {
+		// hit
+		ce.identities[*fetchResp.Payload.Data.Name] = *fetchResp.Payload.Data.ID
+		ce.identitiesReverse[*fetchResp.Payload.Data.ID] = *fetchResp.Payload.Data.Name
+		ce.identitiesMutex.Unlock()
+		return name, nil, nil
+	}
+
+	// next try: find by name...
+	limit := int64(1)
+	offset := int64(0)
+	listReq := &identity.ListIdentitiesParams{
+		Filter:  buildNameFilter(name),
+		Limit:   &limit,
+		Offset:  &offset,
+		Context: context.Background(),
+	}
+	ctResp, err := ce.client.Identity.ListIdentities(listReq, nil)
+	if err == nil && len(ctResp.Payload.Data) == 1 {
+		// found!
+		item := ctResp.Payload.Data[0]
+		ce.identities[*item.Name] = *item.ID
+		ce.identitiesReverse[*item.ID] = *item.Name
+		ce.identitiesMutex.Unlock()
+		return *item.ID, nil, err
+	}
+
+	ce.identitiesMutex.Unlock()
+	msg := fmt.Sprintf("No Identity found matching `%s`", name)
+	return name, &msg, nil
+}
+
+func (*ServicePolicy) Check(ctx p.Context, name string, oldInputs, newInputs resource.PropertyMap) (ServicePolicyArgs, []p.CheckFailure, error) {
+	//if _, ok := newInputs["postureCheckRoles"]; !ok {
+	//	newInputs["postureCheckRoles"] = resource.NewArrayProperty([]resource.PropertyValue{})
+	//}
+	var failures []p.CheckFailure
+	if identityRoles, ok := newInputs["identityRoles"]; ok {
+		ce, _, err := initClient(ctx)
+		if err != nil {
+			return ServicePolicyArgs{}, nil, err
+		}
+		identityRolesA := identityRoles.ArrayValue()
+		identityRolesN := make([]resource.PropertyValue, len(identityRolesA))
+		for idx, identityRole := range identityRolesA {
+			if irs := identityRole.StringValue(); strings.HasPrefix(irs, "@") && !strings.HasPrefix(irs, "@"+IdPreviewPrefix) {
+				resolved, msg, err := resolveIdentity(ce, irs[1:])
+				if err != nil {
+					return ServicePolicyArgs{}, nil, err
+				}
+				if msg != nil {
+					failures = append(failures, p.CheckFailure{
+						Property: "identityRoles",
+						Reason:   *msg,
+					})
+				}
+				identityRolesN[idx] = resource.NewStringProperty("@" + resolved)
+			} else {
+				identityRolesN[idx] = identityRole
+			}
+		}
+		newInputs["identityRoles"] = resource.NewArrayProperty(identityRolesN)
+	}
+	ret, failures2, err := infer.DefaultCheck[ServicePolicyArgs](newInputs)
+	if failures == nil {
+		failures = failures2
+	} else if failures2 == nil {
+		// just keep failures
+	} else {
+		// merge both
+		for _, failure := range failures2 {
+			failures = append(failures, failure)
+		}
+	}
+	return ret, failures, err
 }
 
 // All resources must implement Create at a minumum.
@@ -169,8 +300,6 @@ func (thiz *ServicePolicy) Create(ctx p.Context, name string, input ServicePolic
 		var badReq *service_policy.CreateServicePolicyBadRequest
 		if errors.As(err, &badReq) {
 			err2, dupe := formatApiErrDupeCheck(ctx, badReq, badReq.Payload)
-			fmt.Printf("DupeCheck: %b %b %s", dupe, c.assimilate, c.Assimilate)
-
 			if dupe && c.assimilate {
 				// find identity by name...
 				findParams := &service_policy.ListServicePoliciesParams{
@@ -234,7 +363,7 @@ func (*ServicePolicy) Diff(ctx p.Context, id string, olds ServicePolicyState, ne
 	}, nil
 }
 
-func readServicePolicy(ce CacheEntry, id string, input ServicePolicyArgs) (ServicePolicyState, error) {
+func readServicePolicy(ce *CacheEntry, id string, input ServicePolicyArgs) (ServicePolicyState, error) {
 	params := &service_policy.DetailServicePolicyParams{
 		ID:      id,
 		Context: context.Background(),

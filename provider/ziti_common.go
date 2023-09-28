@@ -33,6 +33,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"sync"
 )
 
 type OpenZitiProviderConfig struct {
@@ -89,6 +90,8 @@ func (c *OpenZitiProviderConfig) Configure(ctx p.Context) error {
 //		DetailedDiff:        nil,
 //	}, nil
 //}
+
+var IdPreviewPrefix = "~~preview~~"
 
 type Link struct {
 
@@ -216,36 +219,45 @@ func dumpStruct(ctx p.Context, name string, data interface{}) {
 
 type CacheEntry struct {
 	//apiSession *rest_model.CurrentAPISessionDetail
-	client      *edgeapis.ZitiEdgeManagement
-	configTypes map[string]string
-	identities  map[string]string
+	client            *edgeapis.ZitiEdgeManagement
+	configTypesMutex  sync.Mutex
+	configTypes       map[string]string
+	identitiesMutex   sync.Mutex
+	identities        map[string]string
+	identitiesReverse map[string]string
 }
 
-var cache = make(map[string]CacheEntry)
+var cache = make(map[string]*CacheEntry)
 
-func getConfigTypeId(cache CacheEntry, name string) (string, error) {
+func getConfigTypeId(cache *CacheEntry, name string) (string, error) {
 	if len(cache.configTypes) == 0 {
-		// initial load
-		// filter := fmt.Sprintf("name=\"%v\"", sdk.ZrokProxyConfig)
-		limit := int64(100)
-		offset := int64(0)
-		listReq := &config.ListConfigTypesParams{
-			// Filter:  &filter,
-			Limit:   &limit,
-			Offset:  &offset,
-			Context: context.Background(),
-		}
-		ctResp, err := cache.client.Config.ListConfigTypes(listReq, nil)
-		if err != nil {
-			return "", err
-		}
+		cache.configTypesMutex.Lock()
+		if len(cache.configTypes) == 0 {
+			// initial load
+			// filter := fmt.Sprintf("name=\"%v\"", sdk.ZrokProxyConfig)
+			limit := int64(100)
+			offset := int64(0)
+			listReq := &config.ListConfigTypesParams{
+				// Filter:  &filter,
+				Limit:   &limit,
+				Offset:  &offset,
+				Context: context.Background(),
+			}
+			ctResp, err := cache.client.Config.ListConfigTypes(listReq, nil)
+			if err != nil {
+				cache.configTypesMutex.Unlock()
+				return "", err
+			}
 
-		cache.configTypes = make(map[string]string)
-		for _, entity := range ctResp.GetPayload().Data {
-			// wrapper := api.Wrap(entity)
-			// configTypes[wrapper.String("name")] = wrapper.String("id")
-			cache.configTypes[*entity.Name] = *entity.ID
+			configTypes := make(map[string]string)
+			for _, entity := range ctResp.GetPayload().Data {
+				// wrapper := api.Wrap(entity)
+				// configTypes[wrapper.String("name")] = wrapper.String("id")
+				configTypes[*entity.Name] = *entity.ID
+			}
+			cache.configTypes = configTypes
 		}
+		cache.configTypesMutex.Unlock()
 		// fmt.Printf("retrived configValues: %+v\n", cache.configTypes)
 	}
 	typeId := cache.configTypes[name]
@@ -255,32 +267,47 @@ func getConfigTypeId(cache CacheEntry, name string) (string, error) {
 	return typeId, nil
 }
 
-func initClient(ctx p.Context) (CacheEntry, OpenZitiProviderConfig, error) {
+var clientMutex sync.Mutex = sync.Mutex{}
+
+func initClient(ctx p.Context) (*CacheEntry, OpenZitiProviderConfig, error) {
 	c := infer.GetConfig[OpenZitiProviderConfig](ctx)
-	ce := cache[c.cacheKey]
-	if ce.client == nil {
-		// creds := edge_apis.New([]*x509.Certificate{testIdCerts.cert}, testIdCerts.key)
-		caPool, err := ziti.GetControllerWellKnownCaPool(c.Uri)
-		if err != nil {
-			return ce, c, err
+	ce, ok := cache[c.cacheKey]
+	if !ok {
+		// new entry - use mutex to limit to one session
+
+		clientMutex.Lock()
+		ce, ok = cache[c.cacheKey]
+		if !ok {
+
+			// creds := edge_apis.New([]*x509.Certificate{testIdCerts.cert}, testIdCerts.key)
+			caPool, err := ziti.GetControllerWellKnownCaPool(c.Uri)
+			if err != nil {
+				clientMutex.Unlock()
+				return nil, c, err
+			}
+
+			client, err := rest_util.NewEdgeManagementClientWithUpdb(c.User, c.Password, c.Uri, caPool)
+			if err != nil {
+				clientMutex.Unlock()
+				return nil, c, err
+			}
+
+			//creds := edgeapis.NewUpdbCredentials(c.User, c.Password)
+			//// creds.CaPool = caPool
+			//
+			//client := edgeapis.NewManagementApiClient(apiUrl, caPool)
+			//apiSession, err := client.Authenticate(creds, nil)
+			//if err != nil {
+			//	return err
+			//}
+
+			// fmt.Printf("identity name: %#v; token: s\n", client)
+			ce = &CacheEntry{
+				client: client,
+			}
+			cache[c.cacheKey] = ce
 		}
-
-		client, err := rest_util.NewEdgeManagementClientWithUpdb(c.User, c.Password, c.Uri, caPool)
-		if err != nil {
-			return ce, c, err
-		}
-
-		//creds := edgeapis.NewUpdbCredentials(c.User, c.Password)
-		//// creds.CaPool = caPool
-		//
-		//client := edgeapis.NewManagementApiClient(apiUrl, caPool)
-		//apiSession, err := client.Authenticate(creds, nil)
-		//if err != nil {
-		//	return err
-		//}
-
-		// fmt.Printf("identity name: %#v; token: s\n", client)
-		ce.client = client
+		clientMutex.Unlock()
 	}
 	return ce, c, nil
 }

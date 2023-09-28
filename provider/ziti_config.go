@@ -184,7 +184,7 @@ func (*ConfigObj) Diff(ctx p.Context, id string, olds ConfigState, news ConfigAr
 	}, nil
 }
 
-func readConfig(ce CacheEntry, id string, input ConfigArgs) (ConfigState, error) {
+func readConfig(ce *CacheEntry, id string, input ConfigArgs) (ConfigState, error) {
 	params := &config.DetailConfigParams{
 		ID:      id,
 		Context: context.Background(),

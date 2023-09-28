@@ -355,7 +355,7 @@ func (thiz *Identity) Create(ctx p.Context, name string, input IdentityArgs, pre
 
 	// bail out now when we are in preview mode
 	if preview {
-		return name, IdentityState{IdentityArgs: input}, nil
+		return IdPreviewPrefix + name, IdentityState{IdentityArgs: input}, nil
 	}
 
 	resp, err := ce.client.Identity.CreateIdentity(createParams, nil)
@@ -460,7 +460,7 @@ func (*Identity) Diff(ctx p.Context, id string, olds IdentityState, news Identit
 	}, nil
 }
 
-func readIdentity(ce CacheEntry, id string, input IdentityArgs) (IdentityState, error) {
+func readIdentity(ce *CacheEntry, id string, input IdentityArgs) (IdentityState, error) {
 	params := &identity.DetailIdentityParams{
 		ID:      id,
 		Context: context.Background(),
