@@ -16,6 +16,11 @@ func GetAssimilate(ctx *pulumi.Context) string {
 	return config.Get(ctx, "openziti:assimilate")
 }
 
+// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+func GetDeleteAssimilated(ctx *pulumi.Context) string {
+	return config.Get(ctx, "openziti:deleteAssimilated")
+}
+
 // The password. It is very secret.
 func GetPassword(ctx *pulumi.Context) string {
 	return config.Get(ctx, "openziti:password")

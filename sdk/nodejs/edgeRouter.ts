@@ -33,6 +33,7 @@ export class EdgeRouter extends pulumi.CustomResource {
         return obj['__pulumiType'] === EdgeRouter.__pulumiType;
     }
 
+    public /*out*/ readonly _assimilated!: pulumi.Output<boolean>;
     public /*out*/ readonly _links!: pulumi.Output<{[key: string]: outputs.Link}>;
     public readonly appData!: pulumi.Output<{[key: string]: any} | undefined>;
     public /*out*/ readonly certPem!: pulumi.Output<string | undefined>;
@@ -81,6 +82,7 @@ export class EdgeRouter extends pulumi.CustomResource {
             resourceInputs["noTraversal"] = args ? args.noTraversal : undefined;
             resourceInputs["roleAttributes"] = args ? args.roleAttributes : undefined;
             resourceInputs["tags"] = args ? args.tags : undefined;
+            resourceInputs["_assimilated"] = undefined /*out*/;
             resourceInputs["_links"] = undefined /*out*/;
             resourceInputs["certPem"] = undefined /*out*/;
             resourceInputs["createdAt"] = undefined /*out*/;
@@ -99,6 +101,7 @@ export class EdgeRouter extends pulumi.CustomResource {
             resourceInputs["unverifiedFingerprint"] = undefined /*out*/;
             resourceInputs["updatedAt"] = undefined /*out*/;
         } else {
+            resourceInputs["_assimilated"] = undefined /*out*/;
             resourceInputs["_links"] = undefined /*out*/;
             resourceInputs["appData"] = undefined /*out*/;
             resourceInputs["certPem"] = undefined /*out*/;

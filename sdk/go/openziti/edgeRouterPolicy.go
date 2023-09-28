@@ -16,6 +16,7 @@ import (
 type EdgeRouterPolicy struct {
 	pulumi.CustomResourceState
 
+	_assimilated           pulumi.BoolOutput        `pulumi:"_assimilated"`
 	_links                 LinkMapOutput            `pulumi:"_links"`
 	CreatedAt              pulumi.StringOutput      `pulumi:"createdAt"`
 	EdgeRouterRoles        pulumi.StringArrayOutput `pulumi:"edgeRouterRoles"`
@@ -141,6 +142,10 @@ func (o EdgeRouterPolicyOutput) ToOutput(ctx context.Context) pulumix.Output[*Ed
 	return pulumix.Output[*EdgeRouterPolicy]{
 		OutputState: o.OutputState,
 	}
+}
+
+func (o EdgeRouterPolicyOutput) _assimilated() pulumi.BoolOutput {
+	return o.ApplyT(func(v *EdgeRouterPolicy) pulumi.BoolOutput { return v._assimilated }).(pulumi.BoolOutput)
 }
 
 func (o EdgeRouterPolicyOutput) _links() LinkMapOutput {

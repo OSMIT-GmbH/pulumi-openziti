@@ -33,6 +33,7 @@ export class Service extends pulumi.CustomResource {
         return obj['__pulumiType'] === Service.__pulumiType;
     }
 
+    public /*out*/ readonly _assimilated!: pulumi.Output<boolean>;
     public /*out*/ readonly _links!: pulumi.Output<{[key: string]: outputs.Link}>;
     public /*out*/ readonly config!: pulumi.Output<{[key: string]: {[key: string]: any}}>;
     public readonly configs!: pulumi.Output<string[]>;
@@ -76,6 +77,7 @@ export class Service extends pulumi.CustomResource {
             resourceInputs["roleAttributes"] = args ? args.roleAttributes : undefined;
             resourceInputs["tags"] = args ? args.tags : undefined;
             resourceInputs["terminatorStrategy"] = args ? args.terminatorStrategy : undefined;
+            resourceInputs["_assimilated"] = undefined /*out*/;
             resourceInputs["_links"] = undefined /*out*/;
             resourceInputs["config"] = undefined /*out*/;
             resourceInputs["createdAt"] = undefined /*out*/;
@@ -84,6 +86,7 @@ export class Service extends pulumi.CustomResource {
             resourceInputs["postureQueries"] = undefined /*out*/;
             resourceInputs["updatedAt"] = undefined /*out*/;
         } else {
+            resourceInputs["_assimilated"] = undefined /*out*/;
             resourceInputs["_links"] = undefined /*out*/;
             resourceInputs["config"] = undefined /*out*/;
             resourceInputs["configs"] = undefined /*out*/;

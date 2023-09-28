@@ -12,6 +12,9 @@ namespace Pulumi.Openziti
     [OpenzitiResourceType("openziti:index:ConfigObj")]
     public partial class ConfigObj : global::Pulumi.CustomResource
     {
+        [Output("_assimilated")]
+        public Output<bool> _assimilated { get; private set; } = null!;
+
         [Output("_links")]
         public Output<ImmutableDictionary<string, Outputs.Link>> _links { get; private set; } = null!;
 

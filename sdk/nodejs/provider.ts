@@ -24,6 +24,10 @@ export class Provider extends pulumi.ProviderResource {
      */
     public readonly assimilate!: pulumi.Output<string | undefined>;
     /**
+     * Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+     */
+    public readonly deleteAssimilated!: pulumi.Output<string | undefined>;
+    /**
      * The password. It is very secret.
      */
     public readonly password!: pulumi.Output<string>;
@@ -58,6 +62,7 @@ export class Provider extends pulumi.ProviderResource {
                 throw new Error("Missing required property 'user'");
             }
             resourceInputs["assimilate"] = args ? args.assimilate : undefined;
+            resourceInputs["deleteAssimilated"] = args ? args.deleteAssimilated : undefined;
             resourceInputs["password"] = args?.password ? pulumi.secret(args.password) : undefined;
             resourceInputs["uri"] = args ? args.uri : undefined;
             resourceInputs["user"] = args ? args.user : undefined;
@@ -78,6 +83,10 @@ export interface ProviderArgs {
      * Assimilate an existing object during create
      */
     assimilate?: pulumi.Input<string>;
+    /**
+     * Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+     */
+    deleteAssimilated?: pulumi.Input<string>;
     /**
      * The password. It is very secret.
      */

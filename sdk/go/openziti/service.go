@@ -16,6 +16,7 @@ import (
 type Service struct {
 	pulumi.CustomResourceState
 
+	_assimilated       pulumi.BoolOutput             `pulumi:"_assimilated"`
 	_links             LinkMapOutput                 `pulumi:"_links"`
 	Config             pulumi.MapMapOutput           `pulumi:"config"`
 	Configs            pulumi.StringArrayOutput      `pulumi:"configs"`
@@ -148,6 +149,10 @@ func (o ServiceOutput) ToOutput(ctx context.Context) pulumix.Output[*Service] {
 	return pulumix.Output[*Service]{
 		OutputState: o.OutputState,
 	}
+}
+
+func (o ServiceOutput) _assimilated() pulumi.BoolOutput {
+	return o.ApplyT(func(v *Service) pulumi.BoolOutput { return v._assimilated }).(pulumi.BoolOutput)
 }
 
 func (o ServiceOutput) _links() LinkMapOutput {

@@ -33,6 +33,7 @@ export class ServiceEdgeRouterPolicy extends pulumi.CustomResource {
         return obj['__pulumiType'] === ServiceEdgeRouterPolicy.__pulumiType;
     }
 
+    public /*out*/ readonly _assimilated!: pulumi.Output<boolean>;
     public /*out*/ readonly _links!: pulumi.Output<{[key: string]: outputs.Link}>;
     public /*out*/ readonly createdAt!: pulumi.Output<string>;
     public readonly edgeRouterRoles!: pulumi.Output<string[]>;
@@ -70,6 +71,7 @@ export class ServiceEdgeRouterPolicy extends pulumi.CustomResource {
             resourceInputs["semantic"] = args ? args.semantic : undefined;
             resourceInputs["serviceRoles"] = args ? args.serviceRoles : undefined;
             resourceInputs["tags"] = args ? args.tags : undefined;
+            resourceInputs["_assimilated"] = undefined /*out*/;
             resourceInputs["_links"] = undefined /*out*/;
             resourceInputs["createdAt"] = undefined /*out*/;
             resourceInputs["edgeRouterRolesDisplay"] = undefined /*out*/;
@@ -77,6 +79,7 @@ export class ServiceEdgeRouterPolicy extends pulumi.CustomResource {
             resourceInputs["serviceRolesDisplay"] = undefined /*out*/;
             resourceInputs["updatedAt"] = undefined /*out*/;
         } else {
+            resourceInputs["_assimilated"] = undefined /*out*/;
             resourceInputs["_links"] = undefined /*out*/;
             resourceInputs["createdAt"] = undefined /*out*/;
             resourceInputs["edgeRouterRoles"] = undefined /*out*/;

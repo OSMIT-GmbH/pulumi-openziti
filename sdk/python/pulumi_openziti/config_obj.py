@@ -145,6 +145,7 @@ class ConfigObj(pulumi.CustomResource):
                 raise TypeError("Missing required property 'name'")
             __props__.__dict__["name"] = name
             __props__.__dict__["tags"] = tags
+            __props__.__dict__["_assimilated"] = None
             __props__.__dict__["_links"] = None
             __props__.__dict__["config_type"] = None
             __props__.__dict__["config_type_id"] = None
@@ -173,6 +174,7 @@ class ConfigObj(pulumi.CustomResource):
 
         __props__ = ConfigObjArgs.__new__(ConfigObjArgs)
 
+        __props__.__dict__["_assimilated"] = None
         __props__.__dict__["_links"] = None
         __props__.__dict__["config_type"] = None
         __props__.__dict__["config_type_id"] = None
@@ -184,6 +186,11 @@ class ConfigObj(pulumi.CustomResource):
         __props__.__dict__["tags"] = None
         __props__.__dict__["updated_at"] = None
         return ConfigObj(resource_name, opts=opts, __props__=__props__)
+
+    @property
+    @pulumi.getter
+    def _assimilated(self) -> pulumi.Output[bool]:
+        return pulumi.get(self, "_assimilated")
 
     @property
     @pulumi.getter

@@ -317,7 +317,7 @@ func (thiz *ServicePolicy) Create(ctx p.Context, name string, input ServicePolic
 				}
 				existingId := *findRet.Payload.Data[0].ID
 				ctx.Logf(diag.Info, "Assimilating existing ID: %s", existingId)
-				state, err := readServicePolicy(ce, existingId, input)
+				state, err := readServicePolicy(ce, existingId, input, true)
 				if err != nil {
 					ctx.Logf(diag.Error, "Assimilate failed: Fetch failed with: %s", err2)
 					return retErr(err2)
@@ -331,7 +331,7 @@ func (thiz *ServicePolicy) Create(ctx p.Context, name string, input ServicePolic
 		return retErr(err)
 	}
 	createdId := resp.GetPayload().Data.ID
-	state, err := readServicePolicy(ce, createdId, input)
+	state, err := readServicePolicy(ce, createdId, input, false)
 	if err != nil {
 		return createdId, state, err
 	}
@@ -363,7 +363,7 @@ func (*ServicePolicy) Diff(ctx p.Context, id string, olds ServicePolicyState, ne
 	}, nil
 }
 
-func readServicePolicy(ce *CacheEntry, id string, input ServicePolicyArgs) (ServicePolicyState, error) {
+func readServicePolicy(ce *CacheEntry, id string, input ServicePolicyArgs, assimilated bool) (ServicePolicyState, error) {
 	params := &service_policy.DetailServicePolicyParams{
 		ID:      id,
 		Context: context.Background(),
@@ -376,7 +376,7 @@ func readServicePolicy(ce *CacheEntry, id string, input ServicePolicyArgs) (Serv
 
 	return ServicePolicyState{
 		ServicePolicyArgs:        input,
-		BaseStateEntity:          buildBaseState(rd.BaseEntity),
+		BaseStateEntity:          buildBaseState(rd.BaseEntity, assimilated),
 		IdentityRoles:            rd.IdentityRoles,
 		IdentityRolesDisplay:     buildRoleDisplay(rd.IdentityRolesDisplay),
 		PostureCheckRoles:        ifte(rd.PostureCheckRoles != nil, rd.PostureCheckRoles, []string{}),
@@ -393,7 +393,7 @@ func (*ServicePolicy) Read(ctx p.Context, id string, inputs ServicePolicyArgs, s
 	if err != nil {
 		return id, inputs, state, err
 	}
-	readState, err := readServicePolicy(ce, id, inputs)
+	readState, err := readServicePolicy(ce, id, inputs, state.Assimilated)
 	if err != nil {
 		return id, inputs, readState, err
 	}
@@ -436,17 +436,21 @@ func (*ServicePolicy) Update(ctx p.Context, id string, olds ServicePolicyState, 
 		return olds, err
 	}
 
-	readState, err := readServicePolicy(ce, id, news)
+	readState, err := readServicePolicy(ce, id, news, olds.Assimilated)
 	if err != nil {
 		return readState, err
 	}
 	return readState, nil
 }
 
-func (*ServicePolicy) Delete(ctx p.Context, id string, _ ServicePolicyState) error {
-	ce, _, err := initClient(ctx)
+func (*ServicePolicy) Delete(ctx p.Context, id string, state ServicePolicyState) error {
+	ce, c, err := initClient(ctx)
 	if err != nil {
 		return err
+	}
+	if state.Assimilated && !c.deleteAssimilated {
+		ctx.Logf(diag.Info, "DELETE on %s[%s]: Keeping on OpenZiti as this object was assimilated!", "ServicePolicy", id)
+		return nil
 	}
 	deleteParams := &service_policy.DeleteServicePolicyParams{
 		ID:      id,

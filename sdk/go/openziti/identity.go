@@ -17,6 +17,7 @@ import (
 type Identity struct {
 	pulumi.CustomResourceState
 
+	_assimilated              pulumi.BoolOutput                       `pulumi:"_assimilated"`
 	_links                    LinkMapOutput                           `pulumi:"_links"`
 	AppData                   pulumi.MapOutput                        `pulumi:"appData"`
 	AuthPolicy                EntityRefOutput                         `pulumi:"authPolicy"`
@@ -176,6 +177,10 @@ func (o IdentityOutput) ToOutput(ctx context.Context) pulumix.Output[*Identity] 
 	return pulumix.Output[*Identity]{
 		OutputState: o.OutputState,
 	}
+}
+
+func (o IdentityOutput) _assimilated() pulumi.BoolOutput {
+	return o.ApplyT(func(v *Identity) pulumi.BoolOutput { return v._assimilated }).(pulumi.BoolOutput)
 }
 
 func (o IdentityOutput) _links() LinkMapOutput {

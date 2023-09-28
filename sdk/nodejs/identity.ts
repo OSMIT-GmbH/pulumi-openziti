@@ -33,6 +33,7 @@ export class Identity extends pulumi.CustomResource {
         return obj['__pulumiType'] === Identity.__pulumiType;
     }
 
+    public /*out*/ readonly _assimilated!: pulumi.Output<boolean>;
     public /*out*/ readonly _links!: pulumi.Output<{[key: string]: outputs.Link}>;
     public readonly appData!: pulumi.Output<{[key: string]: any} | undefined>;
     public /*out*/ readonly authPolicy!: pulumi.Output<outputs.EntityRef>;
@@ -96,6 +97,7 @@ export class Identity extends pulumi.CustomResource {
             resourceInputs["serviceHostingPrecedences"] = args ? args.serviceHostingPrecedences : undefined;
             resourceInputs["tags"] = args ? args.tags : undefined;
             resourceInputs["type"] = args ? args.type : undefined;
+            resourceInputs["_assimilated"] = undefined /*out*/;
             resourceInputs["_links"] = undefined /*out*/;
             resourceInputs["authPolicy"] = undefined /*out*/;
             resourceInputs["authenticators"] = undefined /*out*/;
@@ -113,6 +115,7 @@ export class Identity extends pulumi.CustomResource {
             resourceInputs["typeId"] = undefined /*out*/;
             resourceInputs["updatedAt"] = undefined /*out*/;
         } else {
+            resourceInputs["_assimilated"] = undefined /*out*/;
             resourceInputs["_links"] = undefined /*out*/;
             resourceInputs["appData"] = undefined /*out*/;
             resourceInputs["authPolicy"] = undefined /*out*/;

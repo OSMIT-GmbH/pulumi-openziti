@@ -162,6 +162,7 @@ class ServiceEdgeRouterPolicy(pulumi.CustomResource):
                 raise TypeError("Missing required property 'service_roles'")
             __props__.__dict__["service_roles"] = service_roles
             __props__.__dict__["tags"] = tags
+            __props__.__dict__["_assimilated"] = None
             __props__.__dict__["_links"] = None
             __props__.__dict__["created_at"] = None
             __props__.__dict__["edge_router_roles_display"] = None
@@ -190,6 +191,7 @@ class ServiceEdgeRouterPolicy(pulumi.CustomResource):
 
         __props__ = ServiceEdgeRouterPolicyArgs.__new__(ServiceEdgeRouterPolicyArgs)
 
+        __props__.__dict__["_assimilated"] = None
         __props__.__dict__["_links"] = None
         __props__.__dict__["created_at"] = None
         __props__.__dict__["edge_router_roles"] = None
@@ -202,6 +204,11 @@ class ServiceEdgeRouterPolicy(pulumi.CustomResource):
         __props__.__dict__["tags"] = None
         __props__.__dict__["updated_at"] = None
         return ServiceEdgeRouterPolicy(resource_name, opts=opts, __props__=__props__)
+
+    @property
+    @pulumi.getter
+    def _assimilated(self) -> pulumi.Output[bool]:
+        return pulumi.get(self, "_assimilated")
 
     @property
     @pulumi.getter

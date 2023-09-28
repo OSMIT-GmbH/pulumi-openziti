@@ -42,6 +42,16 @@ namespace Pulumi.Openziti
             set => _assimilate.Set(value);
         }
 
+        private static readonly __Value<string?> _deleteAssimilated = new __Value<string?>(() => __config.Get("deleteAssimilated"));
+        /// <summary>
+        /// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+        /// </summary>
+        public static string? DeleteAssimilated
+        {
+            get => _deleteAssimilated.Get();
+            set => _deleteAssimilated.Set(value);
+        }
+
         private static readonly __Value<string?> _password = new __Value<string?>(() => __config.Get("password"));
         /// <summary>
         /// The password. It is very secret.

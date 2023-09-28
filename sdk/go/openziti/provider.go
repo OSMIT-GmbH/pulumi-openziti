@@ -18,6 +18,8 @@ type Provider struct {
 
 	// Assimilate an existing object during create
 	Assimilate pulumi.StringPtrOutput `pulumi:"assimilate"`
+	// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+	DeleteAssimilated pulumi.StringPtrOutput `pulumi:"deleteAssimilated"`
 	// The password. It is very secret.
 	Password pulumi.StringOutput `pulumi:"password"`
 	// The URI to the API
@@ -62,6 +64,8 @@ func NewProvider(ctx *pulumi.Context,
 type providerArgs struct {
 	// Assimilate an existing object during create
 	Assimilate *string `pulumi:"assimilate"`
+	// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+	DeleteAssimilated *string `pulumi:"deleteAssimilated"`
 	// The password. It is very secret.
 	Password string `pulumi:"password"`
 	// The URI to the API
@@ -75,6 +79,8 @@ type providerArgs struct {
 type ProviderArgs struct {
 	// Assimilate an existing object during create
 	Assimilate pulumi.StringPtrInput
+	// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+	DeleteAssimilated pulumi.StringPtrInput
 	// The password. It is very secret.
 	Password pulumi.StringInput
 	// The URI to the API
@@ -136,6 +142,11 @@ func (o ProviderOutput) ToOutput(ctx context.Context) pulumix.Output[*Provider] 
 // Assimilate an existing object during create
 func (o ProviderOutput) Assimilate() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.Assimilate }).(pulumi.StringPtrOutput)
+}
+
+// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+func (o ProviderOutput) DeleteAssimilated() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DeleteAssimilated }).(pulumi.StringPtrOutput)
 }
 
 // The password. It is very secret.

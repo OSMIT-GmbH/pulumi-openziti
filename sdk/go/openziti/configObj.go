@@ -16,6 +16,7 @@ import (
 type ConfigObj struct {
 	pulumi.CustomResourceState
 
+	_assimilated   pulumi.BoolOutput   `pulumi:"_assimilated"`
 	_links         LinkMapOutput       `pulumi:"_links"`
 	ConfigType     EntityRefOutput     `pulumi:"configType"`
 	ConfigTypeId   pulumi.StringOutput `pulumi:"configTypeId"`
@@ -138,6 +139,10 @@ func (o ConfigObjOutput) ToOutput(ctx context.Context) pulumix.Output[*ConfigObj
 	return pulumix.Output[*ConfigObj]{
 		OutputState: o.OutputState,
 	}
+}
+
+func (o ConfigObjOutput) _assimilated() pulumi.BoolOutput {
+	return o.ApplyT(func(v *ConfigObj) pulumi.BoolOutput { return v._assimilated }).(pulumi.BoolOutput)
 }
 
 func (o ConfigObjOutput) _links() LinkMapOutput {

@@ -19,6 +19,12 @@ namespace Pulumi.Openziti
         public Output<string?> Assimilate { get; private set; } = null!;
 
         /// <summary>
+        /// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+        /// </summary>
+        [Output("deleteAssimilated")]
+        public Output<string?> DeleteAssimilated { get; private set; } = null!;
+
+        /// <summary>
         /// The password. It is very secret.
         /// </summary>
         [Output("password")]
@@ -76,6 +82,12 @@ namespace Pulumi.Openziti
         /// </summary>
         [Input("assimilate")]
         public Input<string>? Assimilate { get; set; }
+
+        /// <summary>
+        /// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+        /// </summary>
+        [Input("deleteAssimilated")]
+        public Input<string>? DeleteAssimilated { get; set; }
 
         [Input("password", required: true)]
         private Input<string>? _password;

@@ -16,6 +16,7 @@ import (
 type ServicePolicy struct {
 	pulumi.CustomResourceState
 
+	_assimilated             pulumi.BoolOutput        `pulumi:"_assimilated"`
 	_links                   LinkMapOutput            `pulumi:"_links"`
 	CreatedAt                pulumi.StringOutput      `pulumi:"createdAt"`
 	Id                       pulumi.StringOutput      `pulumi:"id"`
@@ -154,6 +155,10 @@ func (o ServicePolicyOutput) ToOutput(ctx context.Context) pulumix.Output[*Servi
 	return pulumix.Output[*ServicePolicy]{
 		OutputState: o.OutputState,
 	}
+}
+
+func (o ServicePolicyOutput) _assimilated() pulumi.BoolOutput {
+	return o.ApplyT(func(v *ServicePolicy) pulumi.BoolOutput { return v._assimilated }).(pulumi.BoolOutput)
 }
 
 func (o ServicePolicyOutput) _links() LinkMapOutput {

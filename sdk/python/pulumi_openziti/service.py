@@ -181,6 +181,7 @@ class Service(pulumi.CustomResource):
             __props__.__dict__["role_attributes"] = role_attributes
             __props__.__dict__["tags"] = tags
             __props__.__dict__["terminator_strategy"] = terminator_strategy
+            __props__.__dict__["_assimilated"] = None
             __props__.__dict__["_links"] = None
             __props__.__dict__["config"] = None
             __props__.__dict__["created_at"] = None
@@ -210,6 +211,7 @@ class Service(pulumi.CustomResource):
 
         __props__ = ServiceArgs.__new__(ServiceArgs)
 
+        __props__.__dict__["_assimilated"] = None
         __props__.__dict__["_links"] = None
         __props__.__dict__["config"] = None
         __props__.__dict__["configs"] = None
@@ -224,6 +226,11 @@ class Service(pulumi.CustomResource):
         __props__.__dict__["terminator_strategy"] = None
         __props__.__dict__["updated_at"] = None
         return Service(resource_name, opts=opts, __props__=__props__)
+
+    @property
+    @pulumi.getter
+    def _assimilated(self) -> pulumi.Output[bool]:
+        return pulumi.get(self, "_assimilated")
 
     @property
     @pulumi.getter

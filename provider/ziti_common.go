@@ -45,10 +45,12 @@ type OpenZitiProviderConfig struct {
 	// insecure   bool
 	// I'm not sure what's wrong with boolean - see following error:
 	// error: pulumi:providers:openziti resource 'openziti-provider': property assimilate value {false} has a problem: Field 'assimilate' on 'provider.OpenZitiProviderConfig' must be a 'bool'; got 'string' instead
-	Assimilate string `pulumi:"assimilate,optional"`
-	assimilate bool
-	Version    string `pulumi:"version,optional"` // version seems to be provided automatically
-	cacheKey   string
+	Assimilate        string `pulumi:"assimilate,optional"`
+	assimilate        bool
+	DeleteAssimilated string `pulumi:"deleteAssimilated,optional"`
+	deleteAssimilated bool
+	Version           string `pulumi:"version,optional"` // version seems to be provided automatically
+	cacheKey          string
 }
 
 var _ = (infer.Annotated)((*OpenZitiProviderConfig)(nil))
@@ -58,6 +60,7 @@ func (c *OpenZitiProviderConfig) Annotate(a infer.Annotator) {
 	a.Describe(&c.Password, "The password. It is very secret.")
 	a.Describe(&c.Uri, `The URI to the API`)
 	a.Describe(&c.Assimilate, `Assimilate an existing object during create`)
+	a.Describe(&c.DeleteAssimilated, `Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)`)
 	// a.SetDefault(&c.Insecure, false)
 }
 
@@ -73,6 +76,7 @@ func (c *OpenZitiProviderConfig) Configure(ctx p.Context) error {
 	//}
 	c.cacheKey = fmt.Sprintf("%s:%s:%s", c.Uri, c.User, c.Password)
 	c.assimilate = strings.EqualFold(c.Assimilate, "true")
+	c.deleteAssimilated = strings.EqualFold(c.DeleteAssimilated, "true")
 	// c.insecure = strings.EqualFold(c.Insecure, "true")
 
 	//ctx.Log(diag.Info, msg)
@@ -158,6 +162,10 @@ type BaseStateEntity struct {
 	// Required: true
 	// Format: date-time
 	UpdatedAt string `pulumi:"updatedAt"`
+
+	// this config element was assimilated...
+	// Required: true
+	Assimilated bool `pulumi:"_assimilated"`
 }
 
 func buildLinks(src rest_model.Links) Links {
@@ -168,13 +176,14 @@ func buildLinks(src rest_model.Links) Links {
 	return ret
 }
 
-func buildBaseState(src rest_model.BaseEntity) BaseStateEntity {
+func buildBaseState(src rest_model.BaseEntity, assimilated bool) BaseStateEntity {
 	tags := buildTags(*src.Tags)
 	return BaseStateEntity{Links: buildLinks(src.Links),
-		ID:        *src.ID,
-		CreatedAt: src.CreatedAt.String(),
-		Tags:      tags,
-		UpdatedAt: src.UpdatedAt.String(),
+		Assimilated: assimilated,
+		ID:          *src.ID,
+		CreatedAt:   src.CreatedAt.String(),
+		Tags:        tags,
+		UpdatedAt:   src.UpdatedAt.String(),
 	}
 }
 

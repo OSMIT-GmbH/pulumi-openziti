@@ -380,7 +380,7 @@ func (thiz *Identity) Create(ctx p.Context, name string, input IdentityArgs, pre
 				}
 				existingId := *findRet.Payload.Data[0].ID
 				ctx.Logf(diag.Info, "Assimilating existing ID: %s", existingId)
-				state, err := readIdentity(ce, existingId, input)
+				state, err := readIdentity(ce, existingId, input, true)
 				if err != nil {
 					ctx.Logf(diag.Error, "Assimilate failed: Fetch failed with: %s", err2)
 					return retErr(err2)
@@ -394,7 +394,7 @@ func (thiz *Identity) Create(ctx p.Context, name string, input IdentityArgs, pre
 		return retErr(err)
 	}
 	createdId := resp.GetPayload().Data.ID
-	state, err := readIdentity(ce, createdId, input)
+	state, err := readIdentity(ce, createdId, input, false)
 	if err != nil {
 		return createdId, state, err
 	}
@@ -460,7 +460,7 @@ func (*Identity) Diff(ctx p.Context, id string, olds IdentityState, news Identit
 	}, nil
 }
 
-func readIdentity(ce *CacheEntry, id string, input IdentityArgs) (IdentityState, error) {
+func readIdentity(ce *CacheEntry, id string, input IdentityArgs, assimilated bool) (IdentityState, error) {
 	params := &identity.DetailIdentityParams{
 		ID:      id,
 		Context: context.Background(),
@@ -474,7 +474,7 @@ func readIdentity(ce *CacheEntry, id string, input IdentityArgs) (IdentityState,
 	// fmt.Printf("get  output: %+v\n", respPayload)
 	return IdentityState{
 		IdentityArgs:             input,
-		BaseStateEntity:          buildBaseState(data.BaseEntity),
+		BaseStateEntity:          buildBaseState(data.BaseEntity, assimilated),
 		AppData:                  buildTags(*data.AppData),
 		AuthPolicy:               buildEntityRef(data.AuthPolicy),
 		AuthPolicyID:             *data.AuthPolicyID,
@@ -546,7 +546,7 @@ func (*Identity) Read(ctx p.Context, id string, inputs IdentityArgs, state Ident
 	if err != nil {
 		return id, inputs, state, err
 	}
-	readState, err := readIdentity(ce, id, inputs)
+	readState, err := readIdentity(ce, id, inputs, state.Assimilated)
 	if err != nil {
 		return id, inputs, readState, err
 	}
@@ -597,17 +597,21 @@ func (*Identity) Update(ctx p.Context, id string, olds IdentityState, news Ident
 		return olds, err
 	}
 
-	readState, err := readIdentity(ce, id, news)
+	readState, err := readIdentity(ce, id, news, olds.Assimilated)
 	if err != nil {
 		return readState, err
 	}
 	return readState, nil
 }
 
-func (*Identity) Delete(ctx p.Context, id string, _ IdentityState) error {
-	ce, _, err := initClient(ctx)
+func (*Identity) Delete(ctx p.Context, id string, state IdentityState) error {
+	ce, c, err := initClient(ctx)
 	if err != nil {
 		return err
+	}
+	if state.Assimilated && !c.deleteAssimilated {
+		ctx.Logf(diag.Info, "DELETE on %s[%s]: Keeping on OpenZiti as this object was assimilated!", "Identity", id)
+		return nil
 	}
 	deleteParams := &identity.DeleteIdentityParams{
 		ID:      id,

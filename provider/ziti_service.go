@@ -148,7 +148,6 @@ func (thiz *Service) Create(ctx p.Context, name string, input ServiceArgs, previ
 
 	resp, err := ce.client.Service.CreateService(createParams, nil)
 	if err != nil {
-		ctx.Logf(diag.Error, "Error from create: %s", err.Error())
 		var badReq *service.CreateServiceBadRequest
 		if errors.As(err, &badReq) {
 			err2, dupe := formatApiErrDupeCheck(ctx, badReq, badReq.Payload)
@@ -169,7 +168,7 @@ func (thiz *Service) Create(ctx p.Context, name string, input ServiceArgs, previ
 				}
 				existingId := *findRet.Payload.Data[0].ID
 				ctx.Logf(diag.Info, "Assimilating existing ID: %s", existingId)
-				state, err := readService(ce, existingId, input)
+				state, err := readService(ce, existingId, input, true)
 				if err != nil {
 					ctx.Logf(diag.Error, "Assimilate failed: Fetch failed with: %s", err2)
 					return retErr(err2)
@@ -183,7 +182,7 @@ func (thiz *Service) Create(ctx p.Context, name string, input ServiceArgs, previ
 		return retErr(err)
 	}
 	createdId := resp.GetPayload().Data.ID
-	state, err := readService(ce, createdId, input)
+	state, err := readService(ce, createdId, input, false)
 	if err != nil {
 		return createdId, state, err
 	}
@@ -214,7 +213,7 @@ func (*Service) Diff(ctx p.Context, id string, olds ServiceState, news ServiceAr
 	}, nil
 }
 
-func readService(ce *CacheEntry, id string, input ServiceArgs) (ServiceState, error) {
+func readService(ce *CacheEntry, id string, input ServiceArgs, assimilated bool) (ServiceState, error) {
 	params := &service.DetailServiceParams{
 		ID:      id,
 		Context: context.Background(),
@@ -240,7 +239,7 @@ func readService(ce *CacheEntry, id string, input ServiceArgs) (ServiceState, er
 	// fmt.Printf("get  output: %+v\n", respPayload)
 	return ServiceState{
 		ServiceArgs:        input,
-		BaseStateEntity:    buildBaseState(respPayload.Data.BaseEntity),
+		BaseStateEntity:    buildBaseState(respPayload.Data.BaseEntity, assimilated),
 		Config:             ifte(respPayload.Data.Config != nil, respPayload.Data.Config, make(map[string]map[string]interface{})),
 		Configs:            respPayload.Data.Configs,
 		EncryptionRequired: *respPayload.Data.EncryptionRequired,
@@ -257,7 +256,7 @@ func (*Service) Read(ctx p.Context, id string, inputs ServiceArgs, state Service
 	if err != nil {
 		return id, inputs, state, err
 	}
-	readState, err := readService(ce, id, inputs)
+	readState, err := readService(ce, id, inputs, state.Assimilated)
 	if err != nil {
 		return id, inputs, readState, err
 	}
@@ -299,17 +298,21 @@ func (*Service) Update(ctx p.Context, id string, olds ServiceState, news Service
 		return olds, err
 	}
 
-	readState, err := readService(ce, id, news)
+	readState, err := readService(ce, id, news, olds.Assimilated)
 	if err != nil {
 		return readState, err
 	}
 	return readState, nil
 }
 
-func (*Service) Delete(ctx p.Context, id string, _ ServiceState) error {
-	ce, _, err := initClient(ctx)
+func (*Service) Delete(ctx p.Context, id string, state ServiceState) error {
+	ce, c, err := initClient(ctx)
 	if err != nil {
 		return err
+	}
+	if state.Assimilated && !c.deleteAssimilated {
+		ctx.Logf(diag.Info, "DELETE on %s[%s]: Keeping on OpenZiti as this object was assimilated!", "Service", id)
+		return nil
 	}
 	deleteParams := &service.DeleteServiceParams{
 		ID:      id,

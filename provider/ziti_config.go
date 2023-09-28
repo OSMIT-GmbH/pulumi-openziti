@@ -143,7 +143,7 @@ func (thiz *ConfigObj) Create(ctx p.Context, name string, input ConfigArgs, prev
 				}
 				existingId := *findRet.Payload.Data[0].ID
 				ctx.Logf(diag.Info, "Assimilating existing ID: %s", existingId)
-				state, err := readConfig(ce, existingId, input)
+				state, err := readConfig(ce, existingId, input, true)
 				if err != nil {
 					ctx.Logf(diag.Error, "Assimilate failed: Fetch failed with: %s", err2)
 					return retErr(err2)
@@ -157,7 +157,7 @@ func (thiz *ConfigObj) Create(ctx p.Context, name string, input ConfigArgs, prev
 		return retErr(err)
 	}
 	createdId := resp.GetPayload().Data.ID
-	state, err := readConfig(ce, createdId, input)
+	state, err := readConfig(ce, createdId, input, false)
 	if err != nil {
 		return createdId, state, err
 	}
@@ -184,7 +184,7 @@ func (*ConfigObj) Diff(ctx p.Context, id string, olds ConfigState, news ConfigAr
 	}, nil
 }
 
-func readConfig(ce *CacheEntry, id string, input ConfigArgs) (ConfigState, error) {
+func readConfig(ce *CacheEntry, id string, input ConfigArgs, assimilated bool) (ConfigState, error) {
 	params := &config.DetailConfigParams{
 		ID:      id,
 		Context: context.Background(),
@@ -196,7 +196,7 @@ func readConfig(ce *CacheEntry, id string, input ConfigArgs) (ConfigState, error
 	respPayload := detailResp.GetPayload()
 	// fmt.Printf("get  output: %+v\n", respPayload)
 	return ConfigState{ConfigArgs: input,
-		BaseStateEntity: buildBaseState(respPayload.Data.BaseEntity),
+		BaseStateEntity: buildBaseState(respPayload.Data.BaseEntity, assimilated),
 		ConfigType:      buildEntityRef(respPayload.Data.ConfigType),
 		ConfigTypeID:    *respPayload.Data.ConfigTypeID,
 		Data:            respPayload.Data.Data,
@@ -208,7 +208,7 @@ func (*ConfigObj) Read(ctx p.Context, id string, inputs ConfigArgs, state Config
 	if err != nil {
 		return id, inputs, state, err
 	}
-	readState, err := readConfig(ce, id, inputs)
+	readState, err := readConfig(ce, id, inputs, state.Assimilated)
 	if err != nil {
 		return id, inputs, readState, err
 	}
@@ -247,17 +247,21 @@ func (*ConfigObj) Update(ctx p.Context, id string, olds ConfigState, news Config
 		return olds, err
 	}
 
-	readState, err := readConfig(ce, id, news)
+	readState, err := readConfig(ce, id, news, olds.Assimilated)
 	if err != nil {
 		return readState, err
 	}
 	return readState, nil
 }
 
-func (*ConfigObj) Delete(ctx p.Context, id string, _ ConfigState) error {
-	ce, _, err := initClient(ctx)
+func (*ConfigObj) Delete(ctx p.Context, id string, state ConfigState) error {
+	ce, c, err := initClient(ctx)
 	if err != nil {
 		return err
+	}
+	if state.Assimilated && !c.deleteAssimilated {
+		ctx.Logf(diag.Info, "DELETE on %s[%s]: Keeping on OpenZiti as this object was assimilated!", "Config", id)
+		return nil
 	}
 	deleteParams := &config.DeleteConfigParams{
 		ID:      id,

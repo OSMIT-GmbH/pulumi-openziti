@@ -23,6 +23,13 @@ class _ExportableConfig(types.ModuleType):
         return __config__.get('assimilate')
 
     @property
+    def delete_assimilated(self) -> Optional[str]:
+        """
+        Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+        """
+        return __config__.get('deleteAssimilated')
+
+    @property
     def password(self) -> Optional[str]:
         """
         The password. It is very secret.

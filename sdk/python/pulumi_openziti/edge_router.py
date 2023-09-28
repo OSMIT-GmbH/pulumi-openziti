@@ -211,6 +211,7 @@ class EdgeRouter(pulumi.CustomResource):
             __props__.__dict__["no_traversal"] = no_traversal
             __props__.__dict__["role_attributes"] = role_attributes
             __props__.__dict__["tags"] = tags
+            __props__.__dict__["_assimilated"] = None
             __props__.__dict__["_links"] = None
             __props__.__dict__["cert_pem"] = None
             __props__.__dict__["created_at"] = None
@@ -250,6 +251,7 @@ class EdgeRouter(pulumi.CustomResource):
 
         __props__ = EdgeRouterArgs.__new__(EdgeRouterArgs)
 
+        __props__.__dict__["_assimilated"] = None
         __props__.__dict__["_links"] = None
         __props__.__dict__["app_data"] = None
         __props__.__dict__["cert_pem"] = None
@@ -276,6 +278,11 @@ class EdgeRouter(pulumi.CustomResource):
         __props__.__dict__["unverified_fingerprint"] = None
         __props__.__dict__["updated_at"] = None
         return EdgeRouter(resource_name, opts=opts, __props__=__props__)
+
+    @property
+    @pulumi.getter
+    def _assimilated(self) -> pulumi.Output[bool]:
+        return pulumi.get(self, "_assimilated")
 
     @property
     @pulumi.getter

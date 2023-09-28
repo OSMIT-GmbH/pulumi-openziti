@@ -133,7 +133,7 @@ func (thiz *EdgeRouterPolicy) Create(ctx p.Context, name string, input EdgeRoute
 				}
 				existingId := *findRet.Payload.Data[0].ID
 				ctx.Logf(diag.Info, "Assimilating existing ID: %s", existingId)
-				state, err := readEdgeRouterPolicy(ce, existingId, input)
+				state, err := readEdgeRouterPolicy(ce, existingId, input, true)
 				if err != nil {
 					ctx.Logf(diag.Error, "Assimilate failed: Fetch failed with: %s", err2)
 					return retErr(err2)
@@ -147,7 +147,7 @@ func (thiz *EdgeRouterPolicy) Create(ctx p.Context, name string, input EdgeRoute
 		return retErr(err)
 	}
 	createdId := resp.GetPayload().Data.ID
-	state, err := readEdgeRouterPolicy(ce, createdId, input)
+	state, err := readEdgeRouterPolicy(ce, createdId, input, false)
 	if err != nil {
 		return createdId, state, err
 	}
@@ -175,7 +175,7 @@ func (*EdgeRouterPolicy) Diff(ctx p.Context, id string, olds EdgeRouterPolicySta
 	}, nil
 }
 
-func readEdgeRouterPolicy(ce *CacheEntry, id string, input EdgeRouterPolicyArgs) (EdgeRouterPolicyState, error) {
+func readEdgeRouterPolicy(ce *CacheEntry, id string, input EdgeRouterPolicyArgs, assimilated bool) (EdgeRouterPolicyState, error) {
 	params := &edge_router_policy.DetailEdgeRouterPolicyParams{
 		ID:      id,
 		Context: context.Background(),
@@ -188,7 +188,7 @@ func readEdgeRouterPolicy(ce *CacheEntry, id string, input EdgeRouterPolicyArgs)
 
 	return EdgeRouterPolicyState{
 		EdgeRouterPolicyArgs:   input,
-		BaseStateEntity:        buildBaseState(rd.BaseEntity),
+		BaseStateEntity:        buildBaseState(rd.BaseEntity, assimilated),
 		IdentityRoles:          rd.IdentityRoles,
 		IdentityRolesDisplay:   buildRoleDisplay(rd.IdentityRolesDisplay),
 		EdgeRouterRoles:        ifte(rd.EdgeRouterRoles != nil, rd.EdgeRouterRoles, []string{}),
@@ -202,7 +202,7 @@ func (*EdgeRouterPolicy) Read(ctx p.Context, id string, inputs EdgeRouterPolicyA
 	if err != nil {
 		return id, inputs, state, err
 	}
-	readState, err := readEdgeRouterPolicy(ce, id, inputs)
+	readState, err := readEdgeRouterPolicy(ce, id, inputs, state.Assimilated)
 	if err != nil {
 		return id, inputs, readState, err
 	}
@@ -243,17 +243,21 @@ func (*EdgeRouterPolicy) Update(ctx p.Context, id string, olds EdgeRouterPolicyS
 		return olds, err
 	}
 
-	readState, err := readEdgeRouterPolicy(ce, id, news)
+	readState, err := readEdgeRouterPolicy(ce, id, news, olds.Assimilated)
 	if err != nil {
 		return readState, err
 	}
 	return readState, nil
 }
 
-func (*EdgeRouterPolicy) Delete(ctx p.Context, id string, _ EdgeRouterPolicyState) error {
-	ce, _, err := initClient(ctx)
+func (*EdgeRouterPolicy) Delete(ctx p.Context, id string, state EdgeRouterPolicyState) error {
+	ce, c, err := initClient(ctx)
 	if err != nil {
 		return err
+	}
+	if state.Assimilated && !c.deleteAssimilated {
+		ctx.Logf(diag.Info, "DELETE on %s[%s]: Keeping on OpenZiti as this object was assimilated!", "EdgeRouterPolicy", id)
+		return nil
 	}
 	deleteParams := &edge_router_policy.DeleteEdgeRouterPolicyParams{
 		ID:      id,

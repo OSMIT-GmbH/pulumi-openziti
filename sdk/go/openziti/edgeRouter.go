@@ -16,6 +16,7 @@ import (
 type EdgeRouter struct {
 	pulumi.CustomResourceState
 
+	_assimilated          pulumi.BoolOutput        `pulumi:"_assimilated"`
 	_links                LinkMapOutput            `pulumi:"_links"`
 	AppData               pulumi.MapOutput         `pulumi:"appData"`
 	CertPem               pulumi.StringPtrOutput   `pulumi:"certPem"`
@@ -155,6 +156,10 @@ func (o EdgeRouterOutput) ToOutput(ctx context.Context) pulumix.Output[*EdgeRout
 	return pulumix.Output[*EdgeRouter]{
 		OutputState: o.OutputState,
 	}
+}
+
+func (o EdgeRouterOutput) _assimilated() pulumi.BoolOutput {
+	return o.ApplyT(func(v *EdgeRouter) pulumi.BoolOutput { return v._assimilated }).(pulumi.BoolOutput)
 }
 
 func (o EdgeRouterOutput) _links() LinkMapOutput {

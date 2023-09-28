@@ -305,6 +305,7 @@ class Identity(pulumi.CustomResource):
             if type is None and not opts.urn:
                 raise TypeError("Missing required property 'type'")
             __props__.__dict__["type"] = type
+            __props__.__dict__["_assimilated"] = None
             __props__.__dict__["_links"] = None
             __props__.__dict__["auth_policy"] = None
             __props__.__dict__["authenticators"] = None
@@ -343,6 +344,7 @@ class Identity(pulumi.CustomResource):
 
         __props__ = IdentityArgs.__new__(IdentityArgs)
 
+        __props__.__dict__["_assimilated"] = None
         __props__.__dict__["_links"] = None
         __props__.__dict__["app_data"] = None
         __props__.__dict__["auth_policy"] = None
@@ -373,6 +375,11 @@ class Identity(pulumi.CustomResource):
         __props__.__dict__["type_id"] = None
         __props__.__dict__["updated_at"] = None
         return Identity(resource_name, opts=opts, __props__=__props__)
+
+    @property
+    @pulumi.getter
+    def _assimilated(self) -> pulumi.Output[bool]:
+        return pulumi.get(self, "_assimilated")
 
     @property
     @pulumi.getter

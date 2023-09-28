@@ -14,6 +14,11 @@ assimilate: Optional[str]
 Assimilate an existing object during create
 """
 
+deleteAssimilated: Optional[str]
+"""
+Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+"""
+
 password: Optional[str]
 """
 The password. It is very secret.

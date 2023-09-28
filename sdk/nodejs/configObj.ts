@@ -33,6 +33,7 @@ export class ConfigObj extends pulumi.CustomResource {
         return obj['__pulumiType'] === ConfigObj.__pulumiType;
     }
 
+    public /*out*/ readonly _assimilated!: pulumi.Output<boolean>;
     public /*out*/ readonly _links!: pulumi.Output<{[key: string]: outputs.Link}>;
     public /*out*/ readonly configType!: pulumi.Output<outputs.EntityRef>;
     public /*out*/ readonly configTypeId!: pulumi.Output<string>;
@@ -68,6 +69,7 @@ export class ConfigObj extends pulumi.CustomResource {
             resourceInputs["data"] = args ? args.data : undefined;
             resourceInputs["name"] = args ? args.name : undefined;
             resourceInputs["tags"] = args ? args.tags : undefined;
+            resourceInputs["_assimilated"] = undefined /*out*/;
             resourceInputs["_links"] = undefined /*out*/;
             resourceInputs["configType"] = undefined /*out*/;
             resourceInputs["configTypeId"] = undefined /*out*/;
@@ -75,6 +77,7 @@ export class ConfigObj extends pulumi.CustomResource {
             resourceInputs["id"] = undefined /*out*/;
             resourceInputs["updatedAt"] = undefined /*out*/;
         } else {
+            resourceInputs["_assimilated"] = undefined /*out*/;
             resourceInputs["_links"] = undefined /*out*/;
             resourceInputs["configType"] = undefined /*out*/;
             resourceInputs["configTypeId"] = undefined /*out*/;

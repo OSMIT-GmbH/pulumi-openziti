@@ -19,6 +19,17 @@ Object.defineProperty(exports, "assimilate", {
 });
 
 /**
+ * Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+ */
+export declare const deleteAssimilated: string | undefined;
+Object.defineProperty(exports, "deleteAssimilated", {
+    get() {
+        return __config.get("deleteAssimilated");
+    },
+    enumerable: true,
+});
+
+/**
  * The password. It is very secret.
  */
 export declare const password: string | undefined;
