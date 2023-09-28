@@ -15,9 +15,6 @@ var _ = internal.GetEnvOrDefault
 func GetAssimilate(ctx *pulumi.Context) string {
 	return config.Get(ctx, "openziti:assimilate")
 }
-func GetInsecure(ctx *pulumi.Context) string {
-	return config.Get(ctx, "openziti:insecure")
-}
 
 // The password. It is very secret.
 func GetPassword(ctx *pulumi.Context) string {

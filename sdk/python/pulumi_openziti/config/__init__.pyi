@@ -14,8 +14,6 @@ assimilate: Optional[str]
 Assimilate an existing object during create
 """
 
-insecure: Optional[str]
-
 password: Optional[str]
 """
 The password. It is very secret.

@@ -23,10 +23,6 @@ class _ExportableConfig(types.ModuleType):
         return __config__.get('assimilate')
 
     @property
-    def insecure(self) -> Optional[str]:
-        return __config__.get('insecure')
-
-    @property
     def password(self) -> Optional[str]:
         """
         The password. It is very secret.

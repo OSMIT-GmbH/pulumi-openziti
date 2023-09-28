@@ -39,10 +39,11 @@ type OpenZitiProviderConfig struct {
 	User     string `pulumi:"user"`
 	Password string `pulumi:"password" provider:"secret"`
 	Uri      string `pulumi:"uri"`
+	// TODO finalize insecure!
+	// Insecure   string `pulumi:"insecure,optional"`
+	// insecure   bool
 	// I'm not sure what's wrong with boolean - see following error:
 	// error: pulumi:providers:openziti resource 'openziti-provider': property assimilate value {false} has a problem: Field 'assimilate' on 'provider.OpenZitiProviderConfig' must be a 'bool'; got 'string' instead
-	Insecure   string `pulumi:"insecure,optional"`
-	insecure   bool
 	Assimilate string `pulumi:"assimilate,optional"`
 	assimilate bool
 	Version    string `pulumi:"version,optional"` // version seems to be provided automatically
@@ -71,7 +72,7 @@ func (c *OpenZitiProviderConfig) Configure(ctx p.Context) error {
 	//}
 	c.cacheKey = fmt.Sprintf("%s:%s:%s", c.Uri, c.User, c.Password)
 	c.assimilate = strings.EqualFold(c.Assimilate, "true")
-	c.insecure = strings.EqualFold(c.Insecure, "true")
+	// c.insecure = strings.EqualFold(c.Insecure, "true")
 
 	//ctx.Log(diag.Info, msg)
 	return nil

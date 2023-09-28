@@ -18,9 +18,6 @@ namespace Pulumi.Openziti
         [Output("assimilate")]
         public Output<string?> Assimilate { get; private set; } = null!;
 
-        [Output("insecure")]
-        public Output<string?> Insecure { get; private set; } = null!;
-
         /// <summary>
         /// The password. It is very secret.
         /// </summary>
@@ -79,9 +76,6 @@ namespace Pulumi.Openziti
         /// </summary>
         [Input("assimilate")]
         public Input<string>? Assimilate { get; set; }
-
-        [Input("insecure")]
-        public Input<string>? Insecure { get; set; }
 
         [Input("password", required: true)]
         private Input<string>? _password;

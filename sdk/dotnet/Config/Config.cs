@@ -42,13 +42,6 @@ namespace Pulumi.Openziti
             set => _assimilate.Set(value);
         }
 
-        private static readonly __Value<string?> _insecure = new __Value<string?>(() => __config.Get("insecure"));
-        public static string? Insecure
-        {
-            get => _insecure.Get();
-            set => _insecure.Set(value);
-        }
-
         private static readonly __Value<string?> _password = new __Value<string?>(() => __config.Get("password"));
         /// <summary>
         /// The password. It is very secret.

@@ -18,14 +18,6 @@ Object.defineProperty(exports, "assimilate", {
     enumerable: true,
 });
 
-export declare const insecure: string | undefined;
-Object.defineProperty(exports, "insecure", {
-    get() {
-        return __config.get("insecure");
-    },
-    enumerable: true,
-});
-
 /**
  * The password. It is very secret.
  */
