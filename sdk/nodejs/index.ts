@@ -15,6 +15,11 @@ export type EdgeRouter = import("./edgeRouter").EdgeRouter;
 export const EdgeRouter: typeof import("./edgeRouter").EdgeRouter = null as any;
 utilities.lazyLoad(exports, ["EdgeRouter"], () => require("./edgeRouter"));
 
+export { EdgeRouterPolicyArgs } from "./edgeRouterPolicy";
+export type EdgeRouterPolicy = import("./edgeRouterPolicy").EdgeRouterPolicy;
+export const EdgeRouterPolicy: typeof import("./edgeRouterPolicy").EdgeRouterPolicy = null as any;
+utilities.lazyLoad(exports, ["EdgeRouterPolicy"], () => require("./edgeRouterPolicy"));
+
 export { IdentityArgs } from "./identity";
 export type Identity = import("./identity").Identity;
 export const Identity: typeof import("./identity").Identity = null as any;
@@ -29,6 +34,11 @@ export { ServiceArgs } from "./service";
 export type Service = import("./service").Service;
 export const Service: typeof import("./service").Service = null as any;
 utilities.lazyLoad(exports, ["Service"], () => require("./service"));
+
+export { ServiceEdgeRouterPolicyArgs } from "./serviceEdgeRouterPolicy";
+export type ServiceEdgeRouterPolicy = import("./serviceEdgeRouterPolicy").ServiceEdgeRouterPolicy;
+export const ServiceEdgeRouterPolicy: typeof import("./serviceEdgeRouterPolicy").ServiceEdgeRouterPolicy = null as any;
+utilities.lazyLoad(exports, ["ServiceEdgeRouterPolicy"], () => require("./serviceEdgeRouterPolicy"));
 
 export { ServicePolicyArgs } from "./servicePolicy";
 export type ServicePolicy = import("./servicePolicy").ServicePolicy;
@@ -53,10 +63,14 @@ const _module = {
                 return new ConfigObj(name, <any>undefined, { urn })
             case "openziti:index:EdgeRouter":
                 return new EdgeRouter(name, <any>undefined, { urn })
+            case "openziti:index:EdgeRouterPolicy":
+                return new EdgeRouterPolicy(name, <any>undefined, { urn })
             case "openziti:index:Identity":
                 return new Identity(name, <any>undefined, { urn })
             case "openziti:index:Service":
                 return new Service(name, <any>undefined, { urn })
+            case "openziti:index:ServiceEdgeRouterPolicy":
+                return new ServiceEdgeRouterPolicy(name, <any>undefined, { urn })
             case "openziti:index:ServicePolicy":
                 return new ServicePolicy(name, <any>undefined, { urn })
             default:

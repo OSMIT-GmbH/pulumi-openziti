@@ -34,8 +34,11 @@ export class EdgeRouter extends pulumi.CustomResource {
     }
 
     public /*out*/ readonly _links!: pulumi.Output<{[key: string]: outputs.Link}>;
+    public readonly appData!: pulumi.Output<{[key: string]: any} | undefined>;
     public /*out*/ readonly certPem!: pulumi.Output<string | undefined>;
+    public readonly cost!: pulumi.Output<number>;
     public /*out*/ readonly createdAt!: pulumi.Output<string>;
+    public readonly disabled!: pulumi.Output<boolean>;
     public /*out*/ readonly enrollmentCreatedAt!: pulumi.Output<string | undefined>;
     public /*out*/ readonly enrollmentExpiresAt!: pulumi.Output<string | undefined>;
     public /*out*/ readonly enrollmentJwt!: pulumi.Output<string | undefined>;
@@ -47,6 +50,7 @@ export class EdgeRouter extends pulumi.CustomResource {
     public readonly isTunnelerEnabled!: pulumi.Output<boolean>;
     public /*out*/ readonly isVerified!: pulumi.Output<boolean>;
     public readonly name!: pulumi.Output<string>;
+    public readonly noTraversal!: pulumi.Output<boolean>;
     public readonly roleAttributes!: pulumi.Output<string[]>;
     public /*out*/ readonly supportedProtocols!: pulumi.Output<{[key: string]: string}>;
     public /*out*/ readonly syncStatus!: pulumi.Output<string>;
@@ -96,8 +100,11 @@ export class EdgeRouter extends pulumi.CustomResource {
             resourceInputs["updatedAt"] = undefined /*out*/;
         } else {
             resourceInputs["_links"] = undefined /*out*/;
+            resourceInputs["appData"] = undefined /*out*/;
             resourceInputs["certPem"] = undefined /*out*/;
+            resourceInputs["cost"] = undefined /*out*/;
             resourceInputs["createdAt"] = undefined /*out*/;
+            resourceInputs["disabled"] = undefined /*out*/;
             resourceInputs["enrollmentCreatedAt"] = undefined /*out*/;
             resourceInputs["enrollmentExpiresAt"] = undefined /*out*/;
             resourceInputs["enrollmentJwt"] = undefined /*out*/;
@@ -109,6 +116,7 @@ export class EdgeRouter extends pulumi.CustomResource {
             resourceInputs["isTunnelerEnabled"] = undefined /*out*/;
             resourceInputs["isVerified"] = undefined /*out*/;
             resourceInputs["name"] = undefined /*out*/;
+            resourceInputs["noTraversal"] = undefined /*out*/;
             resourceInputs["roleAttributes"] = undefined /*out*/;
             resourceInputs["supportedProtocols"] = undefined /*out*/;
             resourceInputs["syncStatus"] = undefined /*out*/;

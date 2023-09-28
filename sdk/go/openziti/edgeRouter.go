@@ -17,8 +17,11 @@ type EdgeRouter struct {
 	pulumi.CustomResourceState
 
 	_links                LinkMapOutput            `pulumi:"_links"`
+	AppData               pulumi.MapOutput         `pulumi:"appData"`
 	CertPem               pulumi.StringPtrOutput   `pulumi:"certPem"`
+	Cost                  pulumi.IntOutput         `pulumi:"cost"`
 	CreatedAt             pulumi.StringOutput      `pulumi:"createdAt"`
+	Disabled              pulumi.BoolOutput        `pulumi:"disabled"`
 	EnrollmentCreatedAt   pulumi.StringPtrOutput   `pulumi:"enrollmentCreatedAt"`
 	EnrollmentExpiresAt   pulumi.StringPtrOutput   `pulumi:"enrollmentExpiresAt"`
 	EnrollmentJwt         pulumi.StringPtrOutput   `pulumi:"enrollmentJwt"`
@@ -30,6 +33,7 @@ type EdgeRouter struct {
 	IsTunnelerEnabled     pulumi.BoolOutput        `pulumi:"isTunnelerEnabled"`
 	IsVerified            pulumi.BoolOutput        `pulumi:"isVerified"`
 	Name                  pulumi.StringOutput      `pulumi:"name"`
+	NoTraversal           pulumi.BoolOutput        `pulumi:"noTraversal"`
 	RoleAttributes        pulumi.StringArrayOutput `pulumi:"roleAttributes"`
 	SupportedProtocols    pulumi.StringMapOutput   `pulumi:"supportedProtocols"`
 	SyncStatus            pulumi.StringOutput      `pulumi:"syncStatus"`
@@ -157,12 +161,24 @@ func (o EdgeRouterOutput) _links() LinkMapOutput {
 	return o.ApplyT(func(v *EdgeRouter) LinkMapOutput { return v._links }).(LinkMapOutput)
 }
 
+func (o EdgeRouterOutput) AppData() pulumi.MapOutput {
+	return o.ApplyT(func(v *EdgeRouter) pulumi.MapOutput { return v.AppData }).(pulumi.MapOutput)
+}
+
 func (o EdgeRouterOutput) CertPem() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *EdgeRouter) pulumi.StringPtrOutput { return v.CertPem }).(pulumi.StringPtrOutput)
 }
 
+func (o EdgeRouterOutput) Cost() pulumi.IntOutput {
+	return o.ApplyT(func(v *EdgeRouter) pulumi.IntOutput { return v.Cost }).(pulumi.IntOutput)
+}
+
 func (o EdgeRouterOutput) CreatedAt() pulumi.StringOutput {
 	return o.ApplyT(func(v *EdgeRouter) pulumi.StringOutput { return v.CreatedAt }).(pulumi.StringOutput)
+}
+
+func (o EdgeRouterOutput) Disabled() pulumi.BoolOutput {
+	return o.ApplyT(func(v *EdgeRouter) pulumi.BoolOutput { return v.Disabled }).(pulumi.BoolOutput)
 }
 
 func (o EdgeRouterOutput) EnrollmentCreatedAt() pulumi.StringPtrOutput {
@@ -207,6 +223,10 @@ func (o EdgeRouterOutput) IsVerified() pulumi.BoolOutput {
 
 func (o EdgeRouterOutput) Name() pulumi.StringOutput {
 	return o.ApplyT(func(v *EdgeRouter) pulumi.StringOutput { return v.Name }).(pulumi.StringOutput)
+}
+
+func (o EdgeRouterOutput) NoTraversal() pulumi.BoolOutput {
+	return o.ApplyT(func(v *EdgeRouter) pulumi.BoolOutput { return v.NoTraversal }).(pulumi.BoolOutput)
 }
 
 func (o EdgeRouterOutput) RoleAttributes() pulumi.StringArrayOutput {

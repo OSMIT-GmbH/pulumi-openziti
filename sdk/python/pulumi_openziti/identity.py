@@ -285,7 +285,7 @@ class Identity(pulumi.CustomResource):
             __props__.__dict__["auth_policy_id"] = auth_policy_id
             __props__.__dict__["default_hosting_cost"] = default_hosting_cost
             __props__.__dict__["default_hosting_precedence"] = default_hosting_precedence
-            if not isinstance(enrollment, IdentityCreateEnrollmentArgs):
+            if enrollment is not None and not isinstance(enrollment, IdentityCreateEnrollmentArgs):
                 enrollment = enrollment or {}
                 def _setter(key, value):
                     enrollment[key] = value

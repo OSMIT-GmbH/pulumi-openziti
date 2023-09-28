@@ -15,11 +15,20 @@ namespace Pulumi.Openziti
         [Output("_links")]
         public Output<ImmutableDictionary<string, Outputs.Link>> _links { get; private set; } = null!;
 
+        [Output("appData")]
+        public Output<ImmutableDictionary<string, object>?> AppData { get; private set; } = null!;
+
         [Output("certPem")]
         public Output<string?> CertPem { get; private set; } = null!;
 
+        [Output("cost")]
+        public Output<int> Cost { get; private set; } = null!;
+
         [Output("createdAt")]
         public Output<string> CreatedAt { get; private set; } = null!;
+
+        [Output("disabled")]
+        public Output<bool> Disabled { get; private set; } = null!;
 
         [Output("enrollmentCreatedAt")]
         public Output<string?> EnrollmentCreatedAt { get; private set; } = null!;
@@ -53,6 +62,9 @@ namespace Pulumi.Openziti
 
         [Output("name")]
         public Output<string> Name { get; private set; } = null!;
+
+        [Output("noTraversal")]
+        public Output<bool> NoTraversal { get; private set; } = null!;
 
         [Output("roleAttributes")]
         public Output<ImmutableArray<string>> RoleAttributes { get; private set; } = null!;

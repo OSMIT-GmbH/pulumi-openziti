@@ -1,6 +1,7 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as openziti from "@pulumi/openziti";
 
+// This is optional - when provider is not specified the openziti:[uri/user/password] keys are taken directly.
 const openzitiConfig = new pulumi.Config("openziti");
 const invokeOptions: pulumi.ResourceOptions = {
     provider: new openziti.Provider('openziti-provider', {
@@ -10,8 +11,34 @@ const invokeOptions: pulumi.ResourceOptions = {
         assimilate: "true",
         insecure: "true"
     }),
-    // ignoreChanges: ["*"]
+    ignoreChanges: ["version"]
 };
+
+const router = new openziti.EdgeRouter('oz-test-edge-router',
+    {
+        name: 'pulumi-edge-router',
+        roleAttributes: ['public'],
+        isTunnelerEnabled: true,
+    }, invokeOptions
+);
+
+const routerPolicy = new openziti.EdgeRouterPolicy('oz-test-edge-router-policy',
+    {
+        name: 'pulumi-all-endpoints-public-routers',
+        edgeRouterRoles: ['#public'],
+        identityRoles: ['#all'],
+        semantic: 'AnyOf',
+    }, invokeOptions
+);
+
+const routerServicePolicy = new openziti.ServiceEdgeRouterPolicy('oz-test-service-edge-router-policy',
+    {
+        name: 'pulumi-all-routers-all-services',
+        edgeRouterRoles: ['#all'],
+        serviceRoles: ['#all'],
+        semantic: 'AnyOf',
+    }, invokeOptions
+);
 
 const obj1 = new openziti.ConfigObj('oz-test-interceptv1-config',
     {
@@ -92,13 +119,6 @@ const svcBind = new openziti.ServicePolicy('oz-test-service-pol-bind',
     }, invokeOptions
 );
 
-const router = new openziti.EdgeRouter('oz-test-edge-router',
-    {
-        name: 'pulumi-edge-router',
-        roleAttributes: ['public'],
-        isTunnelerEnabled: true,
-    }, invokeOptions
-);
 
 export const routerId = router.id;
 export const routerEnrolmentToken = router.enrollmentToken;

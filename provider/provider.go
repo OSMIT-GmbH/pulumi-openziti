@@ -38,8 +38,10 @@ func Provider() p.Provider {
 			// clash with ProviderConfig in dotnet module... :-/
 			infer.Resource[*ConfigObj, ConfigArgs, ConfigState](),
 			infer.Resource[*EdgeRouter, EdgeRouterArgs, EdgeRouterState](),
+			infer.Resource[*EdgeRouterPolicy, EdgeRouterPolicyArgs, EdgeRouterPolicyState](),
 			infer.Resource[*Identity, IdentityArgs, IdentityState](),
 			infer.Resource[*Service, ServiceArgs, ServiceState](),
+			infer.Resource[*ServiceEdgeRouterPolicy, ServiceEdgeRouterPolicyArgs, ServiceEdgeRouterPolicyState](),
 			infer.Resource[*ServicePolicy, ServicePolicyArgs, ServicePolicyState](),
 		},
 		ModuleMap: map[tokens.ModuleName]tokens.ModuleName{

@@ -251,8 +251,11 @@ class EdgeRouter(pulumi.CustomResource):
         __props__ = EdgeRouterArgs.__new__(EdgeRouterArgs)
 
         __props__.__dict__["_links"] = None
+        __props__.__dict__["app_data"] = None
         __props__.__dict__["cert_pem"] = None
+        __props__.__dict__["cost"] = None
         __props__.__dict__["created_at"] = None
+        __props__.__dict__["disabled"] = None
         __props__.__dict__["enrollment_created_at"] = None
         __props__.__dict__["enrollment_expires_at"] = None
         __props__.__dict__["enrollment_jwt"] = None
@@ -264,6 +267,7 @@ class EdgeRouter(pulumi.CustomResource):
         __props__.__dict__["is_tunneler_enabled"] = None
         __props__.__dict__["is_verified"] = None
         __props__.__dict__["name"] = None
+        __props__.__dict__["no_traversal"] = None
         __props__.__dict__["role_attributes"] = None
         __props__.__dict__["supported_protocols"] = None
         __props__.__dict__["sync_status"] = None
@@ -279,14 +283,29 @@ class EdgeRouter(pulumi.CustomResource):
         return pulumi.get(self, "_links")
 
     @property
+    @pulumi.getter(name="appData")
+    def app_data(self) -> pulumi.Output[Optional[Mapping[str, Any]]]:
+        return pulumi.get(self, "app_data")
+
+    @property
     @pulumi.getter(name="certPem")
     def cert_pem(self) -> pulumi.Output[Optional[str]]:
         return pulumi.get(self, "cert_pem")
 
     @property
+    @pulumi.getter
+    def cost(self) -> pulumi.Output[int]:
+        return pulumi.get(self, "cost")
+
+    @property
     @pulumi.getter(name="createdAt")
     def created_at(self) -> pulumi.Output[str]:
         return pulumi.get(self, "created_at")
+
+    @property
+    @pulumi.getter
+    def disabled(self) -> pulumi.Output[bool]:
+        return pulumi.get(self, "disabled")
 
     @property
     @pulumi.getter(name="enrollmentCreatedAt")
@@ -342,6 +361,11 @@ class EdgeRouter(pulumi.CustomResource):
     @pulumi.getter
     def name(self) -> pulumi.Output[str]:
         return pulumi.get(self, "name")
+
+    @property
+    @pulumi.getter(name="noTraversal")
+    def no_traversal(self) -> pulumi.Output[bool]:
+        return pulumi.get(self, "no_traversal")
 
     @property
     @pulumi.getter(name="roleAttributes")
