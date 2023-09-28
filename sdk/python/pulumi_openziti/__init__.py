@@ -6,6 +6,7 @@ from . import _utilities
 import typing
 # Export this package's modules as members:
 from .config_obj import *
+from .edge_router import *
 from .identity import *
 from .provider import *
 from .service import *
@@ -32,6 +33,7 @@ _utilities.register(
   "fqn": "pulumi_openziti",
   "classes": {
    "openziti:index:ConfigObj": "ConfigObj",
+   "openziti:index:EdgeRouter": "EdgeRouter",
    "openziti:index:Identity": "Identity",
    "openziti:index:Service": "Service",
    "openziti:index:ServicePolicy": "ServicePolicy"

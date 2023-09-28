@@ -37,6 +37,7 @@ func Provider() p.Provider {
 			// we have to use ConfigObj as name otherwise we have a name
 			// clash with ProviderConfig in dotnet module... :-/
 			infer.Resource[*ConfigObj, ConfigArgs, ConfigState](),
+			infer.Resource[*EdgeRouter, EdgeRouterArgs, EdgeRouterState](),
 			infer.Resource[*Identity, IdentityArgs, IdentityState](),
 			infer.Resource[*Service, ServiceArgs, ServiceState](),
 			infer.Resource[*ServicePolicy, ServicePolicyArgs, ServicePolicyState](),

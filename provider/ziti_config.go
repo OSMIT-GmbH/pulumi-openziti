@@ -126,8 +126,6 @@ func (thiz *ConfigObj) Create(ctx p.Context, name string, input ConfigArgs, prev
 		var badReq *config.CreateConfigBadRequest
 		if errors.As(err, &badReq) {
 			err2, dupe := formatApiErrDupeCheck(ctx, badReq, badReq.Payload)
-			fmt.Printf("DupeCheck: %b %b %s", dupe, c.assimilate, c.Assimilate)
-
 			if dupe && c.assimilate {
 				// find identity by name...
 				findParams := &config.ListConfigsParams{

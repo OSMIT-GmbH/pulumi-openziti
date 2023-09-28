@@ -204,12 +204,12 @@ func buildZitiTags(tags Tags) *rest_model.Tags {
 	return &rest_model.Tags{SubTags: out}
 }
 
-func dumpStruct(ctx p.Context, data interface{}) {
+func dumpStruct(ctx p.Context, name string, data interface{}) {
 	out, err := json.Marshal(data)
 	if err != nil {
 		ctx.Logf(diag.Info, "ERROR: failed serializing data: %s => %#v", err.Error(), data)
 	} else {
-		ctx.Logf(diag.Info, "OK: createConf(json)=%s", string(out))
+		ctx.Logf(diag.Info, "OK: %s(json)=%s", name, string(out))
 	}
 }
 

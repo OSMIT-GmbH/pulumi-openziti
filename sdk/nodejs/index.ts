@@ -10,6 +10,11 @@ export type ConfigObj = import("./configObj").ConfigObj;
 export const ConfigObj: typeof import("./configObj").ConfigObj = null as any;
 utilities.lazyLoad(exports, ["ConfigObj"], () => require("./configObj"));
 
+export { EdgeRouterArgs } from "./edgeRouter";
+export type EdgeRouter = import("./edgeRouter").EdgeRouter;
+export const EdgeRouter: typeof import("./edgeRouter").EdgeRouter = null as any;
+utilities.lazyLoad(exports, ["EdgeRouter"], () => require("./edgeRouter"));
+
 export { IdentityArgs } from "./identity";
 export type Identity = import("./identity").Identity;
 export const Identity: typeof import("./identity").Identity = null as any;
@@ -46,6 +51,8 @@ const _module = {
         switch (type) {
             case "openziti:index:ConfigObj":
                 return new ConfigObj(name, <any>undefined, { urn })
+            case "openziti:index:EdgeRouter":
+                return new EdgeRouter(name, <any>undefined, { urn })
             case "openziti:index:Identity":
                 return new Identity(name, <any>undefined, { urn })
             case "openziti:index:Service":

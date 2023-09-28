@@ -7,7 +7,8 @@ const invokeOptions: pulumi.ResourceOptions = {
         uri: openzitiConfig.require("uri"),
         user: openzitiConfig.require("user"),
         password: openzitiConfig.require("password"),
-        assimilate: "true"
+        assimilate: "true",
+        insecure: "true"
     }),
     // ignoreChanges: ["*"]
 };
@@ -90,3 +91,14 @@ const svcBind = new openziti.ServicePolicy('oz-test-service-pol-bind',
         type: 'Bind',
     }, invokeOptions
 );
+
+const router = new openziti.EdgeRouter('oz-test-edge-router',
+    {
+        name: 'pulumi-edge-router',
+        roleAttributes: ['public'],
+        isTunnelerEnabled: true,
+    }, invokeOptions
+);
+
+export const routerId = router.id;
+export const routerEnrolmentToken = router.enrollmentToken;
