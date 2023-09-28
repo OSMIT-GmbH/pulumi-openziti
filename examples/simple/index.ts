@@ -9,9 +9,12 @@ const invokeOptions: pulumi.ResourceOptions = {
         user: openzitiConfig.require("user"),
         password: openzitiConfig.require("password"),
         assimilate: "true",
-        insecure: "true"
+    }, {
+        // provider config changes currently enforce a Create/Delete on all items
+        // associated with this provider. This is not a good idea for Identity's and
+        // EdgeRouter's. So we better ignore changes on the provider. ;)
+        ignoreChanges: ["version", "uri", "assimilate", "user", "password", "insecure"]
     }),
-    ignoreChanges: ["version"]
 };
 
 const router = new openziti.EdgeRouter('oz-test-edge-router',
