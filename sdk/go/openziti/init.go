@@ -27,6 +27,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 		r = &EdgeRouter{}
 	case "openziti:index:EdgeRouterPolicy":
 		r = &EdgeRouterPolicy{}
+	case "openziti:index:EnrolledIdentity":
+		r = &EnrolledIdentity{}
 	case "openziti:index:Identity":
 		r = &Identity{}
 	case "openziti:index:Service":

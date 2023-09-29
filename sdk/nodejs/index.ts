@@ -20,6 +20,11 @@ export type EdgeRouterPolicy = import("./edgeRouterPolicy").EdgeRouterPolicy;
 export const EdgeRouterPolicy: typeof import("./edgeRouterPolicy").EdgeRouterPolicy = null as any;
 utilities.lazyLoad(exports, ["EdgeRouterPolicy"], () => require("./edgeRouterPolicy"));
 
+export { EnrolledIdentityArgs } from "./enrolledIdentity";
+export type EnrolledIdentity = import("./enrolledIdentity").EnrolledIdentity;
+export const EnrolledIdentity: typeof import("./enrolledIdentity").EnrolledIdentity = null as any;
+utilities.lazyLoad(exports, ["EnrolledIdentity"], () => require("./enrolledIdentity"));
+
 export { IdentityArgs } from "./identity";
 export type Identity = import("./identity").Identity;
 export const Identity: typeof import("./identity").Identity = null as any;
@@ -65,6 +70,8 @@ const _module = {
                 return new EdgeRouter(name, <any>undefined, { urn })
             case "openziti:index:EdgeRouterPolicy":
                 return new EdgeRouterPolicy(name, <any>undefined, { urn })
+            case "openziti:index:EnrolledIdentity":
+                return new EnrolledIdentity(name, <any>undefined, { urn })
             case "openziti:index:Identity":
                 return new Identity(name, <any>undefined, { urn })
             case "openziti:index:Service":

@@ -39,6 +39,7 @@ func Provider() p.Provider {
 			infer.Resource[*ConfigObj, ConfigArgs, ConfigState](),
 			infer.Resource[*EdgeRouter, EdgeRouterArgs, EdgeRouterState](),
 			infer.Resource[*EdgeRouterPolicy, EdgeRouterPolicyArgs, EdgeRouterPolicyState](),
+			infer.Resource[*EnrolledIdentity, EnrolledIdentityArgs, EnrolledIdentityState](),
 			infer.Resource[*Identity, IdentityArgs, IdentityState](),
 			infer.Resource[*Service, ServiceArgs, ServiceState](),
 			infer.Resource[*ServiceEdgeRouterPolicy, ServiceEdgeRouterPolicyArgs, ServiceEdgeRouterPolicyState](),

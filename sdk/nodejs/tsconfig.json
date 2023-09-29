@@ -18,6 +18,7 @@
         "configObj.ts",
         "edgeRouter.ts",
         "edgeRouterPolicy.ts",
+        "enrolledIdentity.ts",
         "identity.ts",
         "index.ts",
         "provider.ts",

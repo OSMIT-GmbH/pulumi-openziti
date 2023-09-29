@@ -8,6 +8,7 @@ import typing
 from .config_obj import *
 from .edge_router import *
 from .edge_router_policy import *
+from .enrolled_identity import *
 from .identity import *
 from .provider import *
 from .service import *
@@ -37,6 +38,7 @@ _utilities.register(
    "openziti:index:ConfigObj": "ConfigObj",
    "openziti:index:EdgeRouter": "EdgeRouter",
    "openziti:index:EdgeRouterPolicy": "EdgeRouterPolicy",
+   "openziti:index:EnrolledIdentity": "EnrolledIdentity",
    "openziti:index:Identity": "Identity",
    "openziti:index:Service": "Service",
    "openziti:index:ServiceEdgeRouterPolicy": "ServiceEdgeRouterPolicy",

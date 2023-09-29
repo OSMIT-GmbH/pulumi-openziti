@@ -109,6 +109,14 @@ const id1 = new openziti.Identity('oz-test-identity',
 export const id1exp = id1;
 export const id1id = id1.id;
 
+const enrolledId1 = new openziti.EnrolledIdentity('oz-test-identity-enrolled',
+    {
+        enrollmentJwt: id1.enrollment.ott.jwt,
+    }, invokeOptions
+);
+
+export const id1json = enrolledId1.identityJson;
+
 const svcBind = new openziti.ServicePolicy('oz-test-service-pol-bind',
     {
         name: 'test-service.bind',
