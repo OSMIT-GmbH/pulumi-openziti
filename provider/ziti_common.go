@@ -20,6 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/strfmt"
 	edgeapis "github.com/openziti/edge-api/rest_management_api_client"
 	"github.com/openziti/edge-api/rest_management_api_client/config"
 	"github.com/openziti/edge-api/rest_model"
@@ -215,6 +216,18 @@ func buildZitiTags(tags Tags) *rest_model.Tags {
 		out[key] = value
 	}
 	return &rest_model.Tags{SubTags: out}
+}
+
+func buildBaseStatePreviewEntity(name string, input BaseArgsEntity) BaseStateEntity {
+	now := strfmt.Date{}
+	return BaseStateEntity{
+		Links:       Links{},
+		CreatedAt:   now.String(),
+		ID:          IdPreviewPrefix + name,
+		Tags:        input.Tags,
+		UpdatedAt:   now.String(),
+		Assimilated: false,
+	}
 }
 
 func dumpStruct(ctx p.Context, name string, data interface{}) {

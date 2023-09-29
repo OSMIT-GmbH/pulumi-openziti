@@ -75,6 +75,22 @@ type ConfigState struct {
 
 // All resources must implement Create at a minumum.
 func (thiz *ConfigObj) Create(ctx p.Context, name string, input ConfigArgs, preview bool) (string, ConfigState, error) {
+	// bail out now when we are in preview mode
+	if preview {
+		return name, ConfigState{
+			ConfigArgs:      input,
+			BaseStateEntity: buildBaseStatePreviewEntity(name, input.BaseArgsEntity),
+			ConfigType: EntityRef{
+				Links:  Links{},
+				Entity: "",
+				ID:     "",
+				Name:   input.ConfigTypeName,
+			},
+			ConfigTypeID: "",
+			Data:         input.Data,
+		}, nil
+	}
+
 	retErr := func(err error) (string, ConfigState, error) {
 		return "", ConfigState{ConfigArgs: input}, err
 	}
@@ -98,28 +114,6 @@ func (thiz *ConfigObj) Create(ctx p.Context, name string, input ConfigArgs, prev
 		Context: context.Background(),
 	}
 	// dumpStruct(ctx, confCreate)
-
-	// bail out now when we are in preview mode
-	if preview {
-		return name, ConfigState{
-			ConfigArgs: input,
-			BaseStateEntity: BaseStateEntity{
-				Links:     Links{},
-				CreatedAt: "",
-				ID:        "",
-				Tags:      input.Tags,
-				UpdatedAt: "",
-			},
-			ConfigType: EntityRef{
-				Links:  Links{},
-				Entity: "",
-				ID:     "",
-				Name:   input.ConfigTypeName,
-			},
-			ConfigTypeID: "",
-			Data:         input.Data,
-		}, nil
-	}
 
 	resp, err := ce.client.Config.CreateConfig(confParams, nil)
 	if err != nil {

@@ -85,6 +85,19 @@ type ServiceEdgeRouterPolicyState struct {
 
 // All resources must implement Create at a minumum.
 func (thiz *ServiceEdgeRouterPolicy) Create(ctx p.Context, name string, input ServiceEdgeRouterPolicyArgs, preview bool) (string, ServiceEdgeRouterPolicyState, error) {
+	// bail out now when we are in preview mode
+	if preview {
+		return name, ServiceEdgeRouterPolicyState{
+			ServiceEdgeRouterPolicyArgs: input,
+			BaseStateEntity:             buildBaseStatePreviewEntity(name, input.BaseArgsEntity),
+			EdgeRouterRoles:             input.EdgeRouterRoles,
+			EdgeRouterRolesDisplay:      NamedRoles{},
+			ServiceRoles:                input.ServiceRoles,
+			ServiceRolesDisplay:         NamedRoles{},
+			Semantic:                    input.Semantic,
+		}, nil
+	}
+
 	retErr := func(err error) (string, ServiceEdgeRouterPolicyState, error) {
 		return "", ServiceEdgeRouterPolicyState{ServiceEdgeRouterPolicyArgs: input}, err
 	}
@@ -105,11 +118,6 @@ func (thiz *ServiceEdgeRouterPolicy) Create(ctx p.Context, name string, input Se
 		Context: context.Background(),
 	}
 	// dumpStruct(ctx, confCreate)
-
-	// bail out now when we are in preview mode
-	if preview {
-		return name, ServiceEdgeRouterPolicyState{ServiceEdgeRouterPolicyArgs: input}, nil
-	}
 
 	resp, err := ce.client.ServiceEdgeRouterPolicy.CreateServiceEdgeRouterPolicy(createParams, nil)
 	if err != nil {

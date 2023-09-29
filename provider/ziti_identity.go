@@ -320,6 +320,43 @@ type IdentityState struct {
 
 // All resources must implement Create at a minumum.
 func (thiz *Identity) Create(ctx p.Context, name string, input IdentityArgs, preview bool) (string, IdentityState, error) {
+	// bail out now when we are in preview mode
+	if preview {
+		return IdPreviewPrefix + name, IdentityState{
+			IdentityArgs:              input,
+			BaseStateEntity:           buildBaseStatePreviewEntity(name, input.BaseArgsEntity),
+			AppData:                   input.AppData,
+			AuthPolicy:                EntityRef{},
+			AuthPolicyID:              "",
+			Authenticators:            rest_model.IdentityAuthenticators{},
+			DefaultHostingCost:        input.DefaultHostingCost,
+			DefaultHostingPrecedence:  input.DefaultHostingPrecedence,
+			Disabled:                  false,
+			DisabledAt:                nil,
+			DisabledUntil:             nil,
+			Enrollment:                IdentityEnrollments{},
+			EnvInfo:                   EnvInfo{},
+			ExternalID:                input.ExternalID,
+			HasAPISession:             false,
+			HasEdgeRouterConnection:   false,
+			IsAdmin:                   input.IsAdmin,
+			IsDefaultAdmin:            false,
+			IsMfaEnabled:              false,
+			Name:                      input.Name,
+			RoleAttributes:            input.RoleAttributes,
+			SdkInfo:                   SdkInfo{},
+			ServiceHostingCosts:       input.ServiceHostingCosts,
+			ServiceHostingPrecedences: input.ServiceHostingPrecedences,
+			Type: EntityRef{
+				Links:  nil,
+				Entity: "",
+				ID:     "",
+				Name:   fmt.Sprintf("%s", input.Type),
+			},
+			TypeID: "",
+		}, nil
+	}
+
 	retErr := func(err error) (string, IdentityState, error) {
 		return "", IdentityState{IdentityArgs: input}, err
 	}
@@ -352,11 +389,6 @@ func (thiz *Identity) Create(ctx p.Context, name string, input IdentityArgs, pre
 		Context:  context.Background(),
 	}
 	// dumpStruct(ctx, confCreate)
-
-	// bail out now when we are in preview mode
-	if preview {
-		return IdPreviewPrefix + name, IdentityState{IdentityArgs: input}, nil
-	}
 
 	resp, err := ce.client.Identity.CreateIdentity(createParams, nil)
 	if err != nil {

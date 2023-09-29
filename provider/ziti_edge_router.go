@@ -181,41 +181,11 @@ type EdgeRouterState struct {
 
 // All resources must implement Create at a minumum.
 func (thiz *EdgeRouter) Create(ctx p.Context, name string, input EdgeRouterArgs, preview bool) (string, EdgeRouterState, error) {
-	retErr := func(err error) (string, EdgeRouterState, error) {
-		return "", EdgeRouterState{}, err
-	}
-	ce, c, err := initClient(ctx)
-	if err != nil {
-		return retErr(err)
-	}
-
-	confCreate := &rest_model.EdgeRouterCreate{
-		AppData:           buildZitiTags(input.AppData),
-		Cost:              &input.Cost,
-		Disabled:          &input.Disabled,
-		IsTunnelerEnabled: input.IsTunnelerEnabled,
-		Name:              &input.Name,
-		NoTraversal:       &input.NoTraversal,
-		RoleAttributes:    &input.RoleAttributes,
-		Tags:              buildZitiTags(input.Tags),
-	}
-	createParams := &edge_router.CreateEdgeRouterParams{
-		EdgeRouter: confCreate,
-		Context:    context.Background(),
-	}
-	// dumpStruct(ctx, confCreate)
-
 	// bail out now when we are in preview mode
 	if preview {
 		previewState := EdgeRouterState{
 			// EdgeRouterArgs: input,
-			BaseStateEntity: BaseStateEntity{
-				Links:     nil,
-				CreatedAt: "",
-				ID:        "",
-				Tags:      input.Tags,
-				UpdatedAt: "",
-			},
+			BaseStateEntity: buildBaseStatePreviewEntity(name, input.BaseArgsEntity),
 			CommonEdgeRouterProperties: CommonEdgeRouterProperties{
 				AppData:            input.AppData,
 				Cost:               input.Cost,
@@ -244,6 +214,30 @@ func (thiz *EdgeRouter) Create(ctx p.Context, name string, input EdgeRouterArgs,
 
 		return name, previewState, nil
 	}
+
+	retErr := func(err error) (string, EdgeRouterState, error) {
+		return "", EdgeRouterState{}, err
+	}
+	ce, c, err := initClient(ctx)
+	if err != nil {
+		return retErr(err)
+	}
+
+	confCreate := &rest_model.EdgeRouterCreate{
+		AppData:           buildZitiTags(input.AppData),
+		Cost:              &input.Cost,
+		Disabled:          &input.Disabled,
+		IsTunnelerEnabled: input.IsTunnelerEnabled,
+		Name:              &input.Name,
+		NoTraversal:       &input.NoTraversal,
+		RoleAttributes:    &input.RoleAttributes,
+		Tags:              buildZitiTags(input.Tags),
+	}
+	createParams := &edge_router.CreateEdgeRouterParams{
+		EdgeRouter: confCreate,
+		Context:    context.Background(),
+	}
+	// dumpStruct(ctx, confCreate)
 
 	resp, err := ce.client.EdgeRouter.CreateEdgeRouter(createParams, nil)
 	if err != nil {

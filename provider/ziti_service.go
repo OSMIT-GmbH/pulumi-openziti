@@ -119,6 +119,22 @@ type ServiceState struct {
 
 // All resources must implement Create at a minumum.
 func (thiz *Service) Create(ctx p.Context, name string, input ServiceArgs, preview bool) (string, ServiceState, error) {
+	// bail out early when we are in preview mode
+	if preview {
+		return IdPreviewPrefix + name, ServiceState{
+			ServiceArgs:        input,
+			BaseStateEntity:    buildBaseStatePreviewEntity(name, input.BaseArgsEntity),
+			Config:             make(map[string]map[string]interface{}),
+			Configs:            input.Configs,
+			EncryptionRequired: input.EncryptionRequired,
+			Name:               input.Name,
+			Permissions:        nil,
+			PostureQueries:     nil,
+			RoleAttributes:     input.RoleAttributes,
+			TerminatorStrategy: input.TerminatorStrategy,
+		}, nil
+	}
+
 	retErr := func(err error) (string, ServiceState, error) {
 		return "", ServiceState{ServiceArgs: input}, err
 	}
@@ -140,11 +156,6 @@ func (thiz *Service) Create(ctx p.Context, name string, input ServiceArgs, previ
 		Context: context.Background(),
 	}
 	// dumpStruct(ctx, confCreate)
-
-	// bail out now when we are in preview mode
-	if preview {
-		return name, ServiceState{ServiceArgs: input}, nil
-	}
 
 	resp, err := ce.client.Service.CreateService(createParams, nil)
 	if err != nil {

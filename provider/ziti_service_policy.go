@@ -267,6 +267,22 @@ func (*ServicePolicy) Check(ctx p.Context, name string, oldInputs, newInputs res
 
 // All resources must implement Create at a minumum.
 func (thiz *ServicePolicy) Create(ctx p.Context, name string, input ServicePolicyArgs, preview bool) (string, ServicePolicyState, error) {
+	// bail out now when we are in preview mode
+	if preview {
+		return name, ServicePolicyState{
+			ServicePolicyArgs:        input,
+			BaseStateEntity:          buildBaseStatePreviewEntity(name, input.BaseArgsEntity),
+			IdentityRoles:            input.IdentityRoles,
+			IdentityRolesDisplay:     NamedRoles{},
+			PostureCheckRoles:        input.PostureCheckRoles,
+			PostureCheckRolesDisplay: NamedRoles{},
+			Semantic:                 input.Semantic,
+			ServiceRoles:             input.ServiceRoles,
+			ServiceRolesDisplay:      nil,
+			Type:                     input.Type,
+		}, nil
+	}
+
 	retErr := func(err error) (string, ServicePolicyState, error) {
 		return "", ServicePolicyState{ServicePolicyArgs: input}, err
 	}
@@ -289,11 +305,6 @@ func (thiz *ServicePolicy) Create(ctx p.Context, name string, input ServicePolic
 		Context: context.Background(),
 	}
 	// dumpStruct(ctx, confCreate)
-
-	// bail out now when we are in preview mode
-	if preview {
-		return name, ServicePolicyState{ServicePolicyArgs: input}, nil
-	}
 
 	resp, err := ce.client.ServicePolicy.CreateServicePolicy(createParams, nil)
 	if err != nil {
