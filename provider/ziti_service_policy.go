@@ -388,12 +388,12 @@ func readServicePolicy(ce *CacheEntry, id string, input ServicePolicyArgs, assim
 	return ServicePolicyState{
 		ServicePolicyArgs:        input,
 		BaseStateEntity:          buildBaseState(rd.BaseEntity, assimilated),
-		IdentityRoles:            rd.IdentityRoles,
+		IdentityRoles:            ifte(rd.IdentityRoles != nil, rd.IdentityRoles, []string{}),
 		IdentityRolesDisplay:     buildRoleDisplay(rd.IdentityRolesDisplay),
 		PostureCheckRoles:        ifte(rd.PostureCheckRoles != nil, rd.PostureCheckRoles, []string{}),
 		PostureCheckRolesDisplay: buildRoleDisplay(rd.PostureCheckRolesDisplay),
 		Semantic:                 *rd.Semantic,
-		ServiceRoles:             rd.ServiceRoles,
+		ServiceRoles:             ifte(rd.ServiceRoles != nil, rd.ServiceRoles, []string{}),
 		ServiceRolesDisplay:      buildRoleDisplay(rd.ServiceRolesDisplay),
 		Type:                     *rd.Type,
 	}, nil

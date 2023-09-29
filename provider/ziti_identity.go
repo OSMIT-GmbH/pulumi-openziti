@@ -436,7 +436,7 @@ func (thiz *Identity) Create(ctx p.Context, name string, input IdentityArgs, pre
 func (*Identity) Diff(ctx p.Context, id string, olds IdentityState, news IdentityArgs) (p.DiffResponse, error) {
 	diff := map[string]p.PropertyDiff{}
 	if news.Name != olds.Name {
-		diff["name"] = p.PropertyDiff{Kind: p.UpdateReplace}
+		diff["name"] = p.PropertyDiff{Kind: p.Update}
 	}
 	diffWalk(ctx, diff, "tags", reflect.ValueOf(olds.Tags), reflect.ValueOf(news.Tags))
 

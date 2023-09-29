@@ -197,7 +197,7 @@ func readServiceEdgeRouterPolicy(ce *CacheEntry, id string, input ServiceEdgeRou
 	return ServiceEdgeRouterPolicyState{
 		ServiceEdgeRouterPolicyArgs: input,
 		BaseStateEntity:             buildBaseState(rd.BaseEntity, assimilated),
-		ServiceRoles:                rd.ServiceRoles,
+		ServiceRoles:                ifte(rd.ServiceRoles != nil, rd.ServiceRoles, []string{}),
 		ServiceRolesDisplay:         buildRoleDisplay(rd.ServiceRolesDisplay),
 		EdgeRouterRoles:             ifte(rd.EdgeRouterRoles != nil, rd.EdgeRouterRoles, []string{}),
 		EdgeRouterRolesDisplay:      buildRoleDisplay(rd.EdgeRouterRolesDisplay),
