@@ -54,6 +54,11 @@ func NewEdgeRouter(ctx *pulumi.Context,
 	if args.Name == nil {
 		return nil, errors.New("invalid value for required argument 'Name'")
 	}
+	secrets := pulumi.AdditionalSecretOutputs([]string{
+		"enrollmentJwt",
+		"enrollmentToken",
+	})
+	opts = append(opts, secrets)
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource EdgeRouter
 	err := ctx.RegisterResource("openziti:index:EdgeRouter", name, args, &resource, opts...)

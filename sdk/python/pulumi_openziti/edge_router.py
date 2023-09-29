@@ -229,6 +229,8 @@ class EdgeRouter(pulumi.CustomResource):
             __props__.__dict__["unverified_cert_pem"] = None
             __props__.__dict__["unverified_fingerprint"] = None
             __props__.__dict__["updated_at"] = None
+        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["enrollmentJwt", "enrollmentToken"])
+        opts = pulumi.ResourceOptions.merge(opts, secret_opts)
         super(EdgeRouter, __self__).__init__(
             'openziti:index:EdgeRouter',
             resource_name,

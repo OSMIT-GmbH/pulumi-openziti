@@ -65,6 +65,10 @@ func NewIdentity(ctx *pulumi.Context,
 	if args.Type == nil {
 		return nil, errors.New("invalid value for required argument 'Type'")
 	}
+	secrets := pulumi.AdditionalSecretOutputs([]string{
+		"enrollment",
+	})
+	opts = append(opts, secrets)
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Identity
 	err := ctx.RegisterResource("openziti:index:Identity", name, args, &resource, opts...)

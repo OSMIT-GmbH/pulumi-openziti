@@ -147,6 +147,8 @@ export class Identity extends pulumi.CustomResource {
             resourceInputs["updatedAt"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
+        const secretOpts = { additionalSecretOutputs: ["enrollment"] };
+        opts = pulumi.mergeOptions(opts, secretOpts);
         super(Identity.__pulumiType, name, resourceInputs, opts);
     }
 }

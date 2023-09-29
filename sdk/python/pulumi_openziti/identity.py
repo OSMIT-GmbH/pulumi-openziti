@@ -322,6 +322,8 @@ class Identity(pulumi.CustomResource):
             __props__.__dict__["sdk_info"] = None
             __props__.__dict__["type_id"] = None
             __props__.__dict__["updated_at"] = None
+        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["enrollment"])
+        opts = pulumi.ResourceOptions.merge(opts, secret_opts)
         super(Identity, __self__).__init__(
             'openziti:index:Identity',
             resource_name,

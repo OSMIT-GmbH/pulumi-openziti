@@ -129,6 +129,8 @@ export class EdgeRouter extends pulumi.CustomResource {
             resourceInputs["updatedAt"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
+        const secretOpts = { additionalSecretOutputs: ["enrollmentJwt", "enrollmentToken"] };
+        opts = pulumi.mergeOptions(opts, secretOpts);
         super(EdgeRouter.__pulumiType, name, resourceInputs, opts);
     }
 }

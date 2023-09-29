@@ -260,7 +260,7 @@ type IdentityState struct {
 
 	// enrollment
 	// Required: true
-	Enrollment IdentityEnrollments `pulumi:"enrollment"`
+	Enrollment IdentityEnrollments `pulumi:"enrollment" provider:"secret,output"`
 
 	// env info
 	// Required: true

@@ -149,10 +149,10 @@ type EdgeRouterState struct {
 	EnrollmentExpiresAt *string `pulumi:"enrollmentExpiresAt,optional"`
 
 	// enrollment Jwt
-	EnrollmentJWT *string `pulumi:"enrollmentJwt,optional"`
+	EnrollmentJWT *string `pulumi:"enrollmentJwt,optional" provider:"secret,output"`
 
 	// enrollment token
-	EnrollmentToken *string `pulumi:"enrollmentToken,optional"`
+	EnrollmentToken *string `pulumi:"enrollmentToken,optional" provider:"secret,output"`
 
 	// fingerprint
 	Fingerprint string `pulumi:"fingerprint,optional"`
