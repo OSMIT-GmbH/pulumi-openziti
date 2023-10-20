@@ -239,10 +239,15 @@ func (*ServicePolicy) Check(ctx p.Context, name string, oldInputs, newInputs res
 					return ServicePolicyArgs{}, nil, err
 				}
 				if msg != nil {
-					failures = append(failures, p.CheckFailure{
-						Property: "identityRoles",
-						Reason:   *msg,
-					})
+					if newInputs.ContainsUnknowns() || identityRoles.ContainsUnknowns() {
+						// preview mode - identities could not have been created yet...
+						ctx.Logf(diag.Warning, "identityRoles: %s", msg)
+					} else {
+						failures = append(failures, p.CheckFailure{
+							Property: "identityRoles",
+							Reason:   *msg,
+						})
+					}
 				}
 				identityRolesN[idx] = resource.NewStringProperty("@" + resolved)
 			} else {
