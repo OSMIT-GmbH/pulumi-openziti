@@ -95,7 +95,7 @@ jobs:
           java-version: ${{matrix.javaversion}}
       - if: ${{ matrix.language == 'python'}}
         name: Setup Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: ${{matrix.pythonversion}}
       # provider is needed by all further SDK steps...
