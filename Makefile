@@ -2,9 +2,9 @@ PROJECT_NAME := Pulumi OpenZiti Resource Provider
 
 PACK             := openziti
 PACKDIR          := sdk
-PROJECT          := github.com/pulumi/pulumi-openziti
-NODE_MODULE_NAME := @pulumi/openziti
-NUGET_PKG_NAME   := Pulumi.OpenZiti
+PROJECT          := github.com/OSMIT-GmbH/pulumi-openziti
+NODE_MODULE_NAME := @OSMIT-GmbH/openziti
+NUGET_PKG_NAME   := OSMIT-GmbH.OpenZiti
 
 PROVIDER        := pulumi-resource-${PACK}
 VERSION         ?= $(shell pulumictl get version)

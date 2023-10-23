@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	openziti "github.com/pulumi/pulumi-openziti/provider"
+	openziti "github.com/OSMIT-GmbH/pulumi-openziti/provider"
 )
 
 func TestRandomCreate(t *testing.T) {

@@ -1,14 +1,14 @@
-module github.com/pulumi/pulumi-openziti/tests
+module github.com/OSMIT-GmbH/pulumi-openziti/tests
 
 go 1.21
 
-replace github.com/pulumi/pulumi-openziti/provider => ../provider
+replace github.com/OSMIT-GmbH/pulumi-openziti/provider => ../provider
 
 require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/pulumi/pulumi-go-provider v0.12.0
 	github.com/pulumi/pulumi-go-provider/integration v0.10.0
-	github.com/pulumi/pulumi-openziti/provider v0.0.0-00010101000000-000000000000
+	github.com/OSMIT-GmbH/pulumi-openziti/provider v0.0.0-00010101000000-000000000000
 	github.com/pulumi/pulumi/sdk/v3 v3.79.0
 )
 

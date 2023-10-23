@@ -1,4 +1,4 @@
-module github.com/pulumi/pulumi-openziti/sdk
+module github.com/OSMIT-GmbH/pulumi-openziti/sdk
 
 go 1.21
 

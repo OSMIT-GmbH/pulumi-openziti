@@ -1,9 +1,11 @@
-module github.com/pulumi/pulumi-openziti/provider
+module github.com/OSMIT-GmbH/pulumi-openziti/provider
 
 go 1.21
 
 require (
 	github.com/go-openapi/runtime v0.26.0
+	github.com/go-openapi/strfmt v0.21.7
+	github.com/motemen/go-loghttp v0.0.0-20170804080138-974ac5ceac27
 	github.com/openziti/edge-api v0.25.35
 	github.com/openziti/sdk-golang v0.20.111
 	github.com/pulumi/pulumi-go-provider v0.12.0
@@ -42,7 +44,6 @@ require (
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/loads v0.21.2 // indirect
 	github.com/go-openapi/spec v0.20.9 // indirect
-	github.com/go-openapi/strfmt v0.21.7 // indirect
 	github.com/go-openapi/swag v0.22.4 // indirect
 	github.com/go-openapi/validate v0.22.1 // indirect
 	github.com/gofrs/uuid v4.3.1+incompatible // indirect
@@ -75,7 +76,6 @@ require (
 	github.com/mitchellh/go-ps v1.0.0 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
-	github.com/motemen/go-loghttp v0.0.0-20170804080138-974ac5ceac27 // indirect
 	github.com/motemen/go-nuts v0.0.0-20220604134737-2658d0104f31 // indirect
 	github.com/natefinch/atomic v1.0.1 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
