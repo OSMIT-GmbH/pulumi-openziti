@@ -1,5 +1,5 @@
 {
-    "name": "@pulumi/openziti",
+    "name": "@osmit-gmbh/openziti",
     "version": "${VERSION}",
     "scripts": {
         "build": "tsc"

@@ -3,7 +3,7 @@ PROJECT_NAME := Pulumi OpenZiti Resource Provider
 PACK             := openziti
 PACKDIR          := sdk
 PROJECT          := github.com/OSMIT-GmbH/pulumi-openziti
-NODE_MODULE_NAME := @OSMIT-GmbH/openziti
+NODE_MODULE_NAME := @osmit-gmbh/openziti
 NUGET_PKG_NAME   := OSMIT-GmbH.OpenZiti
 
 PROVIDER        := pulumi-resource-${PACK}
@@ -47,6 +47,8 @@ nodejs_sdk::
 	rm -rf sdk/nodejs
 	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language nodejs
 	cd ${PACKDIR}/nodejs/ && \
+		sed -i.bak 's!"name": "@pulumi/${PACK}"!"name": "$(NODE_MODULE_NAME)"!g' package.json && \
+		rm package.json.bak && \
 		yarn install && \
 		yarn run tsc && \
 		cp ../../README.md ../../LICENSE package.json yarn.lock bin/ && \
