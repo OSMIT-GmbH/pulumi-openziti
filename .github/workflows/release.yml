@@ -57,6 +57,7 @@ jobs:
         - 1.21.x
 
   publish_sdk:
+    name: Publish SDKs
     runs-on: ubuntu-latest
     needs: publish_binary
     steps:
@@ -97,6 +98,9 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{matrix.pythonversion}}
+      # provider is needed by all further SDK steps...
+      - name: Build Provider
+        run: make provider
       - name: Build SDK
         run: make ${{ matrix.language }}_sdk
       - name: Check worktree clean
@@ -108,6 +112,13 @@ jobs:
               git diff
               exit 1
           fi
+      - name: Compress SDK folder
+        run: tar -zcf sdk/${{ matrix.language }}.tar.gz -C sdk/${{ matrix.language }} .
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.language  }}-sdk.tar.gz
+          path: ${{ github.workspace}}/sdk/${{ matrix.language }}.tar.gz
       - if: ${{ matrix.language == 'python' && env.PUBLISH_PYPI == 'true' }}
         name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -118,6 +129,7 @@ jobs:
       - if: ${{ matrix.language == 'nodejs' && env.PUBLISH_NPM == 'true' }}
         uses: JS-DevTools/npm-publish@v2
         with:
+          access: "public"
           registry: ${{env.NPM_REGISTRY_URL}}
           token: ${{ env.NPM_TOKEN }}
           package: ${{github.workspace}}/sdk/nodejs/bin/package.json
