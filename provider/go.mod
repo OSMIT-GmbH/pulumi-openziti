@@ -9,7 +9,7 @@ require (
 	github.com/openziti/edge-api v0.26.0
 	github.com/openziti/sdk-golang v0.20.124
 	github.com/pulumi/pulumi-go-provider v0.12.2
-	github.com/pulumi/pulumi/sdk/v3 v3.90.0
+	github.com/pulumi/pulumi/sdk/v3 v3.89.0
 )
 
 require (
@@ -71,7 +71,6 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/kataras/go-events v0.0.3 // indirect
 	github.com/kevinburke/ssh_config v1.2.0 // indirect
-	github.com/klauspost/compress v1.17.2 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/lufia/plan9stats v0.0.0-20231016141302-07b5767bb0ed // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
@@ -108,7 +107,7 @@ require (
 	github.com/pkg/term v1.2.0-beta.2 // indirect
 	github.com/power-devops/perfstat v0.0.0-20221212215047-62379fc7944b // indirect
 	github.com/pulumi/esc v0.5.6 // indirect
-	github.com/pulumi/pulumi/pkg/v3 v3.90.0 // indirect
+	github.com/pulumi/pulumi/pkg/v3 v3.89.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
