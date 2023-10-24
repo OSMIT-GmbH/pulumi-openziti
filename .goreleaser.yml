@@ -7,6 +7,8 @@ archives:
 builds:
 - binary: pulumi-resource-openziti
   dir: provider
+  env:
+    - CGO_ENABLED=0
   goarch:
   - amd64
   - arm64
@@ -16,6 +18,7 @@ builds:
   - linux
   ignore: []
   ldflags:
+  # The line below MUST align with the module in current provider/go.mod
   - -X github.com/OSMIT-GmbH/pulumi-openziti/provider/pkg/version.Version={{.Tag}}
   main: ./cmd/pulumi-resource-openziti/
 changelog:
@@ -30,5 +33,6 @@ changelog:
   use: git
 release:
   disable: false
+  prerelease: auto
 snapshot:
   name_template: "{{ .Tag }}-SNAPSHOT"
