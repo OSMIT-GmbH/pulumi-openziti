@@ -3,7 +3,7 @@ PROJECT_NAME := Pulumi OpenZiti Resource Provider
 PACK             := openziti
 PACKDIR          := sdk
 PROJECT          := github.com/OSMIT-GmbH/pulumi-openziti
-NODE_MODULE_NAME := @osmit-gmbh/openziti
+NODE_MODULE_NAME := @osmit-gmbh/pulumi-openziti
 NUGET_PKG_NAME   := OSMIT-GmbH.OpenZiti
 
 PROVIDER        := pulumi-resource-${PACK}
