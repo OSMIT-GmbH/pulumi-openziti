@@ -83,7 +83,7 @@ jobs:
           registry-url: ${{env.NPM_REGISTRY_URL}}
       - if: ${{ matrix.language == 'dotnet'}}
         name: Setup DotNet
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{matrix.dotnetversion}}
       - if: ${{ matrix.language == 'java'}}
