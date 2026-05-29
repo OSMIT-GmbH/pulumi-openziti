@@ -37,6 +37,14 @@ import (
 // - WireDependencies: Control how outputs and secrets flows through values.
 type ServiceEdgeRouterPolicy struct{}
 
+var _ infer.CustomStateMigrations[ServiceEdgeRouterPolicyState] = (*ServiceEdgeRouterPolicy)(nil)
+
+func (*ServiceEdgeRouterPolicy) StateMigrations(context.Context) []infer.StateMigrationFunc[ServiceEdgeRouterPolicyState] {
+	return []infer.StateMigrationFunc[ServiceEdgeRouterPolicyState]{
+		infer.StateMigration(migrateServiceEdgeRouterPolicyV0),
+	}
+}
+
 // Each resource has in input struct, defining what arguments it accepts.
 type ServiceEdgeRouterPolicyArgs struct {
 	BaseArgsEntity

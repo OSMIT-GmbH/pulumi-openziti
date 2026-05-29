@@ -37,6 +37,14 @@ import (
 // - WireDependencies: Control how outputs and secrets flows through values.
 type Service struct{}
 
+var _ infer.CustomStateMigrations[ServiceState] = (*Service)(nil)
+
+func (*Service) StateMigrations(context.Context) []infer.StateMigrationFunc[ServiceState] {
+	return []infer.StateMigrationFunc[ServiceState]{
+		infer.StateMigration(migrateServiceV0),
+	}
+}
+
 // Each resource has in input struct, defining what arguments it accepts.
 type ServiceArgs struct {
 	BaseArgsEntity

@@ -37,6 +37,14 @@ import (
 // - WireDependencies: Control how outputs and secrets flows through values.
 type EdgeRouter struct{}
 
+var _ infer.CustomStateMigrations[EdgeRouterState] = (*EdgeRouter)(nil)
+
+func (*EdgeRouter) StateMigrations(context.Context) []infer.StateMigrationFunc[EdgeRouterState] {
+	return []infer.StateMigrationFunc[EdgeRouterState]{
+		infer.StateMigration(migrateEdgeRouterV0),
+	}
+}
+
 // Each resource has in input struct, defining what arguments it accepts.
 type EdgeRouterArgs struct {
 	BaseArgsEntity

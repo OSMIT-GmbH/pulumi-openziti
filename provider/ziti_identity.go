@@ -38,6 +38,14 @@ import (
 // - WireDependencies: Control how outputs and secrets flows through values.
 type Identity struct{}
 
+var _ infer.CustomStateMigrations[IdentityState] = (*Identity)(nil)
+
+func (*Identity) StateMigrations(context.Context) []infer.StateMigrationFunc[IdentityState] {
+	return []infer.StateMigrationFunc[IdentityState]{
+		infer.StateMigration(migrateIdentityV0),
+	}
+}
+
 type IdentityCreateEnrollment struct {
 
 	// ott

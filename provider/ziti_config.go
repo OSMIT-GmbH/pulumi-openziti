@@ -37,6 +37,14 @@ import (
 // - WireDependencies: Control how outputs and secrets flows through values.
 type ConfigObj struct{}
 
+var _ infer.CustomStateMigrations[ConfigState] = (*ConfigObj)(nil)
+
+func (*ConfigObj) StateMigrations(context.Context) []infer.StateMigrationFunc[ConfigState] {
+	return []infer.StateMigrationFunc[ConfigState]{
+		infer.StateMigration(migrateConfigV0),
+	}
+}
+
 // Each resource has in input struct, defining what arguments it accepts.
 type ConfigArgs struct {
 	BaseArgsEntity
