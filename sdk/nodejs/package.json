@@ -1,5 +1,5 @@
 {
-    "name": "@osmit-gmbh/openziti",
+    "name": "@osmit-gmbh/pulumi-openziti",
     "version": "1.0.0-alpha.0+dev",
     "homepage": "https://github.com/OSMIT-GmbH/pulumi-openziti",
     "repository": "https://github.com/OSMIT-GmbH/pulumi-openziti",
