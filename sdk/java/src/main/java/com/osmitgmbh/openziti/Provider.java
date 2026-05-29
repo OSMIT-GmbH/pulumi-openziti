@@ -6,12 +6,87 @@ package com.osmitgmbh.openziti;
 import com.osmitgmbh.openziti.ProviderArgs;
 import com.osmitgmbh.openziti.Utilities;
 import com.pulumi.core.Output;
+import com.pulumi.core.annotations.Export;
 import com.pulumi.core.annotations.ResourceType;
 import com.pulumi.core.internal.Codegen;
+import java.lang.String;
+import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nullable;
 
 @ResourceType(type="pulumi:providers:openziti")
 public class Provider extends com.pulumi.resources.ProviderResource {
+    /**
+     * Assimilate an existing object during create
+     * 
+     */
+    @Export(name="assimilate", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> assimilate;
+
+    /**
+     * @return Assimilate an existing object during create
+     * 
+     */
+    public Output<Optional<String>> assimilate() {
+        return Codegen.optional(this.assimilate);
+    }
+    /**
+     * Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+     * 
+     */
+    @Export(name="deleteAssimilated", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> deleteAssimilated;
+
+    /**
+     * @return Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+     * 
+     */
+    public Output<Optional<String>> deleteAssimilated() {
+        return Codegen.optional(this.deleteAssimilated);
+    }
+    /**
+     * The password. It is very secret.
+     * 
+     */
+    @Export(name="password", refs={String.class}, tree="[0]")
+    private Output<String> password;
+
+    /**
+     * @return The password. It is very secret.
+     * 
+     */
+    public Output<String> password() {
+        return this.password;
+    }
+    /**
+     * The URI to the API
+     * 
+     */
+    @Export(name="uri", refs={String.class}, tree="[0]")
+    private Output<String> uri;
+
+    /**
+     * @return The URI to the API
+     * 
+     */
+    public Output<String> uri() {
+        return this.uri;
+    }
+    /**
+     * The username. It&#39;s important but not secret.
+     * 
+     */
+    @Export(name="user", refs={String.class}, tree="[0]")
+    private Output<String> user;
+
+    /**
+     * @return The username. It&#39;s important but not secret.
+     * 
+     */
+    public Output<String> user() {
+        return this.user;
+    }
+
     /**
      *
      * @param name The _unique_ name of the resulting resource.
@@ -24,7 +99,7 @@ public class Provider extends com.pulumi.resources.ProviderResource {
      * @param name The _unique_ name of the resulting resource.
      * @param args The arguments to use to populate this resource's properties.
      */
-    public Provider(java.lang.String name, @Nullable ProviderArgs args) {
+    public Provider(java.lang.String name, ProviderArgs args) {
         this(name, args, null);
     }
     /**
@@ -33,11 +108,11 @@ public class Provider extends com.pulumi.resources.ProviderResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param options A bag of options that control this resource's behavior.
      */
-    public Provider(java.lang.String name, @Nullable ProviderArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
+    public Provider(java.lang.String name, ProviderArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
         super("openziti", name, makeArgs(args, options), makeResourceOptions(options, Codegen.empty()), false);
     }
 
-    private static ProviderArgs makeArgs(@Nullable ProviderArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
+    private static ProviderArgs makeArgs(ProviderArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
         if (options != null && options.getUrn().isPresent()) {
             return null;
         }
@@ -47,6 +122,9 @@ public class Provider extends com.pulumi.resources.ProviderResource {
     private static com.pulumi.resources.CustomResourceOptions makeResourceOptions(@Nullable com.pulumi.resources.CustomResourceOptions options, @Nullable Output<java.lang.String> id) {
         var defaultOptions = com.pulumi.resources.CustomResourceOptions.builder()
             .version(Utilities.getVersion())
+            .additionalSecretOutputs(List.of(
+                "password"
+            ))
             .build();
         return com.pulumi.resources.CustomResourceOptions.merge(defaultOptions, options, id);
     }

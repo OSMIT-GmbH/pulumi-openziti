@@ -5,7 +5,8 @@ package com.osmitgmbh.openziti;
 
 import com.pulumi.core.Output;
 import com.pulumi.core.annotations.Import;
-import java.lang.Boolean;
+import com.pulumi.exceptions.MissingRequiredPropertyException;
+import java.lang.String;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -15,17 +16,89 @@ public final class ProviderArgs extends com.pulumi.resources.ResourceArgs {
 
     public static final ProviderArgs Empty = new ProviderArgs();
 
-    @Import(name="itsasecret", json=true)
-    private @Nullable Output<Boolean> itsasecret;
+    /**
+     * Assimilate an existing object during create
+     * 
+     */
+    @Import(name="assimilate")
+    private @Nullable Output<String> assimilate;
 
-    public Optional<Output<Boolean>> itsasecret() {
-        return Optional.ofNullable(this.itsasecret);
+    /**
+     * @return Assimilate an existing object during create
+     * 
+     */
+    public Optional<Output<String>> assimilate() {
+        return Optional.ofNullable(this.assimilate);
+    }
+
+    /**
+     * Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+     * 
+     */
+    @Import(name="deleteAssimilated")
+    private @Nullable Output<String> deleteAssimilated;
+
+    /**
+     * @return Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+     * 
+     */
+    public Optional<Output<String>> deleteAssimilated() {
+        return Optional.ofNullable(this.deleteAssimilated);
+    }
+
+    /**
+     * The password. It is very secret.
+     * 
+     */
+    @Import(name="password", required=true)
+    private Output<String> password;
+
+    /**
+     * @return The password. It is very secret.
+     * 
+     */
+    public Output<String> password() {
+        return this.password;
+    }
+
+    /**
+     * The URI to the API
+     * 
+     */
+    @Import(name="uri", required=true)
+    private Output<String> uri;
+
+    /**
+     * @return The URI to the API
+     * 
+     */
+    public Output<String> uri() {
+        return this.uri;
+    }
+
+    /**
+     * The username. It&#39;s important but not secret.
+     * 
+     */
+    @Import(name="user", required=true)
+    private Output<String> user;
+
+    /**
+     * @return The username. It&#39;s important but not secret.
+     * 
+     */
+    public Output<String> user() {
+        return this.user;
     }
 
     private ProviderArgs() {}
 
     private ProviderArgs(ProviderArgs $) {
-        this.itsasecret = $.itsasecret;
+        this.assimilate = $.assimilate;
+        this.deleteAssimilated = $.deleteAssimilated;
+        this.password = $.password;
+        this.uri = $.uri;
+        this.user = $.user;
     }
 
     public static Builder builder() {
@@ -46,16 +119,121 @@ public final class ProviderArgs extends com.pulumi.resources.ResourceArgs {
             $ = new ProviderArgs(Objects.requireNonNull(defaults));
         }
 
-        public Builder itsasecret(@Nullable Output<Boolean> itsasecret) {
-            $.itsasecret = itsasecret;
+        /**
+         * @param assimilate Assimilate an existing object during create
+         * 
+         * @return builder
+         * 
+         */
+        public Builder assimilate(@Nullable Output<String> assimilate) {
+            $.assimilate = assimilate;
             return this;
         }
 
-        public Builder itsasecret(Boolean itsasecret) {
-            return itsasecret(Output.of(itsasecret));
+        /**
+         * @param assimilate Assimilate an existing object during create
+         * 
+         * @return builder
+         * 
+         */
+        public Builder assimilate(String assimilate) {
+            return assimilate(Output.of(assimilate));
+        }
+
+        /**
+         * @param deleteAssimilated Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+         * 
+         * @return builder
+         * 
+         */
+        public Builder deleteAssimilated(@Nullable Output<String> deleteAssimilated) {
+            $.deleteAssimilated = deleteAssimilated;
+            return this;
+        }
+
+        /**
+         * @param deleteAssimilated Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+         * 
+         * @return builder
+         * 
+         */
+        public Builder deleteAssimilated(String deleteAssimilated) {
+            return deleteAssimilated(Output.of(deleteAssimilated));
+        }
+
+        /**
+         * @param password The password. It is very secret.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder password(Output<String> password) {
+            $.password = password;
+            return this;
+        }
+
+        /**
+         * @param password The password. It is very secret.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder password(String password) {
+            return password(Output.of(password));
+        }
+
+        /**
+         * @param uri The URI to the API
+         * 
+         * @return builder
+         * 
+         */
+        public Builder uri(Output<String> uri) {
+            $.uri = uri;
+            return this;
+        }
+
+        /**
+         * @param uri The URI to the API
+         * 
+         * @return builder
+         * 
+         */
+        public Builder uri(String uri) {
+            return uri(Output.of(uri));
+        }
+
+        /**
+         * @param user The username. It&#39;s important but not secret.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder user(Output<String> user) {
+            $.user = user;
+            return this;
+        }
+
+        /**
+         * @param user The username. It&#39;s important but not secret.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder user(String user) {
+            return user(Output.of(user));
         }
 
         public ProviderArgs build() {
+            if ($.password == null) {
+                throw new MissingRequiredPropertyException("ProviderArgs", "password");
+            }
+            if ($.uri == null) {
+                throw new MissingRequiredPropertyException("ProviderArgs", "uri");
+            }
+            if ($.user == null) {
+                throw new MissingRequiredPropertyException("ProviderArgs", "user");
+            }
             return $;
         }
     }

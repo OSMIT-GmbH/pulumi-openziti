@@ -32,15 +32,26 @@ const Name string = "openziti"
 // Provider creates a new instance of the provider.
 func Provider() p.Provider {
 	p, err := infer.NewProviderBuilder().
-		WithDisplayName("Ceph Rados Gateway").
-		WithDescription("A Pulumi provider for managing Ceph Rados Gateway resources.").
+		WithDisplayName("OpenZITI").
+		WithDescription("A Pulumi provider for managing OpenZITI resources.").
 		WithHomepage("https://github.com/OSMIT-GmbH/pulumi-openziti").
 		WithNamespace("osmit-gmbh").
 		WithGoImportPath("github.com/OSMIT-GmbH/pulumi-openziti/sdk/go/pulumi-openziti").
 		WithRepository("https://github.com/OSMIT-GmbH/pulumi-openziti").
-		WithResources(infer.Resource(Random{})).
-		WithComponents(infer.ComponentF(NewRandomComponent)).
-		WithConfig(infer.Config(&Config{})).
+		WithResources(
+			// we have to use ConfigObj as name otherwise we have a name
+			// clash with ProviderConfig in dotnet module... :-/
+			infer.Resource[*ConfigObj, ConfigArgs, ConfigState](&ConfigObj{}),
+			infer.Resource[*EdgeRouter, EdgeRouterArgs, EdgeRouterState](&EdgeRouter{}),
+			infer.Resource[*EdgeRouterPolicy, EdgeRouterPolicyArgs, EdgeRouterPolicyState](&EdgeRouterPolicy{}),
+			infer.Resource[*EnrolledIdentity, EnrolledIdentityArgs, EnrolledIdentityState](&EnrolledIdentity{}),
+			infer.Resource[*Identity, IdentityArgs, IdentityState](&Identity{}),
+			infer.Resource[*Service, ServiceArgs, ServiceState](&Service{}),
+			infer.Resource[*ServiceEdgeRouterPolicy, ServiceEdgeRouterPolicyArgs, ServiceEdgeRouterPolicyState](&ServiceEdgeRouterPolicy{}),
+			infer.Resource[*ServicePolicy, ServicePolicyArgs, ServicePolicyState](&ServicePolicy{}),
+		).
+		// WithComponents(infer.ComponentF(NewRandomComponent)).
+		WithConfig(infer.Config(&OpenZitiProviderConfig{})).
 		WithModuleMap(map[tokens.ModuleName]tokens.ModuleName{
 			"provider": "index",
 		}).Build()
@@ -48,9 +59,4 @@ func Provider() p.Provider {
 		panic(fmt.Errorf("unable to build provider: %w", err))
 	}
 	return p
-}
-
-// Config defines provider-level configuration
-type Config struct {
-	Scream *bool `pulumi:"itsasecret,optional"`
 }

@@ -19,21 +19,87 @@ __all__ = ['ProviderArgs', 'Provider']
 @pulumi.input_type
 class ProviderArgs:
     def __init__(__self__, *,
-                 itsasecret: pulumi.Input[Optional[_builtins.bool]] = None):
+                 password: pulumi.Input[_builtins.str],
+                 uri: pulumi.Input[_builtins.str],
+                 user: pulumi.Input[_builtins.str],
+                 assimilate: pulumi.Input[Optional[_builtins.str]] = None,
+                 delete_assimilated: pulumi.Input[Optional[_builtins.str]] = None):
         """
         The set of arguments for constructing a Provider resource.
+
+        :param pulumi.Input[_builtins.str] password: The password. It is very secret.
+        :param pulumi.Input[_builtins.str] uri: The URI to the API
+        :param pulumi.Input[_builtins.str] user: The username. It's important but not secret.
+        :param pulumi.Input[_builtins.str] assimilate: Assimilate an existing object during create
+        :param pulumi.Input[_builtins.str] delete_assimilated: Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
         """
-        if itsasecret is not None:
-            pulumi.set(__self__, "itsasecret", itsasecret)
+        pulumi.set(__self__, "password", password)
+        pulumi.set(__self__, "uri", uri)
+        pulumi.set(__self__, "user", user)
+        if assimilate is not None:
+            pulumi.set(__self__, "assimilate", assimilate)
+        if delete_assimilated is not None:
+            pulumi.set(__self__, "delete_assimilated", delete_assimilated)
 
     @_builtins.property
     @pulumi.getter
-    def itsasecret(self) -> pulumi.Input[Optional[_builtins.bool]]:
-        return pulumi.get(self, "itsasecret")
+    def password(self) -> pulumi.Input[_builtins.str]:
+        """
+        The password. It is very secret.
+        """
+        return pulumi.get(self, "password")
 
-    @itsasecret.setter
-    def itsasecret(self, value: pulumi.Input[Optional[_builtins.bool]]):
-        pulumi.set(self, "itsasecret", value)
+    @password.setter
+    def password(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "password", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def uri(self) -> pulumi.Input[_builtins.str]:
+        """
+        The URI to the API
+        """
+        return pulumi.get(self, "uri")
+
+    @uri.setter
+    def uri(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "uri", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def user(self) -> pulumi.Input[_builtins.str]:
+        """
+        The username. It's important but not secret.
+        """
+        return pulumi.get(self, "user")
+
+    @user.setter
+    def user(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "user", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def assimilate(self) -> pulumi.Input[Optional[_builtins.str]]:
+        """
+        Assimilate an existing object during create
+        """
+        return pulumi.get(self, "assimilate")
+
+    @assimilate.setter
+    def assimilate(self, value: pulumi.Input[Optional[_builtins.str]]):
+        pulumi.set(self, "assimilate", value)
+
+    @_builtins.property
+    @pulumi.getter(name="deleteAssimilated")
+    def delete_assimilated(self) -> pulumi.Input[Optional[_builtins.str]]:
+        """
+        Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+        """
+        return pulumi.get(self, "delete_assimilated")
+
+    @delete_assimilated.setter
+    def delete_assimilated(self, value: pulumi.Input[Optional[_builtins.str]]):
+        pulumi.set(self, "delete_assimilated", value)
 
 
 @pulumi.type_token("pulumi:providers:openziti")
@@ -42,19 +108,28 @@ class Provider(pulumi.ProviderResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 itsasecret: pulumi.Input[Optional[_builtins.bool]] = None,
+                 assimilate: pulumi.Input[Optional[_builtins.str]] = None,
+                 delete_assimilated: pulumi.Input[Optional[_builtins.str]] = None,
+                 password: pulumi.Input[Optional[_builtins.str]] = None,
+                 uri: pulumi.Input[Optional[_builtins.str]] = None,
+                 user: pulumi.Input[Optional[_builtins.str]] = None,
                  __props__=None):
         """
         Create a Openziti resource with the given unique name, props, and options.
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[_builtins.str] assimilate: Assimilate an existing object during create
+        :param pulumi.Input[_builtins.str] delete_assimilated: Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+        :param pulumi.Input[_builtins.str] password: The password. It is very secret.
+        :param pulumi.Input[_builtins.str] uri: The URI to the API
+        :param pulumi.Input[_builtins.str] user: The username. It's important but not secret.
         """
         ...
     @overload
     def __init__(__self__,
                  resource_name: str,
-                 args: Optional[ProviderArgs] = None,
+                 args: ProviderArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         Create a Openziti resource with the given unique name, props, and options.
@@ -74,7 +149,11 @@ class Provider(pulumi.ProviderResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 itsasecret: pulumi.Input[Optional[_builtins.bool]] = None,
+                 assimilate: pulumi.Input[Optional[_builtins.str]] = None,
+                 delete_assimilated: pulumi.Input[Optional[_builtins.str]] = None,
+                 password: pulumi.Input[Optional[_builtins.str]] = None,
+                 uri: pulumi.Input[Optional[_builtins.str]] = None,
+                 user: pulumi.Input[Optional[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -84,10 +163,62 @@ class Provider(pulumi.ProviderResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = ProviderArgs.__new__(ProviderArgs)
 
-            __props__.__dict__["itsasecret"] = pulumi.Output.from_input(itsasecret).apply(pulumi.runtime.to_json) if itsasecret is not None else None
+            __props__.__dict__["assimilate"] = assimilate
+            __props__.__dict__["delete_assimilated"] = delete_assimilated
+            if password is None and not opts.urn:
+                raise TypeError("Missing required property 'password'")
+            __props__.__dict__["password"] = None if password is None else pulumi.Output.secret(password)
+            if uri is None and not opts.urn:
+                raise TypeError("Missing required property 'uri'")
+            __props__.__dict__["uri"] = uri
+            if user is None and not opts.urn:
+                raise TypeError("Missing required property 'user'")
+            __props__.__dict__["user"] = user
+        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["password"])
+        opts = pulumi.ResourceOptions.merge(opts, secret_opts)
         super(Provider, __self__).__init__(
             'openziti',
             resource_name,
             __props__,
             opts)
+
+    @_builtins.property
+    @pulumi.getter
+    def assimilate(self) -> pulumi.Output[Optional[_builtins.str]]:
+        """
+        Assimilate an existing object during create
+        """
+        return pulumi.get(self, "assimilate")
+
+    @_builtins.property
+    @pulumi.getter(name="deleteAssimilated")
+    def delete_assimilated(self) -> pulumi.Output[Optional[_builtins.str]]:
+        """
+        Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+        """
+        return pulumi.get(self, "delete_assimilated")
+
+    @_builtins.property
+    @pulumi.getter
+    def password(self) -> pulumi.Output[_builtins.str]:
+        """
+        The password. It is very secret.
+        """
+        return pulumi.get(self, "password")
+
+    @_builtins.property
+    @pulumi.getter
+    def uri(self) -> pulumi.Output[_builtins.str]:
+        """
+        The URI to the API
+        """
+        return pulumi.get(self, "uri")
+
+    @_builtins.property
+    @pulumi.getter
+    def user(self) -> pulumi.Output[_builtins.str]:
+        """
+        The username. It's important but not secret.
+        """
+        return pulumi.get(self, "user")
 

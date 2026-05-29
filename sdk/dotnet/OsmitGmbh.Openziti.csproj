@@ -4,7 +4,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Pulumi Corp.</Authors>
     <Company>Pulumi Corp.</Company>
-    <Description>A Pulumi provider for managing Ceph Rados Gateway resources.</Description>
+    <Description>A Pulumi provider for managing OpenZITI resources.</Description>
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/OSMIT-GmbH/pulumi-openziti</PackageProjectUrl>
     <RepositoryUrl>https://github.com/OSMIT-GmbH/pulumi-openziti</RepositoryUrl>

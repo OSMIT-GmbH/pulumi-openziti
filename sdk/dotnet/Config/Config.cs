@@ -32,11 +32,54 @@ namespace OsmitGmbh.Openziti
 
         private static readonly global::Pulumi.Config __config = new global::Pulumi.Config("openziti");
 
-        private static readonly __Value<bool?> _itsasecret = new __Value<bool?>(() => __config.GetBoolean("itsasecret"));
-        public static bool? Itsasecret
+        private static readonly __Value<string?> _assimilate = new __Value<string?>(() => __config.Get("assimilate"));
+        /// <summary>
+        /// Assimilate an existing object during create
+        /// </summary>
+        public static string? Assimilate
         {
-            get => _itsasecret.Get();
-            set => _itsasecret.Set(value);
+            get => _assimilate.Get();
+            set => _assimilate.Set(value);
+        }
+
+        private static readonly __Value<string?> _deleteAssimilated = new __Value<string?>(() => __config.Get("deleteAssimilated"));
+        /// <summary>
+        /// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+        /// </summary>
+        public static string? DeleteAssimilated
+        {
+            get => _deleteAssimilated.Get();
+            set => _deleteAssimilated.Set(value);
+        }
+
+        private static readonly __Value<string?> _password = new __Value<string?>(() => __config.Get("password"));
+        /// <summary>
+        /// The password. It is very secret.
+        /// </summary>
+        public static string? Password
+        {
+            get => _password.Get();
+            set => _password.Set(value);
+        }
+
+        private static readonly __Value<string?> _uri = new __Value<string?>(() => __config.Get("uri"));
+        /// <summary>
+        /// The URI to the API
+        /// </summary>
+        public static string? Uri
+        {
+            get => _uri.Get();
+            set => _uri.Set(value);
+        }
+
+        private static readonly __Value<string?> _user = new __Value<string?>(() => __config.Get("user"));
+        /// <summary>
+        /// The username. It's important but not secret.
+        /// </summary>
+        public static string? User
+        {
+            get => _user.Get();
+            set => _user.Set(value);
         }
 
     }

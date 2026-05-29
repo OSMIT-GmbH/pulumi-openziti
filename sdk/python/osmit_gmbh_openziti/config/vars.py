@@ -21,6 +21,37 @@ __config__ = pulumi.Config('openziti')
 
 class _ExportableConfig(types.ModuleType):
     @_builtins.property
-    def itsasecret(self) -> Optional[bool]:
-        return __config__.get_bool('itsasecret')
+    def assimilate(self) -> Optional[str]:
+        """
+        Assimilate an existing object during create
+        """
+        return __config__.get('assimilate')
+
+    @_builtins.property
+    def delete_assimilated(self) -> Optional[str]:
+        """
+        Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+        """
+        return __config__.get('deleteAssimilated')
+
+    @_builtins.property
+    def password(self) -> Optional[str]:
+        """
+        The password. It is very secret.
+        """
+        return __config__.get('password')
+
+    @_builtins.property
+    def uri(self) -> Optional[str]:
+        """
+        The URI to the API
+        """
+        return __config__.get('uri')
+
+    @_builtins.property
+    def user(self) -> Optional[str]:
+        """
+        The username. It's important but not secret.
+        """
+        return __config__.get('user')
 

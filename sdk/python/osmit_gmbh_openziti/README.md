@@ -1,1 +1,1 @@
-A Pulumi provider for managing Ceph Rados Gateway resources.
+A Pulumi provider for managing OpenZITI resources.

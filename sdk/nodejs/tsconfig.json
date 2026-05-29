@@ -21,10 +21,19 @@
     "files": [
         "config/index.ts",
         "config/vars.ts",
+        "configObj.ts",
+        "edgeRouter.ts",
+        "edgeRouterPolicy.ts",
+        "enrolledIdentity.ts",
+        "identity.ts",
         "index.ts",
         "provider.ts",
-        "random.ts",
-        "randomComponent.ts",
+        "service.ts",
+        "serviceEdgeRouterPolicy.ts",
+        "servicePolicy.ts",
+        "types/index.ts",
+        "types/input.ts",
+        "types/output.ts",
         "utilities.ts"
     ]
 }

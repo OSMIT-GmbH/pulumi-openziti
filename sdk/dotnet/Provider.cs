@@ -14,13 +14,44 @@ namespace OsmitGmbh.Openziti
     public partial class Provider : global::Pulumi.ProviderResource
     {
         /// <summary>
+        /// Assimilate an existing object during create
+        /// </summary>
+        [Output("assimilate")]
+        public Output<string?> Assimilate { get; private set; } = null!;
+
+        /// <summary>
+        /// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+        /// </summary>
+        [Output("deleteAssimilated")]
+        public Output<string?> DeleteAssimilated { get; private set; } = null!;
+
+        /// <summary>
+        /// The password. It is very secret.
+        /// </summary>
+        [Output("password")]
+        public Output<string> Password { get; private set; } = null!;
+
+        /// <summary>
+        /// The URI to the API
+        /// </summary>
+        [Output("uri")]
+        public Output<string> Uri { get; private set; } = null!;
+
+        /// <summary>
+        /// The username. It's important but not secret.
+        /// </summary>
+        [Output("user")]
+        public Output<string> User { get; private set; } = null!;
+
+
+        /// <summary>
         /// Create a Provider resource with the given unique name, arguments, and options.
         /// </summary>
         ///
         /// <param name="name">The unique name of the resource</param>
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
-        public Provider(string name, ProviderArgs? args = null, CustomResourceOptions? options = null)
+        public Provider(string name, ProviderArgs args, CustomResourceOptions? options = null)
             : base("openziti", name, args ?? new ProviderArgs(), MakeResourceOptions(options, ""))
         {
         }
@@ -30,6 +61,10 @@ namespace OsmitGmbh.Openziti
             var defaultOptions = new CustomResourceOptions
             {
                 Version = Utilities.Version,
+                AdditionalSecretOutputs =
+                {
+                    "password",
+                },
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.
@@ -40,8 +75,45 @@ namespace OsmitGmbh.Openziti
 
     public sealed class ProviderArgs : global::Pulumi.ResourceArgs
     {
-        [Input("itsasecret", json: true)]
-        public Input<bool>? Itsasecret { get; set; }
+        /// <summary>
+        /// Assimilate an existing object during create
+        /// </summary>
+        [Input("assimilate")]
+        public Input<string>? Assimilate { get; set; }
+
+        /// <summary>
+        /// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+        /// </summary>
+        [Input("deleteAssimilated")]
+        public Input<string>? DeleteAssimilated { get; set; }
+
+        [Input("password", required: true)]
+        private Input<string>? _password;
+
+        /// <summary>
+        /// The password. It is very secret.
+        /// </summary>
+        public Input<string>? Password
+        {
+            get => _password;
+            set
+            {
+                var emptySecret = Output.CreateSecret(0);
+                _password = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
+            }
+        }
+
+        /// <summary>
+        /// The URI to the API
+        /// </summary>
+        [Input("uri", required: true)]
+        public Input<string> Uri { get; set; } = null!;
+
+        /// <summary>
+        /// The username. It's important but not secret.
+        /// </summary>
+        [Input("user", required: true)]
+        public Input<string> User { get; set; } = null!;
 
         public ProviderArgs()
         {

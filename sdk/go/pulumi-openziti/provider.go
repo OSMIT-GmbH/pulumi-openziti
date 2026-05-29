@@ -7,21 +7,49 @@ import (
 	"context"
 	"reflect"
 
+	"errors"
 	"github.com/OSMIT-GmbH/pulumi-openziti/sdk/go/pulumi-openziti/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 type Provider struct {
 	pulumi.ProviderResourceState
+
+	// Assimilate an existing object during create
+	Assimilate pulumi.StringPtrOutput `pulumi:"assimilate"`
+	// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+	DeleteAssimilated pulumi.StringPtrOutput `pulumi:"deleteAssimilated"`
+	// The password. It is very secret.
+	Password pulumi.StringOutput `pulumi:"password"`
+	// The URI to the API
+	Uri pulumi.StringOutput `pulumi:"uri"`
+	// The username. It's important but not secret.
+	User pulumi.StringOutput `pulumi:"user"`
 }
 
 // NewProvider registers a new resource with the given unique name, arguments, and options.
 func NewProvider(ctx *pulumi.Context,
 	name string, args *ProviderArgs, opts ...pulumi.ResourceOption) (*Provider, error) {
 	if args == nil {
-		args = &ProviderArgs{}
+		return nil, errors.New("missing one or more required arguments")
 	}
 
+	if args.Password == nil {
+		return nil, errors.New("invalid value for required argument 'Password'")
+	}
+	if args.Uri == nil {
+		return nil, errors.New("invalid value for required argument 'Uri'")
+	}
+	if args.User == nil {
+		return nil, errors.New("invalid value for required argument 'User'")
+	}
+	if args.Password != nil {
+		args.Password = pulumi.ToSecret(args.Password).(pulumi.StringInput)
+	}
+	secrets := pulumi.AdditionalSecretOutputs([]string{
+		"password",
+	})
+	opts = append(opts, secrets)
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Provider
 	err := ctx.RegisterResource("pulumi:providers:openziti", name, args, &resource, opts...)
@@ -32,12 +60,30 @@ func NewProvider(ctx *pulumi.Context,
 }
 
 type providerArgs struct {
-	Itsasecret *bool `pulumi:"itsasecret"`
+	// Assimilate an existing object during create
+	Assimilate *string `pulumi:"assimilate"`
+	// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+	DeleteAssimilated *string `pulumi:"deleteAssimilated"`
+	// The password. It is very secret.
+	Password string `pulumi:"password"`
+	// The URI to the API
+	Uri string `pulumi:"uri"`
+	// The username. It's important but not secret.
+	User string `pulumi:"user"`
 }
 
 // The set of arguments for constructing a Provider resource.
 type ProviderArgs struct {
-	Itsasecret pulumi.BoolPtrInput
+	// Assimilate an existing object during create
+	Assimilate pulumi.StringPtrInput
+	// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+	DeleteAssimilated pulumi.StringPtrInput
+	// The password. It is very secret.
+	Password pulumi.StringInput
+	// The URI to the API
+	Uri pulumi.StringInput
+	// The username. It's important but not secret.
+	User pulumi.StringInput
 }
 
 func (ProviderArgs) ElementType() reflect.Type {
@@ -75,6 +121,31 @@ func (o ProviderOutput) ToProviderOutput() ProviderOutput {
 
 func (o ProviderOutput) ToProviderOutputWithContext(ctx context.Context) ProviderOutput {
 	return o
+}
+
+// Assimilate an existing object during create
+func (o ProviderOutput) Assimilate() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.Assimilate }).(pulumi.StringPtrOutput)
+}
+
+// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+func (o ProviderOutput) DeleteAssimilated() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.DeleteAssimilated }).(pulumi.StringPtrOutput)
+}
+
+// The password. It is very secret.
+func (o ProviderOutput) Password() pulumi.StringOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringOutput { return v.Password }).(pulumi.StringOutput)
+}
+
+// The URI to the API
+func (o ProviderOutput) Uri() pulumi.StringOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringOutput { return v.Uri }).(pulumi.StringOutput)
+}
+
+// The username. It's important but not secret.
+func (o ProviderOutput) User() pulumi.StringOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringOutput { return v.User }).(pulumi.StringOutput)
 }
 
 func init() {

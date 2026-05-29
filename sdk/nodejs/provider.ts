@@ -19,6 +19,26 @@ export class Provider extends pulumi.ProviderResource {
         return obj['__pulumiType'] === "pulumi:providers:" + Provider.__pulumiType;
     }
 
+    /**
+     * Assimilate an existing object during create
+     */
+    declare public readonly assimilate: pulumi.Output<string | undefined>;
+    /**
+     * Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+     */
+    declare public readonly deleteAssimilated: pulumi.Output<string | undefined>;
+    /**
+     * The password. It is very secret.
+     */
+    declare public readonly password: pulumi.Output<string>;
+    /**
+     * The URI to the API
+     */
+    declare public readonly uri: pulumi.Output<string>;
+    /**
+     * The username. It's important but not secret.
+     */
+    declare public readonly user: pulumi.Output<string>;
 
     /**
      * Create a Provider resource with the given unique name, arguments, and options.
@@ -27,13 +47,28 @@ export class Provider extends pulumi.ProviderResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: ProviderArgs, opts?: pulumi.ResourceOptions) {
+    constructor(name: string, args: ProviderArgs, opts?: pulumi.ResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         {
-            resourceInputs["itsasecret"] = pulumi.output(args?.itsasecret).apply(JSON.stringify);
+            if (args?.password === undefined && !opts.urn) {
+                throw new Error("Missing required property 'password'");
+            }
+            if (args?.uri === undefined && !opts.urn) {
+                throw new Error("Missing required property 'uri'");
+            }
+            if (args?.user === undefined && !opts.urn) {
+                throw new Error("Missing required property 'user'");
+            }
+            resourceInputs["assimilate"] = args?.assimilate;
+            resourceInputs["deleteAssimilated"] = args?.deleteAssimilated;
+            resourceInputs["password"] = args?.password ? pulumi.secret(args.password) : undefined;
+            resourceInputs["uri"] = args?.uri;
+            resourceInputs["user"] = args?.user;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
+        const secretOpts = { additionalSecretOutputs: ["password"] };
+        opts = pulumi.mergeOptions(opts, secretOpts);
         super(Provider.__pulumiType, name, resourceInputs, opts);
     }
 }
@@ -42,5 +77,24 @@ export class Provider extends pulumi.ProviderResource {
  * The set of arguments for constructing a Provider resource.
  */
 export interface ProviderArgs {
-    itsasecret?: pulumi.Input<boolean | undefined>;
+    /**
+     * Assimilate an existing object during create
+     */
+    assimilate?: pulumi.Input<string | undefined>;
+    /**
+     * Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+     */
+    deleteAssimilated?: pulumi.Input<string | undefined>;
+    /**
+     * The password. It is very secret.
+     */
+    password: pulumi.Input<string>;
+    /**
+     * The URI to the API
+     */
+    uri: pulumi.Input<string>;
+    /**
+     * The username. It's important but not secret.
+     */
+    user: pulumi.Input<string>;
 }

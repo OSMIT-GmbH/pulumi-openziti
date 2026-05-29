@@ -4,13 +4,45 @@
 package com.osmitgmbh.openziti;
 
 import com.pulumi.core.internal.Codegen;
-import java.lang.Boolean;
+import java.lang.String;
 import java.util.Optional;
 
 public final class Config {
 
     private static final com.pulumi.Config config = com.pulumi.Config.of("openziti");
-    public Optional<Boolean> itsasecret() {
-        return Codegen.booleanProp("itsasecret").config(config).get();
+/**
+ * Assimilate an existing object during create
+ * 
+ */
+    public Optional<String> assimilate() {
+        return Codegen.stringProp("assimilate").config(config).get();
+    }
+/**
+ * Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+ * 
+ */
+    public Optional<String> deleteAssimilated() {
+        return Codegen.stringProp("deleteAssimilated").config(config).get();
+    }
+/**
+ * The password. It is very secret.
+ * 
+ */
+    public String password() {
+        return Codegen.stringProp("password").config(config).require();
+    }
+/**
+ * The URI to the API
+ * 
+ */
+    public String uri() {
+        return Codegen.stringProp("uri").config(config).require();
+    }
+/**
+ * The username. It&#39;s important but not secret.
+ * 
+ */
+    public String user() {
+        return Codegen.stringProp("user").config(config).require();
     }
 }

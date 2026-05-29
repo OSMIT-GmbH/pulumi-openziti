@@ -21,10 +21,22 @@ func (m *module) Version() semver.Version {
 
 func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi.Resource, err error) {
 	switch typ {
-	case "openziti:index:Random":
-		r = &Random{}
-	case "openziti:index:RandomComponent":
-		r = &RandomComponent{}
+	case "openziti:index:ConfigObj":
+		r = &ConfigObj{}
+	case "openziti:index:EdgeRouter":
+		r = &EdgeRouter{}
+	case "openziti:index:EdgeRouterPolicy":
+		r = &EdgeRouterPolicy{}
+	case "openziti:index:EnrolledIdentity":
+		r = &EnrolledIdentity{}
+	case "openziti:index:Identity":
+		r = &Identity{}
+	case "openziti:index:Service":
+		r = &Service{}
+	case "openziti:index:ServiceEdgeRouterPolicy":
+		r = &ServiceEdgeRouterPolicy{}
+	case "openziti:index:ServicePolicy":
+		r = &ServicePolicy{}
 	default:
 		return nil, fmt.Errorf("unknown resource type: %s", typ)
 	}

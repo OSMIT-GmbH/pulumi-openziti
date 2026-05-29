@@ -11,6 +11,27 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
-func GetItsasecret(ctx *pulumi.Context) bool {
-	return config.GetBool(ctx, "openziti:itsasecret")
+// Assimilate an existing object during create
+func GetAssimilate(ctx *pulumi.Context) string {
+	return config.Get(ctx, "openziti:assimilate")
+}
+
+// Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+func GetDeleteAssimilated(ctx *pulumi.Context) string {
+	return config.Get(ctx, "openziti:deleteAssimilated")
+}
+
+// The password. It is very secret.
+func GetPassword(ctx *pulumi.Context) string {
+	return config.Get(ctx, "openziti:password")
+}
+
+// The URI to the API
+func GetUri(ctx *pulumi.Context) string {
+	return config.Get(ctx, "openziti:uri")
+}
+
+// The username. It's important but not secret.
+func GetUser(ctx *pulumi.Context) string {
+	return config.Get(ctx, "openziti:user")
 }

@@ -1,6 +1,6 @@
 [project]
   name = "osmit_gmbh_openziti"
-  description = "A Pulumi provider for managing Ceph Rados Gateway resources."
+  description = "A Pulumi provider for managing OpenZITI resources."
   dependencies = ["parver>=0.2.1", "pulumi>=3.231.0,<4.0.0", "semver>=2.8.1", "typing-extensions>=4.11,<5; python_version < \"3.11\""]
   readme = "README.md"
   requires-python = ">=3.9"

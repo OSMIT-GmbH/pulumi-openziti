@@ -7,10 +7,57 @@ import * as utilities from "../utilities";
 declare var exports: any;
 const __config = new pulumi.Config("openziti");
 
-export declare const itsasecret: boolean | undefined;
-Object.defineProperty(exports, "itsasecret", {
+/**
+ * Assimilate an existing object during create
+ */
+export declare const assimilate: string | undefined;
+Object.defineProperty(exports, "assimilate", {
     get() {
-        return __config.getObject<boolean>("itsasecret");
+        return __config.get("assimilate");
+    },
+    enumerable: true,
+});
+
+/**
+ * Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)
+ */
+export declare const deleteAssimilated: string | undefined;
+Object.defineProperty(exports, "deleteAssimilated", {
+    get() {
+        return __config.get("deleteAssimilated");
+    },
+    enumerable: true,
+});
+
+/**
+ * The password. It is very secret.
+ */
+export declare const password: string | undefined;
+Object.defineProperty(exports, "password", {
+    get() {
+        return __config.get("password");
+    },
+    enumerable: true,
+});
+
+/**
+ * The URI to the API
+ */
+export declare const uri: string | undefined;
+Object.defineProperty(exports, "uri", {
+    get() {
+        return __config.get("uri");
+    },
+    enumerable: true,
+});
+
+/**
+ * The username. It's important but not secret.
+ */
+export declare const user: string | undefined;
+Object.defineProperty(exports, "user", {
+    get() {
+        return __config.get("user");
     },
     enumerable: true,
 });

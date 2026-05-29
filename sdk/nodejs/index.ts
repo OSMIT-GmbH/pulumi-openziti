@@ -5,37 +5,81 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 // Export members:
+export { ConfigObjArgs } from "./configObj";
+export type ConfigObj = import("./configObj").ConfigObj;
+export const ConfigObj: typeof import("./configObj").ConfigObj = null as any;
+utilities.lazyLoad(exports, ["ConfigObj"], () => require("./configObj"));
+
+export { EdgeRouterArgs } from "./edgeRouter";
+export type EdgeRouter = import("./edgeRouter").EdgeRouter;
+export const EdgeRouter: typeof import("./edgeRouter").EdgeRouter = null as any;
+utilities.lazyLoad(exports, ["EdgeRouter"], () => require("./edgeRouter"));
+
+export { EdgeRouterPolicyArgs } from "./edgeRouterPolicy";
+export type EdgeRouterPolicy = import("./edgeRouterPolicy").EdgeRouterPolicy;
+export const EdgeRouterPolicy: typeof import("./edgeRouterPolicy").EdgeRouterPolicy = null as any;
+utilities.lazyLoad(exports, ["EdgeRouterPolicy"], () => require("./edgeRouterPolicy"));
+
+export { EnrolledIdentityArgs } from "./enrolledIdentity";
+export type EnrolledIdentity = import("./enrolledIdentity").EnrolledIdentity;
+export const EnrolledIdentity: typeof import("./enrolledIdentity").EnrolledIdentity = null as any;
+utilities.lazyLoad(exports, ["EnrolledIdentity"], () => require("./enrolledIdentity"));
+
+export { IdentityArgs } from "./identity";
+export type Identity = import("./identity").Identity;
+export const Identity: typeof import("./identity").Identity = null as any;
+utilities.lazyLoad(exports, ["Identity"], () => require("./identity"));
+
 export { ProviderArgs } from "./provider";
 export type Provider = import("./provider").Provider;
 export const Provider: typeof import("./provider").Provider = null as any;
 utilities.lazyLoad(exports, ["Provider"], () => require("./provider"));
 
-export { RandomArgs } from "./random";
-export type Random = import("./random").Random;
-export const Random: typeof import("./random").Random = null as any;
-utilities.lazyLoad(exports, ["Random"], () => require("./random"));
+export { ServiceArgs } from "./service";
+export type Service = import("./service").Service;
+export const Service: typeof import("./service").Service = null as any;
+utilities.lazyLoad(exports, ["Service"], () => require("./service"));
 
-export { RandomComponentArgs } from "./randomComponent";
-export type RandomComponent = import("./randomComponent").RandomComponent;
-export const RandomComponent: typeof import("./randomComponent").RandomComponent = null as any;
-utilities.lazyLoad(exports, ["RandomComponent"], () => require("./randomComponent"));
+export { ServiceEdgeRouterPolicyArgs } from "./serviceEdgeRouterPolicy";
+export type ServiceEdgeRouterPolicy = import("./serviceEdgeRouterPolicy").ServiceEdgeRouterPolicy;
+export const ServiceEdgeRouterPolicy: typeof import("./serviceEdgeRouterPolicy").ServiceEdgeRouterPolicy = null as any;
+utilities.lazyLoad(exports, ["ServiceEdgeRouterPolicy"], () => require("./serviceEdgeRouterPolicy"));
+
+export { ServicePolicyArgs } from "./servicePolicy";
+export type ServicePolicy = import("./servicePolicy").ServicePolicy;
+export const ServicePolicy: typeof import("./servicePolicy").ServicePolicy = null as any;
+utilities.lazyLoad(exports, ["ServicePolicy"], () => require("./servicePolicy"));
 
 
 // Export sub-modules:
 import * as config from "./config";
+import * as types from "./types";
 
 export {
     config,
+    types,
 };
 
 const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
-            case "openziti:index:Random":
-                return new Random(name, <any>undefined, { urn })
-            case "openziti:index:RandomComponent":
-                return new RandomComponent(name, <any>undefined, { urn })
+            case "openziti:index:ConfigObj":
+                return new ConfigObj(name, <any>undefined, { urn })
+            case "openziti:index:EdgeRouter":
+                return new EdgeRouter(name, <any>undefined, { urn })
+            case "openziti:index:EdgeRouterPolicy":
+                return new EdgeRouterPolicy(name, <any>undefined, { urn })
+            case "openziti:index:EnrolledIdentity":
+                return new EnrolledIdentity(name, <any>undefined, { urn })
+            case "openziti:index:Identity":
+                return new Identity(name, <any>undefined, { urn })
+            case "openziti:index:Service":
+                return new Service(name, <any>undefined, { urn })
+            case "openziti:index:ServiceEdgeRouterPolicy":
+                return new ServiceEdgeRouterPolicy(name, <any>undefined, { urn })
+            case "openziti:index:ServicePolicy":
+                return new ServicePolicy(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

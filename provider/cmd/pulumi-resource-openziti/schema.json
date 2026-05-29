@@ -1,7 +1,7 @@
 {
   "name": "openziti",
-  "displayName": "Ceph Rados Gateway",
-  "description": "A Pulumi provider for managing Ceph Rados Gateway resources.",
+  "displayName": "OpenZITI",
+  "description": "A Pulumi provider for managing OpenZITI resources.",
   "homepage": "https://github.com/OSMIT-GmbH/pulumi-openziti",
   "repository": "https://github.com/OSMIT-GmbH/pulumi-openziti",
   "namespace": "osmit-gmbh",
@@ -26,68 +26,1213 @@
   },
   "config": {
     "variables": {
-      "itsasecret": {
-        "type": "boolean"
+      "assimilate": {
+        "type": "string",
+        "description": "Assimilate an existing object during create"
+      },
+      "deleteAssimilated": {
+        "type": "string",
+        "description": "Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)"
+      },
+      "password": {
+        "type": "string",
+        "description": "The password. It is very secret.",
+        "secret": true
+      },
+      "uri": {
+        "type": "string",
+        "description": "The URI to the API"
+      },
+      "user": {
+        "type": "string",
+        "description": "The username. It's important but not secret."
       }
+    },
+    "defaults": [
+      "user",
+      "password",
+      "uri"
+    ]
+  },
+  "types": {
+    "openziti:index:EntityRef": {
+      "properties": {
+        "_links": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/types/openziti:index:Link"
+          }
+        },
+        "entity": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "zitiId": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "required": [
+        "_links"
+      ]
+    },
+    "openziti:index:EnvInfo": {
+      "properties": {
+        "arch": {
+          "type": "string"
+        },
+        "os": {
+          "type": "string"
+        },
+        "osRelease": {
+          "type": "string"
+        },
+        "osVersion": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "openziti:index:IdentityCreateEnrollment": {
+      "properties": {
+        "ott": {
+          "type": "boolean"
+        },
+        "ottca": {
+          "type": "string"
+        },
+        "updb": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "openziti:index:IdentityEnrollments": {
+      "properties": {
+        "ott": {
+          "$ref": "#/types/openziti:index:IdentityEnrollmentsOtt"
+        },
+        "ottca": {
+          "$ref": "#/types/openziti:index:IdentityEnrollmentsOttca"
+        },
+        "updb": {
+          "$ref": "#/types/openziti:index:IdentityEnrollmentsUpdb"
+        }
+      },
+      "type": "object"
+    },
+    "openziti:index:IdentityEnrollmentsOtt": {
+      "properties": {
+        "expiresAt": {
+          "type": "string"
+        },
+        "jwt": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "zitiId": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "openziti:index:IdentityEnrollmentsOttca": {
+      "properties": {
+        "ca": {
+          "$ref": "#/types/openziti:index:EntityRef"
+        },
+        "caId": {
+          "type": "string"
+        },
+        "expiresAt": {
+          "type": "string"
+        },
+        "jwt": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "zitiId": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "openziti:index:IdentityEnrollmentsUpdb": {
+      "properties": {
+        "expiresAt": {
+          "type": "string"
+        },
+        "jwt": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "zitiId": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "openziti:index:Link": {
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "required": [
+        "href"
+      ]
+    },
+    "openziti:index:NamedRole": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "openziti:index:PostureQueriesType": {
+      "properties": {
+        "isPassing": {
+          "type": "boolean"
+        },
+        "policyId": {
+          "type": "string"
+        },
+        "policyType": {
+          "type": "string"
+        },
+        "postureQueries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/openziti:rest_model:PostureQuery"
+          }
+        }
+      },
+      "type": "object",
+      "required": [
+        "isPassing",
+        "policyId",
+        "postureQueries"
+      ]
+    },
+    "openziti:index:SdkInfo": {
+      "properties": {
+        "appId": {
+          "type": "string"
+        },
+        "appVersion": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "openziti:rest_model:IdentityAuthenticators": {
+      "type": "object"
+    },
+    "openziti:rest_model:PostureQuery": {
+      "type": "object"
     }
   },
   "provider": {
     "properties": {
-      "itsasecret": {
-        "type": "boolean"
+      "assimilate": {
+        "type": "string",
+        "description": "Assimilate an existing object during create"
+      },
+      "deleteAssimilated": {
+        "type": "string",
+        "description": "Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)"
+      },
+      "password": {
+        "type": "string",
+        "description": "The password. It is very secret.",
+        "secret": true
+      },
+      "uri": {
+        "type": "string",
+        "description": "The URI to the API"
+      },
+      "user": {
+        "type": "string",
+        "description": "The username. It's important but not secret."
       }
     },
+    "required": [
+      "user",
+      "password",
+      "uri"
+    ],
     "inputProperties": {
-      "itsasecret": {
-        "type": "boolean"
+      "assimilate": {
+        "type": "string",
+        "description": "Assimilate an existing object during create"
+      },
+      "deleteAssimilated": {
+        "type": "string",
+        "description": "Delete assimilated objects during delete (otherwise they would be kept on OpenZiti)"
+      },
+      "password": {
+        "type": "string",
+        "description": "The password. It is very secret.",
+        "secret": true
+      },
+      "uri": {
+        "type": "string",
+        "description": "The URI to the API"
+      },
+      "user": {
+        "type": "string",
+        "description": "The username. It's important but not secret."
       }
-    }
+    },
+    "requiredInputs": [
+      "user",
+      "password",
+      "uri"
+    ]
   },
   "resources": {
-    "openziti:index:Random": {
+    "openziti:index:ConfigObj": {
       "properties": {
-        "length": {
-          "type": "integer"
+        "_assimilated": {
+          "type": "boolean"
         },
-        "result": {
+        "_links": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/types/openziti:index:Link"
+          }
+        },
+        "configType": {
+          "$ref": "#/types/openziti:index:EntityRef"
+        },
+        "configTypeId": {
+          "type": "string"
+        },
+        "configTypeName": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "pulumi.json#/Any"
+        },
+        "name": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "zitiId": {
           "type": "string"
         }
       },
       "required": [
-        "length",
-        "result"
+        "name",
+        "configTypeName",
+        "_links",
+        "createdAt",
+        "zitiId",
+        "updatedAt",
+        "_assimilated",
+        "configType",
+        "configTypeId",
+        "data"
       ],
       "inputProperties": {
-        "length": {
-          "type": "integer"
+        "configTypeName": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "pulumi.json#/Any"
+        },
+        "name": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
         }
       },
       "requiredInputs": [
-        "length"
+        "name",
+        "configTypeName",
+        "data"
       ]
     },
-    "openziti:index:RandomComponent": {
+    "openziti:index:EdgeRouter": {
       "properties": {
-        "length": {
+        "_assimilated": {
+          "type": "boolean"
+        },
+        "_links": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/types/openziti:index:Link"
+          }
+        },
+        "appData": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "certPem": {
+          "type": "string"
+        },
+        "cost": {
           "type": "integer"
         },
-        "password": {
+        "createdAt": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "enrollmentCreatedAt": {
+          "type": "string"
+        },
+        "enrollmentExpiresAt": {
+          "type": "string"
+        },
+        "enrollmentJwt": {
+          "type": "string",
+          "secret": true
+        },
+        "enrollmentToken": {
+          "type": "string",
+          "secret": true
+        },
+        "fingerprint": {
+          "type": "string"
+        },
+        "hostname": {
+          "type": "string"
+        },
+        "isOnline": {
+          "type": "boolean"
+        },
+        "isTunnelerEnabled": {
+          "type": "boolean"
+        },
+        "isVerified": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "noTraversal": {
+          "type": "boolean"
+        },
+        "roleAttributes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "supportedProtocols": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "syncStatus": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "unverifiedCertPem": {
+          "type": "string"
+        },
+        "unverifiedFingerprint": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "zitiId": {
           "type": "string"
         }
       },
       "required": [
-        "length",
-        "password"
+        "_links",
+        "createdAt",
+        "zitiId",
+        "updatedAt",
+        "_assimilated",
+        "cost",
+        "disabled",
+        "hostname",
+        "isOnline",
+        "name",
+        "noTraversal",
+        "supportedProtocols",
+        "syncStatus",
+        "isTunnelerEnabled",
+        "isVerified",
+        "roleAttributes"
       ],
       "inputProperties": {
-        "length": {
+        "appData": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "cost": {
           "type": "integer"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "isTunnelerEnabled": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "noTraversal": {
+          "type": "boolean"
+        },
+        "roleAttributes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
         }
       },
       "requiredInputs": [
-        "length"
+        "name"
+      ]
+    },
+    "openziti:index:EdgeRouterPolicy": {
+      "properties": {
+        "_assimilated": {
+          "type": "boolean"
+        },
+        "_links": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/types/openziti:index:Link"
+          }
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "edgeRouterRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "edgeRouterRolesDisplay": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/openziti:index:NamedRole"
+          }
+        },
+        "identityRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "identityRolesDisplay": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/openziti:index:NamedRole"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "semantic": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "zitiId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "_links",
+        "createdAt",
+        "zitiId",
+        "updatedAt",
+        "_assimilated",
+        "edgeRouterRoles",
+        "edgeRouterRolesDisplay",
+        "identityRoles",
+        "identityRolesDisplay",
+        "semantic"
       ],
-      "isComponent": true
+      "inputProperties": {
+        "edgeRouterRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "identityRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "semantic": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        }
+      },
+      "requiredInputs": [
+        "name",
+        "identityRoles",
+        "semantic"
+      ]
+    },
+    "openziti:index:EnrolledIdentity": {
+      "properties": {
+        "enrollmentJwt": {
+          "type": "string",
+          "secret": true
+        },
+        "identityJson": {
+          "type": "string",
+          "secret": true
+        }
+      },
+      "required": [
+        "enrollmentJwt",
+        "identityJson"
+      ],
+      "inputProperties": {
+        "enrollmentJwt": {
+          "type": "string",
+          "secret": true
+        }
+      },
+      "requiredInputs": [
+        "enrollmentJwt"
+      ]
+    },
+    "openziti:index:Identity": {
+      "properties": {
+        "_assimilated": {
+          "type": "boolean"
+        },
+        "_links": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/types/openziti:index:Link"
+          }
+        },
+        "appData": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "authPolicy": {
+          "$ref": "#/types/openziti:index:EntityRef"
+        },
+        "authPolicyId": {
+          "type": "string"
+        },
+        "authenticators": {
+          "$ref": "#/types/openziti:rest_model:IdentityAuthenticators"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "defaultHostingCost": {
+          "type": "integer"
+        },
+        "defaultHostingPrecedence": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "disabledAt": {
+          "type": "string"
+        },
+        "disabledUntil": {
+          "type": "string"
+        },
+        "enrollment": {
+          "$ref": "#/types/openziti:index:IdentityEnrollments",
+          "secret": true
+        },
+        "envInfo": {
+          "$ref": "#/types/openziti:index:EnvInfo"
+        },
+        "externalId": {
+          "type": "string"
+        },
+        "hasApiSession": {
+          "type": "boolean"
+        },
+        "hasEdgeRouterConnection": {
+          "type": "boolean"
+        },
+        "isAdmin": {
+          "type": "boolean"
+        },
+        "isDefaultAdmin": {
+          "type": "boolean"
+        },
+        "isMfaEnabled": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "roleAttributes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sdkInfo": {
+          "$ref": "#/types/openziti:index:SdkInfo"
+        },
+        "serviceHostingCosts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "serviceHostingPrecedences": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "type": {
+          "$ref": "#/types/openziti:index:EntityRef"
+        },
+        "typeId": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "zitiId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "_links",
+        "createdAt",
+        "zitiId",
+        "updatedAt",
+        "_assimilated",
+        "authPolicy",
+        "authPolicyId",
+        "authenticators",
+        "defaultHostingCost",
+        "disabled",
+        "enrollment",
+        "envInfo",
+        "hasApiSession",
+        "hasEdgeRouterConnection",
+        "isAdmin",
+        "isDefaultAdmin",
+        "isMfaEnabled",
+        "name",
+        "roleAttributes",
+        "sdkInfo",
+        "serviceHostingCosts",
+        "serviceHostingPrecedences",
+        "type",
+        "typeId"
+      ],
+      "inputProperties": {
+        "appData": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "authPolicyId": {
+          "type": "string"
+        },
+        "defaultHostingCost": {
+          "type": "integer"
+        },
+        "defaultHostingPrecedence": {
+          "type": "string"
+        },
+        "enrollment": {
+          "$ref": "#/types/openziti:index:IdentityCreateEnrollment"
+        },
+        "externalId": {
+          "type": "string"
+        },
+        "isAdmin": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "roleAttributes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "serviceHostingCosts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "serviceHostingPrecedences": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "requiredInputs": [
+        "name",
+        "isAdmin",
+        "type"
+      ]
+    },
+    "openziti:index:Service": {
+      "properties": {
+        "_assimilated": {
+          "type": "boolean"
+        },
+        "_links": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/types/openziti:index:Link"
+          }
+        },
+        "config": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "pulumi.json#/Any"
+            }
+          }
+        },
+        "configs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "encryptionRequired": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "postureQueries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/openziti:index:PostureQueriesType"
+          }
+        },
+        "roleAttributes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "terminatorStrategy": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "zitiId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "_links",
+        "createdAt",
+        "zitiId",
+        "updatedAt",
+        "_assimilated",
+        "config",
+        "configs",
+        "encryptionRequired",
+        "name",
+        "permissions",
+        "postureQueries",
+        "roleAttributes",
+        "terminatorStrategy"
+      ],
+      "inputProperties": {
+        "configs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "encryptionRequired": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "roleAttributes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "terminatorStrategy": {
+          "type": "string"
+        }
+      },
+      "requiredInputs": [
+        "name",
+        "configs",
+        "encryptionRequired",
+        "roleAttributes"
+      ]
+    },
+    "openziti:index:ServiceEdgeRouterPolicy": {
+      "properties": {
+        "_assimilated": {
+          "type": "boolean"
+        },
+        "_links": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/types/openziti:index:Link"
+          }
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "edgeRouterRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "edgeRouterRolesDisplay": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/openziti:index:NamedRole"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "semantic": {
+          "type": "string"
+        },
+        "serviceRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "serviceRolesDisplay": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/openziti:index:NamedRole"
+          }
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "zitiId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "_links",
+        "createdAt",
+        "zitiId",
+        "updatedAt",
+        "_assimilated",
+        "edgeRouterRoles",
+        "edgeRouterRolesDisplay",
+        "serviceRoles",
+        "serviceRolesDisplay",
+        "semantic"
+      ],
+      "inputProperties": {
+        "edgeRouterRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "semantic": {
+          "type": "string"
+        },
+        "serviceRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        }
+      },
+      "requiredInputs": [
+        "name",
+        "serviceRoles",
+        "semantic"
+      ]
+    },
+    "openziti:index:ServicePolicy": {
+      "properties": {
+        "_assimilated": {
+          "type": "boolean"
+        },
+        "_links": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/types/openziti:index:Link"
+          }
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "identityRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "identityRolesDisplay": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/openziti:index:NamedRole"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "postureCheckRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "postureCheckRolesDisplay": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/openziti:index:NamedRole"
+          }
+        },
+        "semantic": {
+          "type": "string"
+        },
+        "serviceRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "serviceRolesDisplay": {
+          "type": "array",
+          "items": {
+            "$ref": "#/types/openziti:index:NamedRole"
+          }
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "type": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "zitiId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "_links",
+        "createdAt",
+        "zitiId",
+        "updatedAt",
+        "_assimilated",
+        "identityRoles",
+        "identityRolesDisplay",
+        "postureCheckRoles",
+        "postureCheckRolesDisplay",
+        "semantic",
+        "serviceRoles",
+        "serviceRolesDisplay",
+        "type"
+      ],
+      "inputProperties": {
+        "identityRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "postureCheckRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "semantic": {
+          "type": "string"
+        },
+        "serviceRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "pulumi.json#/Any"
+          }
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "requiredInputs": [
+        "name",
+        "identityRoles",
+        "semantic",
+        "serviceRoles",
+        "type"
+      ]
     }
   }
 }
