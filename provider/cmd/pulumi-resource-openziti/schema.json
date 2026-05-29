@@ -1,0 +1,93 @@
+{
+  "name": "openziti",
+  "displayName": "Ceph Rados Gateway",
+  "description": "A Pulumi provider for managing Ceph Rados Gateway resources.",
+  "homepage": "https://github.com/OSMIT-GmbH/pulumi-openziti",
+  "repository": "https://github.com/OSMIT-GmbH/pulumi-openziti",
+  "namespace": "osmit-gmbh",
+  "language": {
+    "csharp": {
+      "respectSchemaVersion": true
+    },
+    "go": {
+      "generateResourceContainerTypes": true,
+      "importBasePath": "github.com/OSMIT-GmbH/pulumi-openziti/sdk/go/pulumi-openziti",
+      "respectSchemaVersion": true
+    },
+    "nodejs": {
+      "respectSchemaVersion": true
+    },
+    "python": {
+      "pyproject": {
+        "enabled": true
+      },
+      "respectSchemaVersion": true
+    }
+  },
+  "config": {
+    "variables": {
+      "itsasecret": {
+        "type": "boolean"
+      }
+    }
+  },
+  "provider": {
+    "properties": {
+      "itsasecret": {
+        "type": "boolean"
+      }
+    },
+    "inputProperties": {
+      "itsasecret": {
+        "type": "boolean"
+      }
+    }
+  },
+  "resources": {
+    "openziti:index:Random": {
+      "properties": {
+        "length": {
+          "type": "integer"
+        },
+        "result": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "length",
+        "result"
+      ],
+      "inputProperties": {
+        "length": {
+          "type": "integer"
+        }
+      },
+      "requiredInputs": [
+        "length"
+      ]
+    },
+    "openziti:index:RandomComponent": {
+      "properties": {
+        "length": {
+          "type": "integer"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "length",
+        "password"
+      ],
+      "inputProperties": {
+        "length": {
+          "type": "integer"
+        }
+      },
+      "requiredInputs": [
+        "length"
+      ],
+      "isComponent": true
+    }
+  }
+}

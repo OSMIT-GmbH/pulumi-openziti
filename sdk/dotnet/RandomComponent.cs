@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
+using Pulumi;
 
-namespace Pulumi.ProviderBoilerplate
+namespace OsmitGmbh.Openziti
 {
-    [ProviderBoilerplateResourceType("provider-boilerplate:index:RandomComponent")]
+    [OpenzitiResourceType("openziti:index:RandomComponent")]
     public partial class RandomComponent : global::Pulumi.ComponentResource
     {
         [Output("length")]
@@ -27,7 +28,7 @@ namespace Pulumi.ProviderBoilerplate
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
         public RandomComponent(string name, RandomComponentArgs args, ComponentResourceOptions? options = null)
-            : base("provider-boilerplate:index:RandomComponent", name, args ?? new RandomComponentArgs(), MakeResourceOptions(options, ""), remote: true)
+            : base("openziti:index:RandomComponent", name, args ?? new RandomComponentArgs(), MakeResourceOptions(options, ""), remote: true)
         {
         }
 

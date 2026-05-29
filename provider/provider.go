@@ -27,15 +27,17 @@ import (
 var Version string
 
 // Name controls how this provider is referenced in package names and elsewhere.
-const Name string = "provider-boilerplate"
+const Name string = "openziti"
 
 // Provider creates a new instance of the provider.
 func Provider() p.Provider {
 	p, err := infer.NewProviderBuilder().
-		WithDisplayName("pulumi-provider-boilerplate").
-		WithDescription("An example built with pulumi-go-provider.").
-		WithHomepage("https://www.pulumi.com").
-		WithNamespace("pulumi").
+		WithDisplayName("Ceph Rados Gateway").
+		WithDescription("A Pulumi provider for managing Ceph Rados Gateway resources.").
+		WithHomepage("https://github.com/OSMIT-GmbH/pulumi-openziti").
+		WithNamespace("osmit-gmbh").
+		WithGoImportPath("github.com/OSMIT-GmbH/pulumi-openziti/sdk/go/pulumi-openziti").
+		WithRepository("https://github.com/OSMIT-GmbH/pulumi-openziti").
 		WithResources(infer.Resource(Random{})).
 		WithComponents(infer.ComponentF(NewRandomComponent)).
 		WithConfig(infer.Config(&Config{})).
